@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import '../main.dart';
 import 'custom_clipper.dart';
+import 'package:get_it/get_it.dart';
+import 'package:frontend_gestion_station/models/utilisateurModel.dart';
+import 'package:frontend_gestion_station/services/utilisateurService.dart';
+
+// Initialisez votre service UserService à l'extérieur de votre classe StatefulWidget
 
 class InscriptionPage extends StatefulWidget {
   @override
@@ -7,6 +13,18 @@ class InscriptionPage extends StatefulWidget {
 }
 
 class _InscriptionPageState extends State<InscriptionPage> {
+  final _utilisateurService = GetIt.instance<UtilisateurService>();
+  //UtilisateurService utilisateurService = sl<UtilisateurService>();
+  final _nomController = TextEditingController();
+  final _prenomController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nomController.dispose();
+    _prenomController.dispose();
+    super.dispose();
+  }
+
   bool _isImageVisible = true;
   FocusNode _nomFocusNode = FocusNode();
   FocusNode _prenomFocusNode = FocusNode();
@@ -25,6 +43,25 @@ class _InscriptionPageState extends State<InscriptionPage> {
     });
   }
 
+  void _showAlertDialog(String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: <Widget>[
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,13 +115,13 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     ),
                   ),
                   TextField(
+                    controller: _nomController,
                     focusNode: _nomFocusNode,
                     decoration: InputDecoration(
                       hintText: 'Votre Nom ici',
                     ),
                   ),
                   SizedBox(height: 20),
-
 
                   Align(
                     alignment: Alignment.centerLeft,
@@ -97,6 +134,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     ),
                   ),
                   TextField(
+                    controller: _prenomController,
                     focusNode: _prenomFocusNode,
                     decoration: InputDecoration(
                       hintText: 'Votre Prénom ici',
@@ -104,8 +142,19 @@ class _InscriptionPageState extends State<InscriptionPage> {
                   ),
                   SizedBox(height: 30),
                   ElevatedButton(
-                    onPressed: () {
-                      // Handle login
+                    onPressed: () async {
+                      UserModel newUser = UserModel(
+                        nomUser: _nomController.text,
+                        prenomUser: _prenomController.text,
+                      );
+                      try {
+                        UserModel createdUser = await _utilisateurService.createUser(newUser);
+                        print('User created: $createdUser');
+                        _showAlertDialog('Succès', 'Utilisateur créé avec succès!');
+                      } catch (e) {
+                        print('Error creating user: $e');
+                        _showAlertDialog('Erreur', 'Échec de la création de l\'utilisateur.');
+                      }
                     },
                     child: Text(
                       "Inscrire",
@@ -127,8 +176,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
                   Text(
                     "En appuyant sur \"Inscrire\", l'email et le \nmot de passe de l'utilisateur sont \ngénérés automatiquement.",
                     style: TextStyle(
-                        fontSize: 14,
-                        letterSpacing: 0.5,
+                      fontSize: 14,
+                      letterSpacing: 0.5,
                     ),
                     textAlign: TextAlign.center,
                   ),
