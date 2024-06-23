@@ -13,21 +13,24 @@ class AdminModel {
     this.motDePasse,
   });
 
-  AdminModel.fromJson(Map<String, dynamic> json) {
-    idAdmin = json['idAdmin'];
-    nomAdmin = json['nomAdmin'];
-    prenomAdmin = json['prenomAdmin'];
-    emailAdmin = json['emailAdmin'];
-    motDePasse = json['motDePasse'];
+  factory AdminModel.fromJson(Map<String, dynamic> json) {
+    return AdminModel(
+      idAdmin: json['id'],
+      nomAdmin: json['nomAdmin'],
+      prenomAdmin: json['prenomAdmin'],
+      emailAdmin: json['emailAdmin'],
+      motDePasse: json['motDePasse'],
+    );
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['idAdmin'] = this.idAdmin;
-    data['nomAdmin'] = this.nomAdmin;
-    data['prenomUser'] = this.prenomAdmin;
-    data['emailAdmin'] = this.emailAdmin;
-    data['motDePasse'] = this.motDePasse;
+  Map<String, dynamic> toJson()  {
+    final Map<String, dynamic> data = {
+      'idAdmin': idAdmin,
+      'nomAdmin': nomAdmin,
+      'prenomAdmin': prenomAdmin,
+      'emailAdmin': emailAdmin,
+      'motDePasse': motDePasse,
+    };
     return data;
   }
 }

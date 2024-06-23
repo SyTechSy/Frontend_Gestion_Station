@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend_gestion_station/stationPage/essencePage.dart';
 import 'package:frontend_gestion_station/stationPage/gasoilPage.dart';
 
-import 'add/choix_pour_devis.dart';
+import '../add/choix_pour_devis.dart';
 
 
 class AccueilPage extends StatelessWidget {

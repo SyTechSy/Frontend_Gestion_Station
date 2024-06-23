@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_gestion_station/Administrateur/gestionnaire.dart';
+import 'package:frontend_gestion_station/Administrateur/listDesGestionnaire.dart';
+import 'package:frontend_gestion_station/Administrateur/profileAdmin.dart';
+
+import '../models/adminModel.dart';
 
 class AdminAppHomesPage extends StatefulWidget {
-  const AdminAppHomesPage({super.key});
+  final AdminModel admin;
+
+  const AdminAppHomesPage({super.key, required this.admin});
 
   @override
   State<AdminAppHomesPage> createState() => _AdminAppHomesPageState();
@@ -10,12 +16,21 @@ class AdminAppHomesPage extends StatefulWidget {
 
 class _AdminAppHomesPageState extends State<AdminAppHomesPage> {
   int _currentIndex = 0;
-  final screens = [
-    AdminGestionnairePage(),
-    Center(child: Text("Bons", style: TextStyle(fontSize: 30))),
-    Center(child: Text("Historique", style: TextStyle(fontSize: 30))),
-    Center(child: Text("Profil", style: TextStyle(fontSize: 30))),
-  ];
+
+  //late List<Widget> screens;
+  late final List<Widget> screens;
+
+  @override
+  void initState() {
+    super.initState();
+    screens = [
+      AdminGestionnairePage(),
+      //InscriptionPage(),
+      ListGestionnairePage(),
+      Center(child: Text("Historique", style: TextStyle(fontSize: 30))),
+      ProfilPageAdmin(admin: widget.admin), // Pass the admin object here
+    ];
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -28,17 +43,10 @@ class _AdminAppHomesPageState extends State<AdminAppHomesPage> {
       showSelectedLabels: false,
       showUnselectedLabels: false,
       items: [
-
         BottomNavigationBarItem(icon: Icon(Icons.home_outlined, size: 30,), label: 'Station'),
-        BottomNavigationBarItem(icon: Icon(Icons.calculate_outlined), label: 'Calculer'),
+        BottomNavigationBarItem(icon: Icon(Icons.supervised_user_circle_outlined), label: 'jout User'),
         BottomNavigationBarItem(icon: Icon(Icons.screen_rotation_alt), label: 'Bons'),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-        /*BottomNavigationBarItem(icon: CircleAvatar(
-          backgroundImage: AssetImage(
-            'assets/abdoull.jpg',
-          ),
-          maxRadius: 12,
-        ), label: 'Profil'),*/
       ],
       onTap: (index) {
         setState(() {

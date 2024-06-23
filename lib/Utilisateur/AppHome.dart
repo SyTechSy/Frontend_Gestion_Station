@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_gestion_station/accueil.dart';
-import 'package:frontend_gestion_station/stationPage/station.dart';
+import 'package:frontend_gestion_station/Utilisateur/accueil.dart';
+import 'package:frontend_gestion_station/Utilisateur/profilUtilisateur.dart';
+import 'package:frontend_gestion_station/models/utilisateurModel.dart';
 
 class AppHomes extends StatefulWidget {
-  const AppHomes({super.key});
+  final UserModel utilisateur;
+  const AppHomes({super.key, required this.utilisateur});
 
   @override
   State<AppHomes> createState() => _AppHomesState();
@@ -11,13 +13,22 @@ class AppHomes extends StatefulWidget {
 
 class _AppHomesState extends State<AppHomes> {
   int _currentIndex = 0;
-  final screens = [
-    AccueilPage(),
-    //PageStation(),
-    Center(child: Text("Bons", style: TextStyle(fontSize: 30))),
-    Center(child: Text("Historique", style: TextStyle(fontSize: 30))),
-    Center(child: Text("Profil", style: TextStyle(fontSize: 30))),
-  ];
+
+  late final List<Widget> screens;
+
+  @override
+  void initState() {
+    super.initState();
+    screens = [
+      AccueilPage(),
+      //PageStation(),
+      Center(child: Text("Bons", style: TextStyle(fontSize: 30))),
+      Center(child: Text("Historique", style: TextStyle(fontSize: 30))),
+      ProfilPageUtilisateur(utilisateur: widget.utilisateur,)
+    ];
+  }
+
+
 
   @override
   Widget build(BuildContext context) => Scaffold(

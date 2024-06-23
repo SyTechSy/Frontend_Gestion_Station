@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_gestion_station/services/adminService.dart';
+import 'package:frontend_gestion_station/services/devisStationService.dart';
 import 'package:frontend_gestion_station/services/utilisateurService.dart';
-import 'package:frontend_gestion_station/welcomePage.dart';
+import 'package:frontend_gestion_station/Utilisateur/welcomePage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:frontend_gestion_station/stationPage/tab_bar_page.dart';
 
 import 'Administrateur/AdminAppHome.dart';
-import 'AppHome.dart';
-import 'compte/admin_inscription_user.dart';
+import 'Administrateur/profileAdmin.dart';
+import 'Utilisateur/AppHome.dart';
+import 'brouillon/admin_inscription_user.dart';
 import 'compte/connexion.dart';
 
 
@@ -16,7 +18,9 @@ final GetIt locator = GetIt.instance;
 
 void setupLocator() {
   // Enregistrez vos services ici
+  locator.registerLazySingleton(() => UtilisateurService());
   locator.registerLazySingleton(() => AdminService());
+  locator.registerLazySingleton(() => DevisService());
   //sl.registerLazySingleton<UtilisateurService>(() => UtilisateurService());
 }
 
@@ -37,7 +41,8 @@ class MyApp extends StatelessWidget {
         //"/" : (context) => LoginPage()
         //"/" : (context) => InscriptionPage()
         //"/" : (context) => AdminAppHomesPage()
-        "/" : (context) => WelcomePage()
+        "/" : (context) => const WelcomeUserPage()
+        //"/" : (context) => ProfilPageAdmin()
       },
     );
   }

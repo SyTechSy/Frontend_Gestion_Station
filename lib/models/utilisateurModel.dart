@@ -1,30 +1,44 @@
 class UserModel {
   int? idUser;
-  String? nomUser;
-  String? prenomUser;
-  String? emailUser;
-  String? photo;
-  String? motDePasseUser;
+  String? nomUtilisateur;
+  String? prenomUtilisateur;
+  String? emailUtilisateur;
+  String? photoUrl;
+  String? motDePasse;
 
   UserModel({
     this.idUser,
-    this.nomUser,
-    this.prenomUser,
-    this.emailUser,
-    this.photo,
-    this.motDePasseUser,
+    this.nomUtilisateur,
+    this.prenomUtilisateur,
+    this.emailUtilisateur,
+    this.photoUrl,
+    this.motDePasse,
   });
 
-  UserModel.fromJson(Map<String, dynamic> json) {
-    idUser = json['idUser'];
-    nomUser = json['nomUser'];
-    prenomUser = json['prenomUser'];
-    emailUser = json['emailUser'];
-    photo = json['photo'];
-    motDePasseUser = json['motDePasseUser'];
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+   return UserModel(
+     idUser : json['id'],
+     nomUtilisateur : json['nomUtilisateur'],
+     prenomUtilisateur : json['prenomUtilisateur'],
+     emailUtilisateur : json['emailUtilisateur'],
+     photoUrl : json['photoUrl'],
+     motDePasse : json['motDePasse'],
+   );
   }
 
   Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {
+      'idUser': idUser,
+      'nomUtilisateur': nomUtilisateur,
+      'prenomUtilisateur': prenomUtilisateur,
+      'emailUtilisateur': emailUtilisateur,
+      'motDePasse': motDePasse,
+      'photoUrl': photoUrl,
+    };
+    return data;
+  }
+
+/*Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['idUser'] = this.idUser;
     data['nomUser'] = this.nomUser;
@@ -33,5 +47,5 @@ class UserModel {
     data['photo'] = this.photo;
     data['motDePasseUser'] = this.motDePasseUser;
     return data;
-  }
+  }*/
 }

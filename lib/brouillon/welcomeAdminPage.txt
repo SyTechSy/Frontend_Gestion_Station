@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import '../main.dart';
 import 'package:frontend_gestion_station/services/adminService.dart';
 import 'package:frontend_gestion_station/models/adminModel.dart';
-import 'package:frontend_gestion_station/Utilisateur/welcomePage.dart';
+import 'package:frontend_gestion_station/welcomePage.dart';
 import 'package:get_it/get_it.dart';
 
 import 'AdminAppHome.dart';
@@ -18,12 +18,40 @@ class WelcomeAdminPage extends StatefulWidget {
 
 class _WelcomeAdminPageState extends State<WelcomeAdminPage> {
   final _adminService = GetIt.instance<AdminService>();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
 
-  String message = '';
-  AdminModel? loggedInAdmin;
+  final _emailAdminController = TextEditingController();
+  final _motDePasseController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  bool isEmailAlreadyRegistered = false;
 
+  RegExp _emailRegex = RegExp(r'^\S+@\S+$');
+
+  @override
+  void dispose() {
+    _emailAdminController.dispose();
+    _motDePasseController.dispose();
+    super.dispose();
+  }
+
+  void _showAlertDialog(String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: <Widget>[
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +118,7 @@ class _WelcomeAdminPageState extends State<WelcomeAdminPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const WelcomeUserPage()));
+                              builder: (context) => const WelcomePage()));
                     },
                     child: Text(
                       " Connectez-vous",
@@ -131,17 +159,34 @@ class _WelcomeAdminPageState extends State<WelcomeAdminPage> {
                     ),
                     SizedBox(height: 20),
                     Form(
+                      key: _formKey,
                       child: Column(
                         children: [
                           Container(
                             width: 250,
                             height: 60,
                             child: TextFormField(
-                              controller: emailController,
+                              onChanged: (value) {
+                                if (isEmailAlreadyRegistered) {
+                                  setState(() {
+                                    isEmailAlreadyRegistered = false;
+                                  });
+                                }
+                              },
+                              validator: (value) {
+                                if (!_emailRegex.hasMatch(value!)) {
+                                  return 'Adresse e-mail invalide';
+                                }
+                                return null;
+                              },
+                              controller: _emailAdminController,
                               style: TextStyle(
                                 color: Colors.white,
                               ),
                               decoration: InputDecoration(
+                                errorText: isEmailAlreadyRegistered
+                                    ? 'Email ou mot de passe incorrect'
+                                    : null,
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10)),
                                 hintText: 'Email',
@@ -160,7 +205,13 @@ class _WelcomeAdminPageState extends State<WelcomeAdminPage> {
                             width: 250,
                             height: 60,
                             child: TextFormField(
-                              controller: passwordController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Veuillez entrer un mot de passe.';
+                                }
+                                return null;
+                              },
+                              controller: _motDePasseController,
                               style: TextStyle(
                                 color: Colors.white,
                               ),
@@ -194,48 +245,29 @@ class _WelcomeAdminPageState extends State<WelcomeAdminPage> {
                             offset: Offset(-20, 0),
                             child: ElevatedButton(
                               onPressed: () async {
-                                // Récupérer les valeurs des champs email et mot de passe
-                                String emailAdmin = emailController.text.trim();
-                                String motDePasse = passwordController.text.trim();
+                                if (_formKey.currentState!.validate()) {
+                                  try {
+                                    AdminModel newAdmin = AdminModel(
+                                      emailAdmin: _emailAdminController.text,
+                                      motDePasse: _motDePasseController.text,
+                                    );
 
-                                // Créer un objet AdminModel
-                                AdminModel admin = AdminModel(emailAdmin: emailAdmin, motDePasse: motDePasse);
-
-                                try {
-                                  // Appeler la méthode de connexion de AdminService
-                                  //AdminModel loggedInAdmin = await _adminService.loginAdmin(admin);
-                                  loggedInAdmin = await _adminService.loginAdmin(admin);
-
-                                  if (loggedInAdmin != null && loggedInAdmin!.idAdmin != null) {
-                                    setState(() {
-                                      message = 'Admin connecté avec succès';
-                                    });
-
-                                    // Affichez les données de l'administrateur dans la console
-                                    print('Admin connecté avec succès:');
-                                    print('ID: ${loggedInAdmin!.idAdmin}');
-                                    print('Nom: ${loggedInAdmin!.nomAdmin}');
-                                    print('Prénom: ${loggedInAdmin!.prenomAdmin}');
-                                  } else {
-                                    setState(() {
-                                      message = 'Erreur: données de l\'administrateur manquantes';
-                                    });
+                                    AdminModel loginedAdmin = await _adminService.loginAdmin(newAdmin);
+                                    print('La connexion de l\'admin a été effectuée : $loginedAdmin');
+                                    // Rediriger vers la page d'accueil de l'admin
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => AdminAppHomesPage(admin: loginedAdmin)),
+                                    );
+                                  } catch (e) {
+                                    if (e.toString().contains('Email ou mot de passe incorrect')) {
+                                      setState(() {
+                                        isEmailAlreadyRegistered = true;
+                                      });
+                                    } else {
+                                      _showAlertDialog('Erreur', 'Email ou mot de passe incorrect');
+                                    }
                                   }
-
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => AdminAppHomesPage(admin: admin)
-                                    ),
-                                  );
-                                } catch (e) {
-                                  // Gérer les erreurs, par exemple email ou mot de passe incorrect
-                                  print('Erreur lors de la connexion: $e');
-
-                                  // Mettre à jour l'état pour afficher un message d'erreur
-                                  setState(() {
-                                    message = 'Erreur de connexion: vérifiez vos informations';
-                                  });
                                 }
                               },
                               child: Text(
@@ -261,7 +293,6 @@ class _WelcomeAdminPageState extends State<WelcomeAdminPage> {
                         ],
                       ),
                     ),
-                    Text(message, style: TextStyle(color: Colors.green)),
                   ],
                 ),
               ),

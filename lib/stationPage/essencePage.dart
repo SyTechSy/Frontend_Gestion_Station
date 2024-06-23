@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:frontend_gestion_station/models/budget_models.dart';
+import 'package:frontend_gestion_station/models/devisStationModel.dart';
 
 class EssencePage extends StatelessWidget {
   EssencePage({super.key});
