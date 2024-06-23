@@ -242,7 +242,7 @@ class _PageChampsInputState extends State<PageChampsInput> {
                         }
                       } else {
                         setState(() {
-                          message = 'Erreur: utilisateur non connecté';
+                          message = 'Erreur: utilisateur non connectér';
                         });
                       }
                     }
