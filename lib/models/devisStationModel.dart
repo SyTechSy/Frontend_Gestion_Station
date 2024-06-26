@@ -1,49 +1,49 @@
 class DevisModel {
-  int? idDevis;
-  double? valeurArriver;
-  double? valeurDeDepart;
-  double? prixUnite;
-  String? consommation;
-  String? budgetObtenu;
-  String? dateAddDevis;
-  int? idUser; // Défini comme int
+  int? id; // Ajoutez cette propriété si elle est nécessaire
+  double valeurArriver;
+  double valeurDeDepart;
+  double prixUnite;
+  double consommation;
+  double budgetObtenu;
+  DateTime dateAddDevis;
+  int? idUser;
 
   DevisModel({
-    this.idDevis,
-    this.valeurArriver,
-    this.valeurDeDepart,
-    this.prixUnite,
-    this.consommation,
-    this.budgetObtenu,
-    this.dateAddDevis,
-    this.idUser,
+    required this.id, // Assurez-vous d'inclure toutes les propriétés requises ici
+    required this.valeurArriver,
+    required this.valeurDeDepart,
+    required this.prixUnite,
+    required this.consommation,
+    required this.budgetObtenu,
+    required this.dateAddDevis,
+    required this.idUser,
   });
 
   factory DevisModel.fromJson(Map<String, dynamic> json) {
     return DevisModel(
-      idDevis: json['idDevis'],
-      valeurArriver: (json['valeurArriver'] as num?)?.toDouble(),
-      valeurDeDepart: (json['valeurDeDepart'] as num?)?.toDouble(),
-      prixUnite: (json['prixUnite'] as num?)?.toDouble(),
-      consommation: json['consommation'] as String?,
-      budgetObtenu: json['budgetObtenu'] as String?,
-      dateAddDevis: json['dateAddDevis'] as String?,
-      idUser: json['utilisateur']['id'] as int, // Assurez-vous que 'id' est bien un int
+      id: json['id'],
+      valeurArriver: json['valeurArriver'] != null ? json['valeurArriver'].toDouble() : 0.0,
+      valeurDeDepart: json['valeurDeDepart'] != null ? json['valeurDeDepart'].toDouble() : 0.0,
+      prixUnite: json['prixUnite'] != null ? json['prixUnite'].toDouble() : 0.0,
+      consommation: json['consommation'] != null ? json['consommation'].toDouble() : 0.0,
+      budgetObtenu: json['budgetObtenu'] != null ? json['budgetObtenu'].toDouble() : 0.0,
+      dateAddDevis: json['dateAddDevis'] != null ? DateTime.parse(json['dateAddDevis']) : DateTime.now(),
+      //idUser: json['utilisateur']['id'] ?? 0,
+      idUser: json['utilisateur']['id'] != null ? json['utilisateur']['id'] : 0,
+
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': idDevis,
+      'id': id,
       'valeurArriver': valeurArriver,
       'valeurDeDepart': valeurDeDepart,
       'prixUnite': prixUnite,
       'consommation': consommation,
       'budgetObtenu': budgetObtenu,
-      'dateAddDevis': dateAddDevis,
-      'utilisateur': {
-        'id': idUser, // Assurez-vous que idUser est correctement défini
-      },
+      'dateAddDevis': dateAddDevis.toIso8601String(),
+      'utilisateur': {'id' : idUser},
     };
   }
 }

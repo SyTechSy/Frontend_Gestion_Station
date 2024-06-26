@@ -9,7 +9,7 @@ class DevisService {
   Future<DevisModel> createDevis(DevisModel devis) async {
     try {
       final Map<String, dynamic> requestData = devis.toJson();
-      print('Request Data: $requestData'); // Vérifiez les données envoyées
+      print('Request Data: $requestData');
 
       final response = await http.post(
         Uri.parse('$baseUrl/add/devis'),
@@ -22,12 +22,31 @@ class DevisService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return DevisModel.fromJson(jsonDecode(response.body));
       } else {
-        print('Error: ${response.body}'); // Affichez le message d'erreur
+        print('Error: ${response.body}');
         throw Exception('Failed to create devis response');
       }
     } catch (e) {
-      print('Exception: $e'); // Affichez l'exception
+      print('Exception: $e');
       throw Exception('Failed to create devis station');
     }
   }
+
+  // List des Devis
+  Future<List<DevisModel>> fetchDevis() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/list/devis'),
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      List<DevisModel> devis = body.map((dynamic item) => DevisModel.fromJson(item)).toList();
+      print('Devis Station récupérés: $devis');
+      return devis;
+    } else {
+      print('Erreur lors de la récupération des devis Station: ${response.statusCode}');
+      throw Exception('Failed to load devis: ${response.statusCode}');
+    }
+
+  }
+
 }

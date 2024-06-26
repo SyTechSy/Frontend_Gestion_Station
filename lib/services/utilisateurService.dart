@@ -97,8 +97,8 @@ class UtilisateurService {
       print('Utilisateurs récupérés: $users');
       return users;
     } else {
-      print('Erreur lors de la récupération des utilisateurs: ${response.statusCode}');
-      throw Exception('Failed to load users');
+      print('Erreur lors de la récupération des devis: ${response.statusCode}');
+      throw Exception('Failed to load devis');
     }
 
   }

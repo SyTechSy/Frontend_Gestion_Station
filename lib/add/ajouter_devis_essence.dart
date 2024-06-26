@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_gestion_station/services/devisStationService.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 
 import '../models/devisStationModel.dart';
 import '../services/utilisateurService.dart';
+import '../stationPage/essencePage.dart';
 
 class AjouterDevisEssence extends StatelessWidget {
   const AjouterDevisEssence({super.key});
@@ -68,12 +70,17 @@ class PageChampsInput extends StatefulWidget {
 class _PageChampsInputState extends State<PageChampsInput> {
   final _devisService = GetIt.instance<DevisService>();
   final _utilisateurService = GetIt.instance<UtilisateurService>();
-  final TextEditingController valeurArriverController = TextEditingController();
-  final TextEditingController valeurDeDepartController = TextEditingController();
-  final TextEditingController prixUniteController = TextEditingController();
+
+  final _valeurArriverController = TextEditingController();
+  final _valeurDeDepartController = TextEditingController();
+  final _prixUniteController = TextEditingController();
+
+  bool isLoading = true;
 
   String message = '';
+  //String messageSucces = '';
   DevisModel? champsInDevis;
+
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +104,7 @@ class _PageChampsInputState extends State<PageChampsInput> {
                 ],
               ),
               TextField(
-                controller: valeurArriverController,
+                controller: _valeurArriverController,
                 decoration: InputDecoration(
                   hintText: 'Saisissez le montant trouvé à votre arrivée',
                 ),
@@ -119,7 +126,7 @@ class _PageChampsInputState extends State<PageChampsInput> {
                 ],
               ),
               TextField(
-                controller: valeurDeDepartController,
+                controller: _valeurDeDepartController,
                 decoration: InputDecoration(
                   hintText: 'Saisissez le montant trouvé à votre départ',
                 ),
@@ -141,13 +148,14 @@ class _PageChampsInputState extends State<PageChampsInput> {
                 ],
               ),
               TextField(
-                controller: prixUniteController,
+                controller: _prixUniteController,
                 decoration: InputDecoration(
                   hintText: 'Saisissez le montant d\'unité d\'essence',
                 ),
               ),
 
               SizedBox(height: 10),
+              //Text(messageSucces, style: TextStyle(color: Color(0xff12343b))),
               Text(message, style: TextStyle(color: Colors.red)),
 
               SizedBox(height: 20),
@@ -170,84 +178,88 @@ class _PageChampsInputState extends State<PageChampsInput> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                    onPressed: () async {
-                      // Récupération des champs
-                      String valeurArriverStr = valeurArriverController.text.trim();
-                      String valeurDeDepartStr = valeurDeDepartController.text.trim();
-                      String prixUniteStr = prixUniteController.text.trim();
+                  onPressed: () async {
+                    String valeurArriverStr = _valeurArriverController.text.trim();
+                    String valeurDeDepartStr = _valeurDeDepartController.text.trim();
+                    String prixUniteStr = _prixUniteController.text.trim();
 
-                      // Convertir les chaînes en double
-                      double? valeurArriver = double.tryParse(valeurArriverStr);
-                      double? valeurDeDepart = double.tryParse(valeurDeDepartStr);
-                      double? prixUnite = double.tryParse(prixUniteStr);
+                    double? valeurArriver = double.tryParse(valeurArriverStr);
+                    double? valeurDeDepart = double.tryParse(valeurDeDepartStr);
+                    double? prixUnite = double.tryParse(prixUniteStr);
 
-                      // Vérifier si la conversion a réussi
-                      if (valeurArriver == null || valeurDeDepart == null || prixUnite == null) {
-                        setState(() {
-                          message = 'Erreur: veuillez entrer des valeurs numériques valides';
-                        });
-                        return;
-                      }
-                      if (valeurArriver <= valeurDeDepart) {
-                        setState(() {
-                          message = 'La valeur arriver doit être superieur a la valeur de depart';
-                        });
-                        return;
-                      }
-
-                      // obtenir l'ID de l'utilisateur connecté
-                      int? idUser = _utilisateurService.connectedUser?.idUser;
-
-
-                      if (idUser != null) {
-                        // création d'un objet
-                        DevisModel devis = DevisModel(
-                          valeurArriver: valeurArriver,
-                          valeurDeDepart: valeurDeDepart,
-                          prixUnite: prixUnite,
-                          idUser: idUser,
-                        );
-
-                        try {
-                          champsInDevis = await _devisService.createDevis(devis);
-                          print('Création de devis effectuée avec succès: $champsInDevis');
-                          showSuccessMessage('Création avec succès');
-
-                          if (champsInDevis != null && champsInDevis!.idDevis != null && champsInDevis!.idUser != null) {
-                            setState(() {
-                              message = 'Devis créé avec succès';
-                            });
-
-                            // Affichez les données de l'administrateur dans la console
-                            print('Devis Station créé avec succès:');
-                            print('ID: ${champsInDevis!.idDevis}');
-                            print('Valeur Arriver: ${champsInDevis!.valeurArriver}');
-                            print('Valeur De Depart: ${champsInDevis!.valeurDeDepart}');
-                            print('Prix Unité: ${champsInDevis!.prixUnite}');
-                            print('Consommation: ${champsInDevis!.consommation}');
-                            print('Budget Obtenu: ${champsInDevis!.budgetObtenu}');
-                            print('Date de création: ${champsInDevis!.dateAddDevis}');
-                          } else {
-                            setState(() {
-                              message = 'Erreur: données de devis manquantes';
-                            });
-                          }
-                        } catch (e) {
-                          // Gérer les erreurs, par exemple email ou mot de passe incorrect
-                          print('Erreur lors de la création de devis: $e');
-                          showErrorMessage('Erreur de création de devis, vérifiez que les champs ne sont pas vides');
-                          setState(() {
-                            message = 'Erreur de création: vérifiez vos informations';
-                          });
-                        }
-                      } else {
-                        setState(() {
-                          message = 'Erreur: utilisateur non connectér';
-                        });
-                      }
+                    if (valeurArriver == null || valeurDeDepart == null || prixUnite == null) {
+                      setState(() {
+                        message = 'Erreur: veuillez entrer des valeurs numériques valides';
+                      });
+                      return;
+                    }
+                    if (valeurArriver <= valeurDeDepart) {
+                      setState(() {
+                        message = 'La valeur arriver doit être supérieure à la valeur de départ';
+                      });
+                      return;
                     }
 
+                    int? idUser = _utilisateurService.connectedUser?.idUser;
 
+                    if (idUser != null) {
+                      double consommation = valeurArriver - valeurDeDepart;
+                      double budgetObtenu = consommation * prixUnite;
+                      //String dateAddDevis = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+                      String dateAddDevis = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+
+
+                      DevisModel devis = DevisModel(
+                        id: 1,
+                        valeurArriver: valeurArriver,
+                        valeurDeDepart: valeurDeDepart,
+                        prixUnite: prixUnite,
+                        consommation: consommation,
+                        budgetObtenu: budgetObtenu,
+                        dateAddDevis: DateTime.parse(dateAddDevis),
+                        idUser: idUser,
+                      );
+
+                      try {
+                        champsInDevis = await _devisService.createDevis(devis);
+                        print('Création de devis effectuée avec succès: $champsInDevis');
+                        showSuccessMessage('Création avec succès');
+
+                        _valeurArriverController.text = '';
+                        _valeurDeDepartController.text = '';
+                        _prixUniteController.text = '';
+
+                        if (champsInDevis != null) {
+                          setState(() {
+                            message = 'Devis créé avec succès';
+                          });
+
+                          print('Devis Station créé avec succès:');
+                          print('ID: ${champsInDevis!.id}');
+                          print('Valeur Arriver: ${champsInDevis!.valeurArriver}');
+                          print('Valeur De Depart: ${champsInDevis!.valeurDeDepart}');
+                          print('Prix Unité: ${champsInDevis!.prixUnite}');
+                          print('Consommation: ${champsInDevis!.consommation}');
+                          print('Budget Obtenu: ${champsInDevis!.budgetObtenu}');
+                          print('Date de création: ${champsInDevis!.dateAddDevis}');
+                        } else {
+                          setState(() {
+                            message = 'Erreur: données de devis manquantes';
+                          });
+                        }
+                      } catch (e) {
+                        print('Erreur lors de la création de devis: $e');
+                        showErrorMessage('Erreur de création de devis, vérifiez que les champs ne sont pas vides');
+                        setState(() {
+                          message = 'Erreur de création: vérifiez vos informations';
+                        });
+                      }
+                    } else {
+                      setState(() {
+                        message = 'Erreur: utilisateur non connecté';
+                      });
+                    }
+                  }
                 ),
               ),
             ],
