@@ -7,8 +7,8 @@ class DevisModel {
   double budgetObtenu;
   DateTime dateAddDevis;
   int? idUser;
-  String? nomUtilisateur;
-  String? prenomUtilisateur;
+  String nomUtilisateur;
+  String prenomUtilisateur;
 
   DevisModel({
     required this.id,
@@ -19,8 +19,8 @@ class DevisModel {
     required this.budgetObtenu,
     required this.dateAddDevis,
     required this.idUser,
-    this.nomUtilisateur,
-    this.prenomUtilisateur,
+    required this.nomUtilisateur,
+    required this.prenomUtilisateur,
   });
 
   factory DevisModel.fromJson(Map<String, dynamic> json) {

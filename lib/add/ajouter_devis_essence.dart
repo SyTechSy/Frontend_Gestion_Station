@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_gestion_station/services/devisStationService.dart';
 import 'package:get_it/get_it.dart';
-import 'package:intl/intl.dart';
 
-import '../Utilisateur/AppHome.dart';
-import '../Utilisateur/accueil.dart';
 import '../models/devisStationModel.dart';
 import '../services/utilisateurService.dart';
-import '../stationPage/essencePage.dart';
 
 class AjouterDevisEssence extends StatelessWidget {
   const AjouterDevisEssence({super.key});
@@ -203,6 +199,8 @@ class _PageChampsInputState extends State<PageChampsInput> {
                     }
 
                     int? idUser = _utilisateurService.connectedUser?.idUser;
+                    String nomUtilisateur = _utilisateurService.connectedUser?.nomUtilisateur ?? 'N/A';
+                    String prenomUtilisateur = _utilisateurService.connectedUser?.prenomUtilisateur ?? 'N/A';
 
                     double consommation = valeurArriver - valeurDeDepart;
                     double budgetObtenu = consommation * prixUnite;
@@ -216,7 +214,9 @@ class _PageChampsInputState extends State<PageChampsInput> {
                         consommation: consommation,
                         budgetObtenu: budgetObtenu,
                         dateAddDevis: dateAddDevis,
-                        idUser: idUser
+                        idUser: idUser,
+                        nomUtilisateur: nomUtilisateur,
+                        prenomUtilisateur: prenomUtilisateur
                     );
 
                     try {

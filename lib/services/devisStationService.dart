@@ -41,7 +41,7 @@ class DevisService {
   }
 
   // List des Devis
-  Future<List<DevisModel>> fetchDevis() async {
+  /*Future<List<DevisModel>> fetchDevis() async {
     final response = await http.get(
       Uri.parse('$baseUrl/list/devis'),
     );
@@ -56,5 +56,27 @@ class DevisService {
       print('Erreur lors de la récupération des devis Station: ${response.statusCode}');
       throw Exception('Failed to load devis: ${response.statusCode}');
     }
+  }*/
+  Future<List<DevisModel>> fetchDevis(int id) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/list/devis/$id'),
+    );
+
+    if (response.statusCode == 200) {
+      debugPrint(jsonDecode(response.body).toString());
+      List<dynamic> body = jsonDecode(response.body);
+      List<DevisModel> devis = body.map((dynamic item) => DevisModel.fromJson(item)).toList();
+      print('Devis Station récupérés: $devis');
+      return devis;
+    } else if (response.statusCode == 404) {
+      // Gérer le cas où l'utilisateur n'a pas créé de devis
+      print('L\'utilisateur n\'a pas créé de devis');
+      return []; // Retourner une liste vide dans ce cas
+    } else {
+      // Gérer les autres codes d'erreur
+      print('Erreur lors de la récupération des devis Station: ${response.statusCode}');
+      throw Exception('Failed to load devis: ${response.statusCode}');
+    }
   }
+
 }
