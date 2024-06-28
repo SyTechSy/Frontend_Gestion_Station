@@ -116,7 +116,7 @@ class UtilisateurService {
   }
 
   // Méthode pour récupérer les informations de l'administrateur par ID
-  Future<UserModel> getUserById(String id) async {
+  Future<UserModel> getUserById(int id) async {
     final response = await http.get(
       Uri.parse('$baseUrl//profil/user/$id'),
       headers: <String, String>{
@@ -127,7 +127,7 @@ class UtilisateurService {
     if (response.statusCode == 200) {
       return UserModel.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception('Échec de l\'obtention du profil utilisateur');
+      throw Exception('Erreur lors de la récupération de l\'utilisateur: ${response.statusCode}');
     }
   }
 

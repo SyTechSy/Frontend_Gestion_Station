@@ -208,7 +208,10 @@ class _WelcomeUserPageState extends State<WelcomeUserPage> {
                                   String motDePasse = passwordController.text.trim();
 
                                   // Créer un objet AdminModel
-                                  UserModel utilisateur = UserModel(emailUtilisateur: emailUtilisateur, motDePasse: motDePasse);
+                                  UserModel utilisateur = UserModel(
+                                      emailUtilisateur: emailUtilisateur,
+                                      motDePasse: motDePasse
+                                  );
 
                                   try {
                                     // Appeler la méthode de connexion de UtilisateurService

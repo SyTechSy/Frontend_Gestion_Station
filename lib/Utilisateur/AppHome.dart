@@ -3,6 +3,8 @@ import 'package:frontend_gestion_station/Utilisateur/accueil.dart';
 import 'package:frontend_gestion_station/Utilisateur/profilUtilisateur.dart';
 import 'package:frontend_gestion_station/models/utilisateurModel.dart';
 
+import '../models/devisStationModel.dart';
+
 class AppHomes extends StatefulWidget {
   final UserModel utilisateur;
   const AppHomes({super.key, required this.utilisateur});

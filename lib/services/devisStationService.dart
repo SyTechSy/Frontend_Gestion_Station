@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/devisStationModel.dart';
@@ -20,7 +21,15 @@ class DevisService {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return DevisModel.fromJson(jsonDecode(response.body));
+        final responseData = jsonDecode(response.body);
+        print('Response Data: $responseData');
+
+        // Ensure responseData is a map and contains expected keys
+        if (responseData is Map<String, dynamic>) {
+          return DevisModel.fromJson(responseData);
+        } else {
+          throw Exception('Invalid response data');
+        }
       } else {
         print('Error: ${response.body}');
         throw Exception('Failed to create devis response');
@@ -38,6 +47,7 @@ class DevisService {
     );
 
     if (response.statusCode == 200) {
+      debugPrint(jsonDecode(response.body).toString());
       List<dynamic> body = jsonDecode(response.body);
       List<DevisModel> devis = body.map((dynamic item) => DevisModel.fromJson(item)).toList();
       print('Devis Station récupérés: $devis');
@@ -46,7 +56,5 @@ class DevisService {
       print('Erreur lors de la récupération des devis Station: ${response.statusCode}');
       throw Exception('Failed to load devis: ${response.statusCode}');
     }
-
   }
-
 }

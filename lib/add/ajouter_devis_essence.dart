@@ -3,6 +3,8 @@ import 'package:frontend_gestion_station/services/devisStationService.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
+import '../Utilisateur/AppHome.dart';
+import '../Utilisateur/accueil.dart';
 import '../models/devisStationModel.dart';
 import '../services/utilisateurService.dart';
 import '../stationPage/essencePage.dart';
@@ -202,63 +204,62 @@ class _PageChampsInputState extends State<PageChampsInput> {
 
                     int? idUser = _utilisateurService.connectedUser?.idUser;
 
-                    if (idUser != null) {
-                      double consommation = valeurArriver - valeurDeDepart;
-                      double budgetObtenu = consommation * prixUnite;
-                      //String dateAddDevis = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
-                      String dateAddDevis = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+                    double consommation = valeurArriver - valeurDeDepart;
+                    double budgetObtenu = consommation * prixUnite;
+                    DateTime dateAddDevis = DateTime.now();
 
-
-                      DevisModel devis = DevisModel(
-                        id: 1,
+                    DevisModel devisstation = DevisModel(
+                        id: null,
                         valeurArriver: valeurArriver,
                         valeurDeDepart: valeurDeDepart,
                         prixUnite: prixUnite,
                         consommation: consommation,
                         budgetObtenu: budgetObtenu,
-                        dateAddDevis: DateTime.parse(dateAddDevis),
-                        idUser: idUser,
-                      );
+                        dateAddDevis: dateAddDevis,
+                        idUser: idUser
+                    );
 
-                      try {
-                        champsInDevis = await _devisService.createDevis(devis);
-                        print('Création de devis effectuée avec succès: $champsInDevis');
-                        showSuccessMessage('Création avec succès');
+                    try {
 
-                        _valeurArriverController.text = '';
-                        _valeurDeDepartController.text = '';
-                        _prixUniteController.text = '';
+                      //loggedInUser = await _utilisateurService.loginUtilisateur(utilisateur);
+                      champsInDevis = await _devisService.createDevis(devisstation);
 
-                        if (champsInDevis != null) {
-                          setState(() {
-                            message = 'Devis créé avec succès';
-                          });
-
-                          print('Devis Station créé avec succès:');
-                          print('ID: ${champsInDevis!.id}');
-                          print('Valeur Arriver: ${champsInDevis!.valeurArriver}');
-                          print('Valeur De Depart: ${champsInDevis!.valeurDeDepart}');
-                          print('Prix Unité: ${champsInDevis!.prixUnite}');
-                          print('Consommation: ${champsInDevis!.consommation}');
-                          print('Budget Obtenu: ${champsInDevis!.budgetObtenu}');
-                          print('Date de création: ${champsInDevis!.dateAddDevis}');
-                        } else {
-                          setState(() {
-                            message = 'Erreur: données de devis manquantes';
-                          });
-                        }
-                      } catch (e) {
-                        print('Erreur lors de la création de devis: $e');
-                        showErrorMessage('Erreur de création de devis, vérifiez que les champs ne sont pas vides');
+                      if (idUser != null && champsInDevis != null && champsInDevis!.id != null) {
                         setState(() {
-                          message = 'Erreur de création: vérifiez vos informations';
+                          message = 'Devis créé avec succès';
+                        });
+
+                        print('Devis Station créé avec succès:');
+                        print('ID: ${champsInDevis!.id}');
+                        print('Valeur Arriver: ${champsInDevis!.valeurArriver}');
+                        print('Valeur De Depart: ${champsInDevis!.valeurDeDepart}');
+                        print('Prix Unité: ${champsInDevis!.prixUnite}');
+                        print('Consommation: ${champsInDevis!.consommation}');
+                        print('Budget Obtenu: ${champsInDevis!.budgetObtenu}');
+                        print('Date de création: ${champsInDevis!.dateAddDevis}');
+                        print('Id User: ${champsInDevis!.idUser}');
+                        print('Nom User: ${champsInDevis!.nomUtilisateur}');
+                        print('Prenom User: ${champsInDevis!.prenomUtilisateur}');
+                      } else {
+                        setState(() {
+                          message = 'Erreur: données de devis manquantes';
                         });
                       }
-                    } else {
+
+                      /*Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AccueilPage()
+                        ),
+                      );*/
+                    } catch (e) {
+                      print('Erreur lors de la création de devis: $e');
+                      showErrorMessage('Erreur de création de devis, vérifiez que les champs ne sont pas vides');
                       setState(() {
-                        message = 'Erreur: utilisateur non connecté';
+                        message = 'Erreur de récupérés devis: [] de création: vérifiez vos informations';
                       });
                     }
+
                   }
                 ),
               ),

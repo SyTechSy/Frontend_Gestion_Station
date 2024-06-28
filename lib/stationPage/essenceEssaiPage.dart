@@ -35,15 +35,13 @@ class _EssencePageState extends State<EssencePage> {
       // Ajout de logs pour vérifier les valeurs récupérées
       for (var devis in devisStations) {
         print('idUser: ${devis.id}');
+        print('id: ${devis.idUser}');
         print('ValeurArriver: ${devis.valeurArriver}');
         print('ValeurDeDepart: ${devis.valeurDeDepart}');
         print('PrixUnité: ${devis.prixUnite}');
         print('Consommation: ${devis.consommation}');
         print('BudgetObtenu: ${devis.budgetObtenu}');
         print('dateAddDevis: ${devis.dateAddDevis}');
-        print('id: ${devis.idUser}');
-        print('nomUtilisateur: ${devis.nomUtilisateur}');
-        print('prenomUtilisateur: ${devis.prenomUtilisateur}');
       }
 
     } catch (e) {
@@ -53,8 +51,6 @@ class _EssencePageState extends State<EssencePage> {
       isLoading = false;
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +86,7 @@ class _EssencePageState extends State<EssencePage> {
                               children: [
                                 Text(
                                   //devis.dateAddDevis.toString() ?? 'N/A',
-                                  devis.nomUtilisateur.toString() ?? 'N/A',
+                                  "Mamoutou",
                                   style: TextStyle(
                                     fontSize: 15,
                                     color: Colors.black,
@@ -98,7 +94,7 @@ class _EssencePageState extends State<EssencePage> {
                                 ),
                                 SizedBox(width: 5),
                                 Text(
-                                  devis.prenomUtilisateur.toString() ?? 'N/A',
+                                  "Traore",
                                   style: TextStyle(
                                     fontSize: 15,
                                     color: Colors.black,
