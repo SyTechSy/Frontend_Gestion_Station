@@ -76,7 +76,6 @@ class _PageChampsInputState extends State<PageChampsInput> {
   bool isLoading = true;
 
   String message = '';
-  //String messageSucces = '';
   DevisModel? champsInDevis;
 
 

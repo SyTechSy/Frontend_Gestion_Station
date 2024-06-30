@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_gestion_station/models/utilisateurModel.dart';
+import 'package:get_it/get_it.dart';
+
+import '../services/utilisateurService.dart';
 
 class ProfilPageUtilisateur extends StatefulWidget {
   final UserModel utilisateur;
@@ -10,6 +13,45 @@ class ProfilPageUtilisateur extends StatefulWidget {
 }
 
 class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
+  final _utilisateurService = GetIt.instance<UtilisateurService>();
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDevis();
+  }
+
+  Future<void> _fetchDevis() async {
+    try {
+      UserModel? connectedUser = _utilisateurService.connectedUser;
+
+      if (connectedUser != null) {
+        int? idUser = connectedUser.idUser; // Récupérer l'ID de l'utilisateur connecté
+
+        // Récupérer l'utilisateur complet par son ID
+        UserModel user = await _utilisateurService.getUserById(idUser!);
+
+        // Affichage des informations de l'utilisateur dans le terminal ou dans les logs
+        print('Informations de l\'utilisateur:');
+        print('id: ${user.idUser}');
+        print('nomUtilisateur: ${user.nomUtilisateur}');
+        print('prenomUtilisateur: ${user.prenomUtilisateur}');
+        print('emailUtilisateur: ${user.emailUtilisateur}');
+        print('motDePasse: ${user.motDePasse}');
+        print('photoUrl: ${user.photoUrl}');
+        // Affichez d'autres informations si nécessaire
+
+      } else {
+        print('Aucun utilisateur connecté');
+      }
+    } catch (e) {
+      print('Erreur lors du chargement des profil!: $e');
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     final utilisateur = widget.utilisateur;
@@ -116,7 +158,7 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
                       ),
                     ),
                     Text(
-                      utilisateur.nomUtilisateur ?? 'Aucun nom',
+                      utilisateur.nomUtilisateur,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
@@ -146,7 +188,7 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
                       ),
                     ),
                     Text(
-                      utilisateur.prenomUtilisateur ?? 'Aucun prénom',
+                      utilisateur.prenomUtilisateur,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,

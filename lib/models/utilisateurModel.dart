@@ -1,15 +1,15 @@
 class UserModel {
   int? idUser;
-  String? nomUtilisateur;
-  String? prenomUtilisateur;
+  String nomUtilisateur;
+  String prenomUtilisateur;
   String? emailUtilisateur;
   String? photoUrl;
   String? motDePasse;
 
   UserModel({
     this.idUser,
-    this.nomUtilisateur,
-    this.prenomUtilisateur,
+    required this.nomUtilisateur,
+    required this.prenomUtilisateur,
     this.emailUtilisateur,
     this.photoUrl,
     this.motDePasse,
@@ -17,7 +17,7 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
    return UserModel(
-     idUser : json['idUser'],
+     idUser : json['id'],
      nomUtilisateur: json['nomUtilisateur'],
      prenomUtilisateur: json['prenomUtilisateur'],
      emailUtilisateur : json['emailUtilisateur'],
@@ -28,7 +28,7 @@ class UserModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {
-      'idUser': idUser,
+      'id': idUser,
       'nomUtilisateur': nomUtilisateur,
       'prenomUtilisateur': prenomUtilisateur,
       'emailUtilisateur': emailUtilisateur,

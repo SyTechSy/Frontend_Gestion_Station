@@ -207,10 +207,17 @@ class _WelcomeUserPageState extends State<WelcomeUserPage> {
                                   String emailUtilisateur = emailController.text.trim();
                                   String motDePasse = passwordController.text.trim();
 
+                                  int? idUser = _utilisateurService.connectedUser?.idUser;
+                                  String nomUtilisateur = _utilisateurService.connectedUser?.nomUtilisateur ?? 'N/A';
+                                  String prenomUtilisateur = _utilisateurService.connectedUser?.prenomUtilisateur ?? 'N/A';
+
                                   // Créer un objet AdminModel
                                   UserModel utilisateur = UserModel(
+                                      idUser: idUser,
                                       emailUtilisateur: emailUtilisateur,
-                                      motDePasse: motDePasse
+                                      motDePasse: motDePasse,
+                                      nomUtilisateur: nomUtilisateur,
+                                      prenomUtilisateur: prenomUtilisateur
                                   );
 
                                   try {
@@ -228,6 +235,8 @@ class _WelcomeUserPageState extends State<WelcomeUserPage> {
                                       print('ID: ${loggedInUser!.idUser}');
                                       print('Nom: ${loggedInUser!.nomUtilisateur}');
                                       print('Prénom: ${loggedInUser!.prenomUtilisateur}');
+                                      print('Email Utilisateur: ${loggedInUser!.emailUtilisateur}');
+                                      print('Mode Passe: ${loggedInUser!.motDePasse}');
                                     } else {
                                       setState(() {
                                         message = 'Erreur: données de l\'utilisateur manquantes';

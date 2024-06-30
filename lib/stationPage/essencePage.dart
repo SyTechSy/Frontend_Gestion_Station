@@ -84,7 +84,7 @@ class _EssencePageState extends State<EssencePage> {
       }
 
     } catch (e) {
-      print('Erreur lorss du chargement des devis : $e');
+      print('Erreur lors du chargement des devis : $e');
     }
     setState(() {
       isLoading = false;

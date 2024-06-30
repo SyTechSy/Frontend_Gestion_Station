@@ -1,4 +1,4 @@
-class DevisModel {
+class DevisGasoilModel {
   int? id;
   double valeurArriver;
   double valeurDeDepart;
@@ -10,7 +10,7 @@ class DevisModel {
   String nomUtilisateur;
   String prenomUtilisateur;
 
-  DevisModel({
+  DevisGasoilModel({
     required this.id,
     required this.valeurArriver,
     required this.valeurDeDepart,
@@ -23,7 +23,7 @@ class DevisModel {
     required this.prenomUtilisateur,
   });
 
-  factory DevisModel.fromJson(Map<String, dynamic> json) {
+  factory DevisGasoilModel.fromJson(Map<String, dynamic> json) {
     /*print('Received JSON: $json');
     print('Type of idDevis: ${json['idDevis'].runtimeType}');
     print('Type of valeurArriver: ${json['valeurArriver'].runtimeType}');
@@ -33,7 +33,7 @@ class DevisModel {
     print('Type of budgetObtenu: ${json['budgetObtenu'].runtimeType}');
     print('Type of dateAddDevis: ${json['dateAddDevis'].runtimeType}');
     print('Type of idUser: ${json['utilisateur']?['id'].runtimeType}');*/
-    return DevisModel(
+    return DevisGasoilModel(
       id: json['idDevis'] != null ? (json['idDevis'] is int ? json['idDevis'] : int.tryParse(json['idDevis'].toString())) : null,
       valeurArriver: json['valeurArriver'] != null ? (json['valeurArriver'] as num).toDouble() : 0.0,
       valeurDeDepart: json['valeurDeDepart'] != null ? (json['valeurDeDepart'] as num).toDouble() : 0.0,

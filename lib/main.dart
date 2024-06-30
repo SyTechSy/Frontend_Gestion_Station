@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_gestion_station/services/adminService.dart';
+import 'package:frontend_gestion_station/services/devisStationGasoilService.dart';
 import 'package:frontend_gestion_station/services/devisStationService.dart';
 import 'package:frontend_gestion_station/services/utilisateurService.dart';
 import 'package:frontend_gestion_station/Utilisateur/welcomePage.dart';
@@ -21,6 +22,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => UtilisateurService());
   locator.registerLazySingleton(() => AdminService());
   locator.registerLazySingleton(() => DevisService());
+  locator.registerLazySingleton(() => DevisGasoilService());
   //sl.registerLazySingleton<UtilisateurService>(() => UtilisateurService());
 }
 

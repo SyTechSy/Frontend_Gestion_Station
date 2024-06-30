@@ -118,7 +118,7 @@ class UtilisateurService {
   // Méthode pour récupérer les informations de l'administrateur par ID
   Future<UserModel> getUserById(int id) async {
     final response = await http.get(
-      Uri.parse('$baseUrl//profil/user/$id'),
+      Uri.parse('$baseUrl/profil/user/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

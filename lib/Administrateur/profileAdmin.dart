@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_gestion_station/models/adminModel.dart';
+import 'package:get_it/get_it.dart';
+
+import '../models/utilisateurModel.dart';
+import '../services/utilisateurService.dart';
 
 class ProfilPageAdmin extends StatefulWidget {
   final AdminModel admin;
@@ -117,7 +121,7 @@ class _ProfilPageAdminState extends State<ProfilPageAdmin> {
                       ),
                     ),
                     Text(
-                      admin.nomAdmin ?? 'Aucun nom',
+                      admin.nomAdmin.toString(),
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
