@@ -4,10 +4,12 @@ import 'package:frontend_gestion_station/Utilisateur/profilUtilisateur.dart';
 import 'package:frontend_gestion_station/models/utilisateurModel.dart';
 
 import '../models/devisStationModel.dart';
+import 'bonAccueil.dart';
 
 class AppHomes extends StatefulWidget {
-  final UserModel utilisateur;
-  const AppHomes({super.key, required this.utilisateur});
+  //final UserModel utilisateur;
+  final int initialTabIndex;
+  const AppHomes({super.key, this.initialTabIndex = 0});
 
   @override
   State<AppHomes> createState() => _AppHomesState();
@@ -21,12 +23,12 @@ class _AppHomesState extends State<AppHomes> {
   @override
   void initState() {
     super.initState();
+    _currentIndex = widget.initialTabIndex;
     screens = [
-      AccueilPage(),
-      //PageStation(),
-      Center(child: Text("Bons", style: TextStyle(fontSize: 30))),
+      AccueilPage(initialTabIndexx: widget.initialTabIndex),
+      AccueilBon(),
       Center(child: Text("Historique", style: TextStyle(fontSize: 30))),
-      ProfilPageUtilisateur(utilisateur: widget.utilisateur,)
+      ProfilPageUtilisateur()
     ];
   }
 
@@ -36,9 +38,10 @@ class _AppHomesState extends State<AppHomes> {
   Widget build(BuildContext context) => Scaffold(
     body: screens[_currentIndex],
     bottomNavigationBar: BottomNavigationBar(
+      backgroundColor: const Color(0xff12343b),
       currentIndex: _currentIndex,
-      selectedItemColor: Colors.black,
-      unselectedItemColor: Colors.grey.shade700,
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Colors.grey.shade600,
       type: BottomNavigationBarType.fixed,
       showSelectedLabels: false,
       showUnselectedLabels: false,

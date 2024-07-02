@@ -16,15 +16,16 @@ class UserModel {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-   return UserModel(
-     idUser : json['id'],
-     nomUtilisateur: json['nomUtilisateur'],
-     prenomUtilisateur: json['prenomUtilisateur'],
-     emailUtilisateur : json['emailUtilisateur'],
-     photoUrl : json['photoUrl'],
-     motDePasse : json['motDePasse'],
-   );
+    return UserModel(
+      idUser: json['id'],
+      nomUtilisateur: json['nomUtilisateur'] ?? '',
+      prenomUtilisateur: json['prenomUtilisateur'] ?? '',
+      emailUtilisateur: json['emailUtilisateur'],
+      photoUrl: json['photoUrl'],
+      motDePasse: json['motDePasse'],
+    );
   }
+
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {

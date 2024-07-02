@@ -246,7 +246,7 @@ class _WelcomeUserPageState extends State<WelcomeUserPage> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => AppHomes(utilisateur: utilisateur)
+                                          builder: (context) => AppHomes()
                                       ),
                                     );
                                   } catch (e) {

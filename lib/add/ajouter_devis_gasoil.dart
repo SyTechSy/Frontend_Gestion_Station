@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend_gestion_station/models/devisStationGasoilModel.dart';
 import 'package:get_it/get_it.dart';
 
+import '../Utilisateur/AppHome.dart';
+import '../Utilisateur/accueil.dart';
 import '../models/devisStationModel.dart';
 import '../services/devisStationGasoilService.dart';
 import '../services/utilisateurService.dart';
@@ -246,12 +248,14 @@ class _PageChampsInputState extends State<PageChampsInput> {
                           });
                         }
 
-                        /*Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AccueilPage()
-                        ),
-                      );*/
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AppHomes(initialTabIndex: 0), // Rediriger vers AppHomes avec l'onglet Gasoil
+                          ),
+                              (Route<dynamic> route) => false,
+                        );
+
                       } catch (e) {
                         print('Erreur lors de la création de devis: $e');
                         showErrorMessage('Erreur de création de devis, vérifiez que les champs ne sont pas vides');

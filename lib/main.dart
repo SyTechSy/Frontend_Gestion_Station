@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_gestion_station/services/adminService.dart';
+import 'package:frontend_gestion_station/services/bonService.dart';
 import 'package:frontend_gestion_station/services/devisStationGasoilService.dart';
 import 'package:frontend_gestion_station/services/devisStationService.dart';
 import 'package:frontend_gestion_station/services/utilisateurService.dart';
@@ -10,7 +11,7 @@ import 'package:frontend_gestion_station/stationPage/tab_bar_page.dart';
 import 'Administrateur/AdminAppHome.dart';
 import 'Administrateur/profileAdmin.dart';
 import 'Utilisateur/AppHome.dart';
-import 'brouillon/admin_inscription_user.dart';
+import 'brouillon/admin_inscription_user.txt';
 import 'compte/connexion.dart';
 
 
@@ -23,6 +24,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => AdminService());
   locator.registerLazySingleton(() => DevisService());
   locator.registerLazySingleton(() => DevisGasoilService());
+  locator.registerLazySingleton(() => BonService());
   //sl.registerLazySingleton<UtilisateurService>(() => UtilisateurService());
 }
 

@@ -24,6 +24,7 @@ class _AdminGestionnairePageState extends State<AdminGestionnairePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Color(0xff12343b),
         title: Column(
           children: [

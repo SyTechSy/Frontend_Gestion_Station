@@ -5,8 +5,8 @@ import 'package:get_it/get_it.dart';
 import '../services/utilisateurService.dart';
 
 class ProfilPageUtilisateur extends StatefulWidget {
-  final UserModel utilisateur;
-  const ProfilPageUtilisateur({super.key, required this.utilisateur});
+  //final UserModel utilisateur;
+  const ProfilPageUtilisateur({super.key});
 
   @override
   State<ProfilPageUtilisateur> createState() => _ProfilPageUtilisateurState();
@@ -54,7 +54,7 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
   }
   @override
   Widget build(BuildContext context) {
-    final utilisateur = widget.utilisateur;
+    //final utilisateur = widget.utilisateur;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -158,7 +158,7 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
                       ),
                     ),
                     Text(
-                      utilisateur.nomUtilisateur,
+                      'utilisateur.nomUtilisateur',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
@@ -188,7 +188,7 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
                       ),
                     ),
                     Text(
-                      utilisateur.prenomUtilisateur,
+                      'utilisateur.prenomUtilisateur',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
@@ -218,7 +218,7 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
                       ),
                     ),
                     Text(
-                      utilisateur.emailUtilisateur ?? 'Aucun email',
+                      'utilisateur.emailUtilisateur',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
@@ -248,7 +248,7 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
                       ),
                     ),
                     Text(
-                      utilisateur.motDePasse ?? 'Aucun Mot de passe',
+                      'utilisateur.motDePasse',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,

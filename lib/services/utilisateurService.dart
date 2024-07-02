@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend_gestion_station/models/utilisateurModel.dart';
 
@@ -32,44 +33,9 @@ class UtilisateurService {
   }
   UserModel? get connectedUser => _connectedUser;
 
-  /*Future<UserModel> loginUtilisateur(UserModel utilisateur) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/login/user'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(utilisateur.toJson()),
-    );
-
-    if (response.statusCode == 200) {
-      Map<String, dynamic> responseData = jsonDecode(response.body);
-
-      if (responseData.containsKey('utilisateur')) {
-        // Affichez la réponse de l'API pour le débogage
-        print('Réponse de l\'API: ${response.body}');
-
-        // Traitez les données de l'administrateur ici
-        UserModel utilisateur = UserModel.fromJson(responseData['utilisateur']);
-
-        // Par exemple, vous pouvez accéder à ses propriétés ainsi
-        print('ID de l\'utilisateur: ${utilisateur.idUser}');
-        print('Nom de l\'utilisateur: ${utilisateur.nomUtilisateur}');
-        print('Prénom de l\'utilisateur: ${utilisateur.prenomUtilisateur}');
-        print('Email de l\'utilisateur: ${utilisateur.emailUtilisateur}');
-        print('Mot de passe de l\'utilisateur: ${utilisateur.motDePasse}');
-        print('Photo Url de l\'utilisateur: ${utilisateur.photoUrl}');
-
-        return utilisateur;
-      } else {
-        throw Exception('Données de l\'Utilisateur manquantes dans la réponse');
-      }
-    } else {
-      throw Exception('Erreur lors de la connexion utilisate: ${response.statusCode}');
-    }
-  }*/
-
   // Creation des utilisateur
   Future<UserModel> createUser(UserModel user) async {
+    // Vérifiez si le nomUtilisateur et prenomUtilisateur ne sont pas null
     final response = await http.post(
       Uri.parse('$baseUrl/add/user'),
       headers: <String, String>{
@@ -79,6 +45,7 @@ class UtilisateurService {
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
+      debugPrint(jsonDecode(response.body).toString());
       return UserModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to create user');
@@ -167,5 +134,42 @@ class UtilisateurService {
       }
     } else {
       throw Exception('Erreur lors de la connexion: ${response.statusCode}');
+    }
+  }*/
+
+
+/*Future<UserModel> loginUtilisateur(UserModel utilisateur) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/login/user'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(utilisateur.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      if (responseData.containsKey('utilisateur')) {
+        // Affichez la réponse de l'API pour le débogage
+        print('Réponse de l\'API: ${response.body}');
+
+        // Traitez les données de l'administrateur ici
+        UserModel utilisateur = UserModel.fromJson(responseData['utilisateur']);
+
+        // Par exemple, vous pouvez accéder à ses propriétés ainsi
+        print('ID de l\'utilisateur: ${utilisateur.idUser}');
+        print('Nom de l\'utilisateur: ${utilisateur.nomUtilisateur}');
+        print('Prénom de l\'utilisateur: ${utilisateur.prenomUtilisateur}');
+        print('Email de l\'utilisateur: ${utilisateur.emailUtilisateur}');
+        print('Mot de passe de l\'utilisateur: ${utilisateur.motDePasse}');
+        print('Photo Url de l\'utilisateur: ${utilisateur.photoUrl}');
+
+        return utilisateur;
+      } else {
+        throw Exception('Données de l\'Utilisateur manquantes dans la réponse');
+      }
+    } else {
+      throw Exception('Erreur lors de la connexion utilisate: ${response.statusCode}');
     }
   }*/

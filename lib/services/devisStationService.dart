@@ -7,6 +7,7 @@ import '../models/devisStationModel.dart';
 class DevisService {
   final String baseUrl = 'http://10.0.2.2:8000';
 
+  // Ajouter un devis
   Future<DevisModel> createDevis(DevisModel devis) async {
     try {
       final Map<String, dynamic> requestData = devis.toJson();
@@ -41,22 +42,6 @@ class DevisService {
   }
 
   // List des Devis
-  /*Future<List<DevisModel>> fetchDevis() async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/list/devis'),
-    );
-
-    if (response.statusCode == 200) {
-      debugPrint(jsonDecode(response.body).toString());
-      List<dynamic> body = jsonDecode(response.body);
-      List<DevisModel> devis = body.map((dynamic item) => DevisModel.fromJson(item)).toList();
-      print('Devis Station récupérés: $devis');
-      return devis;
-    } else {
-      print('Erreur lors de la récupération des devis Station: ${response.statusCode}');
-      throw Exception('Failed to load devis: ${response.statusCode}');
-    }
-  }*/
   Future<List<DevisModel>> fetchDevis(int id) async {
     final response = await http.get(
       Uri.parse('$baseUrl/list/devis/$id'),
@@ -79,4 +64,34 @@ class DevisService {
     }
   }
 
+  // Suppression des devis essence
+  Future<void> deleteDevisEssence(int id) async {
+    final response = await http.delete(
+        Uri.parse('$baseUrl/delete/devis/$id')
+    );
+
+    if (response.statusCode != 200) {
+      print('Error lors de la suppression devis essence: ${response.statusCode} - ${response.body}');
+      throw Exception('Erreur lors de la suppression de devis essence');
+    }
+  }
+
 }
+
+
+/*Future<List<DevisModel>> fetchDevis() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/list/devis'),
+    );
+
+    if (response.statusCode == 200) {
+      debugPrint(jsonDecode(response.body).toString());
+      List<dynamic> body = jsonDecode(response.body);
+      List<DevisModel> devis = body.map((dynamic item) => DevisModel.fromJson(item)).toList();
+      print('Devis Station récupérés: $devis');
+      return devis;
+    } else {
+      print('Erreur lors de la récupération des devis Station: ${response.statusCode}');
+      throw Exception('Failed to load devis: ${response.statusCode}');
+    }
+  }*/

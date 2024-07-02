@@ -25,6 +25,20 @@ class _EssencePageState extends State<EssencePage> {
     _fetchDevis();
   }
 
+  Future<void> _deleteDevisEssence(int idDevis) async {
+    print('Tentative de suppression de l\'essence devis avec ID: $idDevis');
+    try {
+      await _devisService.deleteDevisEssence(idDevis);
+      setState(() {
+        devisStations.removeWhere((devis) => devis.id == idDevis);
+      });
+      showSuccessMessage('Devis supprimé avec succès');
+    } catch (e) {
+      print('Erreur lors de la suppression de devis essence: $e');
+      showErrorMessage('Erreur lors de la suppression de devis essence');
+    }
+  }
+
   // Fonction pour les listes d'User
   /*Future<void> _fetchDevis() async {
     try {
@@ -98,7 +112,7 @@ class _EssencePageState extends State<EssencePage> {
     return Scaffold(
       body: Container(
         color: Colors.grey[200],
-        padding: EdgeInsets.only(left: 10, right: 10),
+        padding: const  EdgeInsets.only(left: 10, right: 10),
         child: Visibility(
           visible: isLoading,
           child: Center(child: CircularProgressIndicator()),
@@ -287,7 +301,7 @@ class _EssencePageState extends State<EssencePage> {
                                           Container(
                                             padding: EdgeInsets.only(right: 5),
                                             child: Text(
-                                              "FCFA",
+                                              "F",
                                               style: TextStyle(
                                                 fontSize: 10,
                                                 color: Colors.orange,
@@ -375,7 +389,7 @@ class _EssencePageState extends State<EssencePage> {
                                           Container(
                                             padding: EdgeInsets.only(right: 5),
                                             child: Text(
-                                              "FCFA",
+                                              "F",
                                               style: TextStyle(
                                                 fontSize: 10,
                                                 color: Colors.orange,
@@ -385,6 +399,51 @@ class _EssencePageState extends State<EssencePage> {
                                         ],
                                       ),
                                     ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          Container(
+                            margin: EdgeInsets.only(top: 0, bottom: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    if (devis.id != null) {
+                                      _deleteDevisEssence(devis.id!);
+                                    } else {
+                                      print('Devis ID is null, cannot delete');
+                                    }
+                                  },
+                                  child: Text(
+                                    "Supprimer",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.w500,
+                                        letterSpacing: 1
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  "Modifier",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.w500,
+                                      letterSpacing: 1
+                                  ),
+                                ),
+                                Text(
+                                  "Enregistre",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.w500,
+                                      letterSpacing: 1
                                   ),
                                 ),
                               ],
@@ -401,5 +460,30 @@ class _EssencePageState extends State<EssencePage> {
         ),
       ),
     );
+  }
+
+  void showSuccessMessage(String message) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(
+            color: Colors.white
+        ),
+      ),
+      backgroundColor: Color(0xff12343b),
+    );
+    ScaffoldMessenger.of(context as BuildContext).showSnackBar(snackBar);
+  }
+  void showErrorMessage(String message) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(
+            color: Colors.white
+        ),
+      ),
+      backgroundColor: Colors.red,
+    );
+    ScaffoldMessenger.of(context as BuildContext).showSnackBar(snackBar);
   }
 }

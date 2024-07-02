@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_gestion_station/services/devisStationService.dart';
 import 'package:get_it/get_it.dart';
 
 import '../Utilisateur/AppHome.dart';
-import '../Utilisateur/accueil.dart';
-import '../models/devisStationModel.dart';
+import '../Utilisateur/bonAccueil.dart';
+import '../models/bonModel.dart';
+import '../services/bonService.dart';
 import '../services/utilisateurService.dart';
 
-class AjouterDevisEssence extends StatelessWidget {
-  const AjouterDevisEssence({super.key});
+class AjouterBonPage extends StatelessWidget {
+  const AjouterBonPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class AjouterDevisEssence extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: 35, left: 15),
+                  margin: const EdgeInsets.only(top: 35, left: 15),
                   child: GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
@@ -39,7 +39,7 @@ class AjouterDevisEssence extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.only(top: 35, right: 35),
                   child: Text(
-                    "Ajouter devis essence",
+                    "Ajouter un bon",
                     style: TextStyle(
                         fontSize: 15,
                         color: Colors.white
@@ -52,7 +52,7 @@ class AjouterDevisEssence extends StatelessWidget {
             ),
           ),
 
-          PageChampsInput()
+          PageChampsInputAjouterBon()
         ],
 
       ),
@@ -60,110 +60,82 @@ class AjouterDevisEssence extends StatelessWidget {
   }
 }
 
-class PageChampsInput extends StatefulWidget {
-  const PageChampsInput({super.key});
+class PageChampsInputAjouterBon extends StatefulWidget {
+  const PageChampsInputAjouterBon({super.key});
 
   @override
-  State<PageChampsInput> createState() => _PageChampsInputState();
+  State<PageChampsInputAjouterBon> createState() => _PageChampsInputAjouterBonState();
 }
 
-class _PageChampsInputState extends State<PageChampsInput> {
-  final _devisService = GetIt.instance<DevisService>();
+class _PageChampsInputAjouterBonState extends State<PageChampsInputAjouterBon> {
+  final _bonService = GetIt.instance<BonService>();
   final _utilisateurService = GetIt.instance<UtilisateurService>();
 
-  final _valeurArriverController = TextEditingController();
-  final _valeurDeDepartController = TextEditingController();
-  final _prixUniteController = TextEditingController();
-
+  final _nomDestinataireController = TextEditingController();
+  final _prixDemanderController = TextEditingController();
   bool isLoading = true;
 
   String message = '';
-  DevisModel? champsInDevis;
+  BonModel? champsInBon;
 
-  void _onAddDevis() async {
-    String valeurArriverStr = _valeurArriverController.text.trim();
-    String valeurDeDepartStr = _valeurDeDepartController.text.trim();
-    String prixUniteStr = _prixUniteController.text.trim();
-
-    double? valeurArriver = double.tryParse(valeurArriverStr);
-    double? valeurDeDepart = double.tryParse(valeurDeDepartStr);
-    double? prixUnite = double.tryParse(prixUniteStr);
-
-    if (valeurArriver == null || valeurDeDepart == null || prixUnite == null) {
-      setState(() {
-        message = 'Erreur: veuillez entrer des valeurs numériques valides';
-      });
-      return;
-    }
-    if (valeurArriver <= valeurDeDepart) {
-      setState(() {
-        message = 'La valeur d\'arriver doit être supérieure à la valeur de départ';
-      });
-      return;
-    }
+  void _onAddBon() async {
+    String nomDestinataire = _nomDestinataireController.text.trim();
+    String prixDemander = _prixDemanderController.text.trim();
 
     int? idUser = _utilisateurService.connectedUser?.idUser;
     String nomUtilisateur = _utilisateurService.connectedUser?.nomUtilisateur ?? 'N/A';
     String prenomUtilisateur = _utilisateurService.connectedUser?.prenomUtilisateur ?? 'N/A';
+    DateTime dateAddBon = DateTime.now();
 
-    double consommation = valeurArriver - valeurDeDepart;
-    double budgetObtenu = consommation * prixUnite;
-    DateTime dateAddDevis = DateTime.now();
-
-    DevisModel devisstation = DevisModel(
-        id: null,
-        valeurArriver: valeurArriver,
-        valeurDeDepart: valeurDeDepart,
-        prixUnite: prixUnite,
-        consommation: consommation,
-        budgetObtenu: budgetObtenu,
-        dateAddDevis: dateAddDevis,
+    BonModel bonstation = BonModel(
+        idBon: null,
+        nomDestinataire: nomDestinataire,
+        prixDemander: prixDemander,
         idUser: idUser,
         nomUtilisateur: nomUtilisateur,
-        prenomUtilisateur: prenomUtilisateur
+        prenomUtilisateur: prenomUtilisateur,
+        dateAddBon: dateAddBon
     );
 
     try {
-      champsInDevis = await _devisService.createDevis(devisstation);
+      champsInBon = await _bonService.ajouterBon(bonstation);
 
-      if (idUser != null && champsInDevis != null && champsInDevis!.id != null) {
+      if (idUser != null && champsInBon != null && champsInBon!.idBon != null) {
         setState(() {
-          message = 'Devis créé avec succès';
+          message = 'Bon créé avec succès';
         });
 
-        print('Devis Station créé avec succès:');
-        print('ID: ${champsInDevis!.id}');
-        print('Valeur Arriver: ${champsInDevis!.valeurArriver}');
-        print('Valeur De Depart: ${champsInDevis!.valeurDeDepart}');
-        print('Prix Unité: ${champsInDevis!.prixUnite}');
-        print('Consommation: ${champsInDevis!.consommation}');
-        print('Budget Obtenu: ${champsInDevis!.budgetObtenu}');
-        print('Date de création: ${champsInDevis!.dateAddDevis}');
-        print('Id User: ${champsInDevis!.idUser}');
-        print('Nom User: ${champsInDevis!.nomUtilisateur}');
-        print('Prenom User: ${champsInDevis!.prenomUtilisateur}');
+        print('Bon créé avec succès:');
+        print('Id Bon: ${champsInBon!.idBon}');
+        print('Nom Destinataire: ${champsInBon!.nomDestinataire}');
+        print('Prix Demander: ${champsInBon!.prixDemander}');
+        print('Date add bon: ${champsInBon!.dateAddBon}');
+        print('Id User: ${champsInBon!.idUser}');
+        print('Nom Utilisateur: ${champsInBon!.nomUtilisateur}');
+        print('Prenom Utilisateur: ${champsInBon!.prenomUtilisateur}');
       } else {
         setState(() {
-          message = 'Erreur: données de devis manquantes';
+          message = 'Erreur: données de bon manquantes';
         });
       }
 
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => AppHomes(initialTabIndex: 0), // Rediriger vers AppHomes avec l'onglet Gasoil
+          builder: (context) => const AppHomes(initialTabIndex: 1),
         ),
             (Route<dynamic> route) => false,
       );
 
     } catch (e) {
-      print('Erreur lors de la création de devis: $e');
-      showErrorMessage('Erreur de création de devis, vérifiez que les champs ne sont pas vides');
+      print('Erreur lors de la création de bon: $e');
+      showErrorMessage('Erreur de création de bon, vérifiez que les champs ne sont pas vides');
       setState(() {
-        message = 'Erreur de récupérés devis: [] de création: vérifiez vos informations';
+        message = 'Vérifiez vos informations, les champs ne doivent pas être vides';
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +149,7 @@ class _PageChampsInputState extends State<PageChampsInput> {
                 children: [
                   Transform.translate(offset: Offset(0, 5),
                     child: Text(
-                      "Valeur de d'arriver",
+                      "Nom destinataire",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -187,68 +159,46 @@ class _PageChampsInputState extends State<PageChampsInput> {
                 ],
               ),
               TextField(
-                controller: _valeurArriverController,
+                controller: _nomDestinataireController,
                 decoration: InputDecoration(
-                  hintText: 'Saisissez le montant trouvé à votre arrivée',
-                ),
-              ),
-          
-              SizedBox(height: 20),
-          
-              Stack(
-                children: [
-                  Transform.translate(offset: Offset(0, 5),
-                    child: Text(
-                      "Valeur de depart",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              TextField(
-                controller: _valeurDeDepartController,
-                decoration: InputDecoration(
-                  hintText: 'Saisissez le montant trouvé à votre départ',
-                ),
-              ),
-          
-              SizedBox(height: 20),
-          
-              Stack(
-                children: [
-                  Transform.translate(offset: Offset(0, 5),
-                    child: Text(
-                      "Prix unité",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              TextField(
-                controller: _prixUniteController,
-                decoration: InputDecoration(
-                  hintText: 'Saisissez le montant d\'unité d\'essence',
+                  hintText: 'Saisissez le nom de la personne',
                 ),
               ),
 
+              SizedBox(height: 20),
+
+              Stack(
+                children: [
+                  Transform.translate(offset: Offset(0, 5),
+                    child: Text(
+                      "Prix à donner",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              TextField(
+                controller: _prixDemanderController,
+                decoration: InputDecoration(
+                  hintText: 'Saisissez le prix donner à la personne',
+                ),
+              ),
+
+
               SizedBox(height: 10),
-              //Text(messageSucces, style: TextStyle(color: Color(0xff12343b))),
               Text(message, style: TextStyle(color: Colors.red)),
 
               SizedBox(height: 20),
-          
+
               SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
                   child: Text(
-                    "Calculer",
+                    "Valider",
                     style: TextStyle(
                         color: Colors.white,
                         letterSpacing: 1,
@@ -261,7 +211,7 @@ class _PageChampsInputState extends State<PageChampsInput> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  onPressed: _onAddDevis,
+                  onPressed: _onAddBon,
                 ),
               ),
             ],
@@ -269,7 +219,6 @@ class _PageChampsInputState extends State<PageChampsInput> {
         )
     );
   }
-
   void showSuccessMessage(String message) {
     final snackBar = SnackBar(
       content: Text(
@@ -295,3 +244,4 @@ class _PageChampsInputState extends State<PageChampsInput> {
     ScaffoldMessenger.of(context as BuildContext).showSnackBar(snackBar);
   }
 }
+

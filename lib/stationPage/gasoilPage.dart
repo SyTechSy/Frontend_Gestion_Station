@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
 import '../models/devisStationGasoilModel.dart';
@@ -26,6 +27,22 @@ class _GasoilPageState extends State<GasoilPage> {
     _fetchDevisGasoil();
   }
 
+  // Suppression function
+  Future<void> _deleteDevisGasoil(int idDevisG) async {
+    print('Tentative de suppression de l\'essence devis avec ID: $idDevisG');
+    try {
+      await _devisGasoilService.deleteDevisGasoil(idDevisG);
+      setState(() {
+        devisStationsGasoil.removeWhere((devis) => devis.id == idDevisG);
+      });
+      showSuccessMessage('Devis gasoil supprimé avec succès');
+    } catch (e) {
+      print('Erreur lors de la suppression de devis gasoil : $e');
+      showErrorMessage('Erreur lors de la suppression de devis gasoil');
+    }
+  }
+
+  // List function
   Future<void> _fetchDevisGasoil() async {
     try {
       UserModel? connectedUser = _utilisateurService.connectedUser;
@@ -257,7 +274,7 @@ class _GasoilPageState extends State<GasoilPage> {
                                           Container(
                                             padding: EdgeInsets.only(right: 5),
                                             child: Text(
-                                              "FCFA",
+                                              "F",
                                               style: TextStyle(
                                                 fontSize: 10,
                                                 color: Colors.orange,
@@ -345,7 +362,7 @@ class _GasoilPageState extends State<GasoilPage> {
                                           Container(
                                             padding: EdgeInsets.only(right: 5),
                                             child: Text(
-                                              "FCFA",
+                                              "F",
                                               style: TextStyle(
                                                 fontSize: 10,
                                                 color: Colors.orange,
@@ -355,6 +372,50 @@ class _GasoilPageState extends State<GasoilPage> {
                                         ],
                                       ),
                                     ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 0, bottom: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    if (devis.id != null) {
+                                      _deleteDevisGasoil(devis.id!);
+                                    } else {
+                                      print('Devis gasoil ID is null, cannot delete');
+                                    }
+                                  },
+                                  child: Text(
+                                    "Supprimer",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.w500,
+                                        letterSpacing: 1
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  "Modifier",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: 1
+                                  ),
+                                ),
+                                Text(
+                                  "Enregistre",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: 1
                                   ),
                                 ),
                               ],
@@ -371,5 +432,30 @@ class _GasoilPageState extends State<GasoilPage> {
         ),
       ),
     );
+  }
+
+  void showSuccessMessage(String message) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(
+            color: Colors.white
+        ),
+      ),
+      backgroundColor: Color(0xff12343b),
+    );
+    ScaffoldMessenger.of(context as BuildContext).showSnackBar(snackBar);
+  }
+  void showErrorMessage(String message) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(
+            color: Colors.white
+        ),
+      ),
+      backgroundColor: Colors.red,
+    );
+    ScaffoldMessenger.of(context as BuildContext).showSnackBar(snackBar);
   }
 }
