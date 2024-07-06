@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get_it/get_it.dart';
 
+import '../EditPage/editBon.dart';
 import '../add/bonAjouter.dart';
 import '../models/bonModel.dart';
 import '../models/utilisateurModel.dart';
@@ -113,7 +114,7 @@ class _AccueilBonState extends State<AccueilBon> {
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: Visibility(
           visible: isLoading,
-          child: const Center(child: CircularProgressIndicator()),
+          child: Center(child: CircularProgressIndicator()),
           replacement: RefreshIndicator(
             onRefresh: _fetchBons,
             child: ListView.builder(
@@ -128,7 +129,17 @@ class _AccueilBonState extends State<AccueilBon> {
                           children: [
                             SlidableAction(
                               backgroundColor: Colors.green,
-                              onPressed: (context) {},
+                              onPressed: (context) async {
+                                final result = await Navigator.push(
+                                    context, MaterialPageRoute(
+                                    builder: (context) => EditBonPage(bonId: bons.idBon!, bon: bons)
+                                ));
+                                if (result != null) {
+                                  setState(() {
+                                    bonStations[index] = result;
+                                  });
+                                }
+                              },
                               icon: Icons.edit,
                               label: 'Modifier',
                             ),

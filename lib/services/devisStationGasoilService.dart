@@ -41,7 +41,39 @@ class DevisGasoilService {
       throw Exception('Failed to create devis station');
     }
   }
+  // Moification de devis Gasoil
+  Future<DevisGasoilModel> modifierDevisGasoil(int id, DevisGasoilModel devisgasoil) async {
+    try {
+      final Map<String, dynamic> requestData = devisgasoil.toJson();
+      print('Request Data: $requestData');
 
+      final response = await http.put(
+        Uri.parse('$baseUrl/edit/devisGasoil/$id'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(requestData),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        print('Response Data: $responseData');
+
+        // Ensure responseData is a map and contains expected keys
+        if (responseData is Map<String, dynamic>) {
+          return DevisGasoilModel.fromJson(responseData);
+        } else {
+          throw Exception('Invalid response data');
+        }
+      } else {
+        print('Error: ${response.body}');
+        throw Exception('Échec de la mise à jour du devis Gasoil');
+      }
+    } catch (e) {
+      print('Exception: $e');
+      throw Exception('Échec de la mise à jour du devis gasoil station');
+    }
+  }
   // List des Devis
   Future<List<DevisGasoilModel>> fetchDevis(int id) async {
     final response = await http.get(
@@ -64,7 +96,6 @@ class DevisGasoilService {
       throw Exception('Failed to load devis: ${response.statusCode}');
     }
   }
-
   // Suppressiondes devis gasoil
   Future<void> deleteDevisGasoil(int id) async {
     final response = await http.delete(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
+import '../EditPage/editDevisGasoil.dart';
 import '../models/devisStationGasoilModel.dart';
 import '../models/utilisateurModel.dart';
 import '../services/devisStationGasoilService.dart';
@@ -400,13 +401,28 @@ class _GasoilPageState extends State<GasoilPage> {
                                     ),
                                   ),
                                 ),
-                                Text(
-                                  "Modifier",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.w500,
-                                      letterSpacing: 1
+                                GestureDetector(
+                                  onTap: () async {
+                                    final result = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ModifierDevisGasoil(devisId: devis.id!, devis: devis), // Passez le devisId ici
+                                      ),
+                                    );
+                                    if (result != null) {
+                                      setState(() {
+                                        devisStationsGasoil[index] = result;
+                                      });
+                                    }
+                                  },
+                                  child: Text(
+                                    "Modifier",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.w500,
+                                        letterSpacing: 1
+                                    ),
                                   ),
                                 ),
                                 Text(

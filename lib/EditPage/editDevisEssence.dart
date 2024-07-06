@@ -1,86 +1,104 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_gestion_station/services/devisStationService.dart';
 import 'package:get_it/get_it.dart';
 
-import '../Utilisateur/AppHome.dart';
-import '../Utilisateur/accueil.dart';
 import '../models/devisStationModel.dart';
+import '../services/devisStationService.dart';
 import '../services/utilisateurService.dart';
 
-class AjouterDevisEssence extends StatelessWidget {
-  const AjouterDevisEssence({super.key});
+class ModifierDevisEssence extends StatelessWidget {
+  final int devisId;
+  final DevisModel devis;
+  const ModifierDevisEssence({super.key, required this.devisId, required this.devis});
 
   @override
   Widget build(BuildContext context) {
-        return Scaffold(
-          body: Column(
-            children: [
-              Container(
-                height: 80,
-                decoration: BoxDecoration(
-                  color: Color(0xff12343b),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 35, left: 15),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Icon(
-                          Icons.arrow_back_ios_new,
-                          color: Colors.white,
-                          size: 15,
-                        ),
-                      ),
+    return Scaffold(
+      body: Column(
+        children: [
+          Container(
+            height: 80,
+            decoration: BoxDecoration(
+              color: Color(0xff12343b),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 35, left: 15),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Colors.white,
+                      size: 15,
                     ),
-                    Container(
-                      margin: EdgeInsets.only(top: 35, right: 35),
-                      child: Text(
-                        "Ajouter devis essence",
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.white
-                        ),
-                      ),
-                    ),
-
-                    Container(),
-                  ],
+                  ),
                 ),
-              ),
+                Container(
+                  margin: EdgeInsets.only(top: 35, right: 35),
+                  child: Text(
+                    "Modifier devis essence",
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white
+                    ),
+                  ),
+                ),
 
-              PageChampsInput()
-            ],
-
+                Container(),
+              ],
+            ),
           ),
-        );
+
+          PageChampsModifierInput(devisId: devisId, devis: devis,)
+        ],
+
+      ),
+    );
   }
 }
 
-class PageChampsInput extends StatefulWidget {
-  const PageChampsInput({super.key});
+class PageChampsModifierInput extends StatefulWidget {
+  final int devisId;
+  final DevisModel devis;
+  const PageChampsModifierInput({super.key, required this.devisId, required this.devis});
 
   @override
-  State<PageChampsInput> createState() => _PageChampsInputState();
+  State<PageChampsModifierInput> createState() => _PageChampsModifierInputState();
 }
 
-class _PageChampsInputState extends State<PageChampsInput> {
+class _PageChampsModifierInputState extends State<PageChampsModifierInput> {
   final _devisService = GetIt.instance<DevisService>();
   final _utilisateurService = GetIt.instance<UtilisateurService>();
 
-  final _valeurArriverController = TextEditingController();
-  final _valeurDeDepartController = TextEditingController();
-  final _prixUniteController = TextEditingController();
+  late TextEditingController _valeurArriverController;
+  late TextEditingController _valeurDeDepartController;
+  late TextEditingController _prixUniteController;
 
   bool isLoading = true;
 
   String message = '';
-  DevisModel? champsInDevis;
 
-  void _onAddDevis() async {
+  @override
+  void initState() {
+    super.initState();
+    _valeurArriverController = TextEditingController(text: widget.devis.valeurArriver.toString());
+    _valeurDeDepartController = TextEditingController(text: widget.devis.valeurDeDepart.toString());
+    _prixUniteController = TextEditingController(text: widget.devis.prixUnite.toString());
+  }
+
+  @override
+  void dispose() {
+    _valeurArriverController.dispose();
+    _valeurDeDepartController.dispose();
+    _prixUniteController.dispose();
+    super.dispose();
+  }
+
+
+  void _modifierDevisEssence() async {
     String valeurArriverStr = _valeurArriverController.text.trim();
     String valeurDeDepartStr = _valeurDeDepartController.text.trim();
     String prixUniteStr = _prixUniteController.text.trim();
@@ -92,6 +110,7 @@ class _PageChampsInputState extends State<PageChampsInput> {
     if (valeurArriver == null || valeurDeDepart == null || prixUnite == null) {
       setState(() {
         message = 'Erreur: veuillez entrer des valeurs numériques valides';
+        isLoading = false;
       });
       return;
     }
@@ -102,65 +121,40 @@ class _PageChampsInputState extends State<PageChampsInput> {
       return;
     }
 
-    int? idUser = _utilisateurService.connectedUser?.idUser;
-    String nomUtilisateur = _utilisateurService.connectedUser?.nomUtilisateur ?? 'N/A';
-    String prenomUtilisateur = _utilisateurService.connectedUser?.prenomUtilisateur ?? 'N/A';
-
     double consommation = valeurArriver - valeurDeDepart;
     double budgetObtenu = consommation * prixUnite;
     DateTime dateAddDevis = DateTime.now();
 
-    DevisModel devisstation = DevisModel(
-        id: null,
-        valeurArriver: valeurArriver,
-        valeurDeDepart: valeurDeDepart,
-        prixUnite: prixUnite,
-        consommation: consommation,
-        budgetObtenu: budgetObtenu,
-        dateAddDevis: dateAddDevis,
-        idUser: idUser,
-        nomUtilisateur: nomUtilisateur,
-        prenomUtilisateur: prenomUtilisateur
+    // Assuming _utilisateurService.connectedUser is not null
+    int? idUser = _utilisateurService.connectedUser?.idUser;
+    String nomUtilisateur = _utilisateurService.connectedUser?.nomUtilisateur ?? 'N/A';
+    String prenomUtilisateur = _utilisateurService.connectedUser?.prenomUtilisateur ?? 'N/A';
+
+    final devis = DevisModel(
+      valeurArriver: valeurArriver,
+      valeurDeDepart: valeurDeDepart,
+      prixUnite: prixUnite,
+      consommation: consommation,
+      budgetObtenu: budgetObtenu,
+      dateAddDevis: dateAddDevis,
+      idUser: idUser,
+      nomUtilisateur: nomUtilisateur,
+      prenomUtilisateur: prenomUtilisateur,
+      id: widget.devisId, // assuming the id is being passed correctly
     );
 
     try {
-      champsInDevis = await _devisService.createDevis(devisstation);
-
-      if (idUser != null && champsInDevis != null && champsInDevis!.id != null) {
-        setState(() {
-          message = 'Devis créé avec succès';
-        });
-
-        print('Devis Station créé avec succès:');
-        print('ID: ${champsInDevis!.id}');
-        print('Valeur Arriver: ${champsInDevis!.valeurArriver}');
-        print('Valeur De Depart: ${champsInDevis!.valeurDeDepart}');
-        print('Prix Unité: ${champsInDevis!.prixUnite}');
-        print('Consommation: ${champsInDevis!.consommation}');
-        print('Budget Obtenu: ${champsInDevis!.budgetObtenu}');
-        print('Date de création: ${champsInDevis!.dateAddDevis}');
-        print('Id User: ${champsInDevis!.idUser}');
-        print('Nom User: ${champsInDevis!.nomUtilisateur}');
-        print('Prenom User: ${champsInDevis!.prenomUtilisateur}');
-      } else {
-        setState(() {
-          message = 'Erreur: données de devis manquantes';
-        });
-      }
-
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => AppHomes(initialTabIndex: 0), // Rediriger vers AppHomes avec l'onglet Gasoil
-        ),
-            (Route<dynamic> route) => false,
-      );
-
-    } catch (e) {
-      print('Erreur lors de la création de devis: $e');
-      showErrorMessage('Erreur de création de devis, vérifiez que les champs ne sont pas vides');
+      await _devisService.modifierDevisEssence(widget.devisId, devis);
+      showSuccessMessage('Devis modifié avec succès');
+      Navigator.pop(context);
       setState(() {
-        message = 'Erreur de récupérés devis: [] de création: vérifiez vos informations';
+        isLoading = true;
+      });// Navigate back after successful modification
+    } catch (e) {
+      print('Erreur lors de la modification du devis: $e');
+      setState(() {
+        message = 'Erreur lors de la modification du devis';
+        isLoading = false;
       });
     }
   }
@@ -192,9 +186,9 @@ class _PageChampsInputState extends State<PageChampsInput> {
                   hintText: 'Saisissez le montant trouvé à votre arrivée',
                 ),
               ),
-          
+
               SizedBox(height: 20),
-          
+
               Stack(
                 children: [
                   Transform.translate(offset: Offset(0, 5),
@@ -214,9 +208,9 @@ class _PageChampsInputState extends State<PageChampsInput> {
                   hintText: 'Saisissez le montant trouvé à votre départ',
                 ),
               ),
-          
+
               SizedBox(height: 20),
-          
+
               Stack(
                 children: [
                   Transform.translate(offset: Offset(0, 5),
@@ -242,13 +236,13 @@ class _PageChampsInputState extends State<PageChampsInput> {
               Text(message, style: TextStyle(color: Colors.red)),
 
               SizedBox(height: 20),
-          
+
               SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
                   child: Text(
-                    "Calculer",
+                    "Modifier",
                     style: TextStyle(
                         color: Colors.white,
                         letterSpacing: 1,
@@ -261,7 +255,7 @@ class _PageChampsInputState extends State<PageChampsInput> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  onPressed: _onAddDevis,
+                  onPressed: _modifierDevisEssence,
                 ),
               ),
             ],

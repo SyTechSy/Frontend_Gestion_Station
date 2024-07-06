@@ -8,6 +8,7 @@ import '../models/bonModel.dart';
 class BonService {
   final String baseUrl = 'http://10.0.2.2:8000';
 
+  // Ajouter un ou plusieur bon
   Future<BonModel> ajouterBon(BonModel bons) async {
     try {
       final Map<String, dynamic> requestData = bons.toJson();
@@ -40,7 +41,40 @@ class BonService {
       throw Exception('Échec de la création de bon de la station');
     }
   }
+  // Moification de bon
+  Future<BonModel> modifierBon(int id, BonModel bons) async {
+    try {
+      final Map<String, dynamic> requestData = bons.toJson();
+      print('Request Data: $requestData');
 
+      final response = await http.put(
+        Uri.parse('$baseUrl/edit/bon/$id'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(requestData),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        print('Response Data: $responseData');
+
+        // Ensure responseData is a map and contains expected keys
+        if (responseData is Map<String, dynamic>) {
+          return BonModel.fromJson(responseData);
+        } else {
+          throw Exception('Invalid response data');
+        }
+      } else {
+        print('Error: ${response.body}');
+        throw Exception('Échec de la mise à jour du bon');
+      }
+    } catch (e) {
+      print('Exception: $e');
+      throw Exception('Échec de la mise à jour du bon station');
+    }
+  }
+  // Liste de tout les bons
   Future<List<BonModel>> fetchBons(int id) async {
     final response = await http.get(
       Uri.parse('$baseUrl/list/bons/$id'),
@@ -62,7 +96,6 @@ class BonService {
       throw Exception('Échec du chargement de bon: ${response.statusCode}');
     }
   }
-
   // Suppression des devis essence
   Future<void> deleteBon(int id) async {
     final response = await http.delete(

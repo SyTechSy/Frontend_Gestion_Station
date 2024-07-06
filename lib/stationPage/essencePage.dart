@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_gestion_station/models/devisStationModel.dart';
+import 'package:frontend_gestion_station/stationPage/sommePage.dart';
 import 'package:get_it/get_it.dart';
 
+import '../EditPage/editDevisEssence.dart';
 import '../models/utilisateurModel.dart';
 import '../services/devisStationService.dart';
 import '../services/utilisateurService.dart';
@@ -406,7 +408,7 @@ class _EssencePageState extends State<EssencePage> {
                           ),
 
                           Container(
-                            margin: EdgeInsets.only(top: 0, bottom: 8),
+                            margin: EdgeInsets.only(top: 2, bottom: 8),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
@@ -428,24 +430,103 @@ class _EssencePageState extends State<EssencePage> {
                                     ),
                                   ),
                                 ),
-                                Text(
-                                  "Modifier",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.w500,
-                                      letterSpacing: 1
+                                /*GestureDetector(
+                                  onTap: () async {
+                                    final result = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ModifierDevisEssence(devisId: devis.id!, devis: devis,), // Passez le devisId ici
+                                      ),
+                                    );
+                                    if (result != null) {
+                                      setState(() {
+                                        devisStations[index] = result;
+                                      });
+                                    }
+                                  },
+                                  child: Text(
+                                    "Modifier",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.w500,
+                                        letterSpacing: 1
+                                    ),
+                                  ),
+                                ),*/
+                                SizedBox(
+                                  height: 30,
+                                  child: ElevatedButton(
+                                    child: Text(
+                                      "Modifier",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          letterSpacing: 1,
+                                          fontSize: 14
+                                      ),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Color(0xff12343b),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      final result = await Navigator.push(
+                                        context, MaterialPageRoute(
+                                          builder: (context) => ModifierDevisEssence(devisId: devis.id!, devis: devis,), // Passez le devisId ici
+                                        ),
+                                      );
+                                      if (result != null) {
+                                        setState(() {
+                                          devisStations[index] = result;
+                                        });
+                                      }
+                                    },
                                   ),
                                 ),
-                                Text(
-                                  "Enregistre",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.w500,
-                                      letterSpacing: 1
+                                GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text("Confirmer l'enregistrement"),
+                                          content: Text("Voulez-vous vraiment enregistrer ?"),
+                                          actions: [
+                                            TextButton(
+                                              child: Text("OUI"),
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => SommePage(budgetObtenu: devis.budgetObtenu),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: Text("NON"),
+                                              onPressed: () {
+                                                Navigator.pop(context); // Ferme la boîte de dialogue
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Text(
+                                    "Enregistrer",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: 1,
+                                    ),
                                   ),
                                 ),
+
                               ],
                             ),
                           ),

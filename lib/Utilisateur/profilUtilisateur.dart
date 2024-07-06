@@ -3,6 +3,7 @@ import 'package:frontend_gestion_station/models/utilisateurModel.dart';
 import 'package:get_it/get_it.dart';
 
 import '../services/utilisateurService.dart';
+import 'changerPassword.dart';
 
 class ProfilPageUtilisateur extends StatefulWidget {
   //final UserModel utilisateur;
@@ -327,17 +328,25 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
                     color: Colors.black,
                   ),
                 ),
-                trailing: Container(
-                  width: 25,
-                  height: 25,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: Colors.grey.withOpacity(0.1),
-                  ),
-                  child: Icon(
-                    Icons.keyboard_arrow_right,
-                    color: Color(0xff12343b),
-                    size: 16,
+                trailing: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context, MaterialPageRoute(
+                        builder: (context) => ChangerPasswordPage()
+                    ));
+                  },
+                  child: Container(
+                    width: 25,
+                    height: 25,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: Colors.grey.withOpacity(0.1),
+                    ),
+                    child: Icon(
+                      Icons.keyboard_arrow_right,
+                      color: Color(0xff12343b),
+                      size: 16,
+                    ),
                   ),
                 ),
               ),

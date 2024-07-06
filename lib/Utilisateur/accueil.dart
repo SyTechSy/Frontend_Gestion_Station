@@ -3,6 +3,7 @@ import 'package:frontend_gestion_station/stationPage/essencePage.dart';
 import 'package:frontend_gestion_station/stationPage/gasoilPage.dart';
 
 import '../add/choix_pour_devis.dart';
+import '../stationPage/sommePage.dart';
 
 
 class AccueilPage extends StatefulWidget {
@@ -20,7 +21,7 @@ class _AccueilPageState extends State<AccueilPage> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this, initialIndex: widget.initialTabIndexx);
+    _tabController = TabController(length: 3, vsync: this, initialIndex: widget.initialTabIndexx);
   }
 
   String _getGreeting() {
@@ -164,6 +165,7 @@ class _AccueilPageState extends State<AccueilPage> with SingleTickerProviderStat
                     tabs: [
                       Tab(child: Text("Essence")),
                       Tab(child: Text("Gasoil")),
+                      Tab(child: Text("Somme total")),
                     ],
                   ),
                 ),
@@ -176,6 +178,7 @@ class _AccueilPageState extends State<AccueilPage> with SingleTickerProviderStat
           children: [
             EssencePage(),
             GasoilPage(),
+            SommePage(budgetObtenu: 0.0),
           ],
         ),
       ),

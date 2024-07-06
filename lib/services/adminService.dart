@@ -59,8 +59,6 @@ class AdminService {
       throw Exception('Erreur lors de la connexion: ${response.statusCode}');
     }
   }
-
-
   // Méthode pour récupérer les informations de l'administrateur par ID
   Future<AdminModel> getAdminById(String idAdmin) async {
     final response = await http.get(

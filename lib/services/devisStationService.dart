@@ -40,7 +40,39 @@ class DevisService {
       throw Exception('Failed to create devis station');
     }
   }
+  // Moification de devis essence
+  Future<DevisModel> modifierDevisEssence(int id, DevisModel devisessence) async {
+    try {
+      final Map<String, dynamic> requestData = devisessence.toJson();
+      print('Request Data: $requestData');
 
+      final response = await http.put(
+        Uri.parse('$baseUrl/edit/devisEssence/$id'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(requestData),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        print('Response Data: $responseData');
+
+        // Ensure responseData is a map and contains expected keys
+        if (responseData is Map<String, dynamic>) {
+          return DevisModel.fromJson(responseData);
+        } else {
+          throw Exception('Invalid response data');
+        }
+      } else {
+        print('Error: ${response.body}');
+        throw Exception('Échec de la mise à jour du devis essence');
+      }
+    } catch (e) {
+      print('Exception: $e');
+      throw Exception('Échec de la mise à jour du devis essennce station');
+    }
+  }
   // List des Devis
   Future<List<DevisModel>> fetchDevis(int id) async {
     final response = await http.get(
@@ -63,7 +95,6 @@ class DevisService {
       throw Exception('Failed to load devis: ${response.statusCode}');
     }
   }
-
   // Suppression des devis essence
   Future<void> deleteDevisEssence(int id) async {
     final response = await http.delete(
