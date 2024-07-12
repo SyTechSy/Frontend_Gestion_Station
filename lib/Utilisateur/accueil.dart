@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend_gestion_station/stationPage/essencePage.dart';
 import 'package:frontend_gestion_station/stationPage/gasoilPage.dart';
@@ -21,7 +22,7 @@ class _AccueilPageState extends State<AccueilPage> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this, initialIndex: widget.initialTabIndexx);
+    _tabController = TabController(length: 2, vsync: this, initialIndex: widget.initialTabIndexx);
   }
 
   String _getGreeting() {
@@ -73,7 +74,7 @@ class _AccueilPageState extends State<AccueilPage> with SingleTickerProviderStat
                             ),
                             SizedBox(width: 5),
                             Text(
-                              'Diakaridia Sy !',
+                              'Diakaridia Sy',
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
@@ -82,6 +83,21 @@ class _AccueilPageState extends State<AccueilPage> with SingleTickerProviderStat
                             ),
                           ],
                         ),
+
+                        Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context, MaterialPageRoute(
+                                builder: (context) => SommePage()
+                            ));
+                          },
+                          child: Icon(
+                            Icons.calculate_outlined,
+                            size: 25,
+                            color: Color(0xff12343b),
+                          ),
+                        )
                       ],
                     ),
                     Container(
@@ -165,7 +181,7 @@ class _AccueilPageState extends State<AccueilPage> with SingleTickerProviderStat
                     tabs: [
                       Tab(child: Text("Essence")),
                       Tab(child: Text("Gasoil")),
-                      Tab(child: Text("Somme total")),
+                      //Tab(child: Text("Somme total")),
                     ],
                   ),
                 ),
@@ -178,7 +194,7 @@ class _AccueilPageState extends State<AccueilPage> with SingleTickerProviderStat
           children: [
             EssencePage(),
             GasoilPage(),
-            SommePage(budgetObtenu: 0.0),
+            //SommePage(budgetObtenu: 0.0),
           ],
         ),
       ),

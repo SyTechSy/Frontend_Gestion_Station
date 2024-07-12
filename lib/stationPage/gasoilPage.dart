@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:frontend_gestion_station/stationPage/sommePage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../EditPage/editDevisGasoil.dart';
 import '../models/devisStationGasoilModel.dart';
@@ -10,7 +12,8 @@ import '../services/devisStationGasoilService.dart';
 import '../services/utilisateurService.dart';
 
 class GasoilPage extends StatefulWidget {
-  const GasoilPage({super.key});
+  final double budgetObtenu;
+  const GasoilPage({super.key, this.budgetObtenu = 0});
 
   @override
   State<GasoilPage> createState() => _GasoilPageState();
@@ -27,6 +30,12 @@ class _GasoilPageState extends State<GasoilPage> {
     super.initState();
     _fetchDevisGasoil();
   }
+
+  Future<void> _saveBudget(double budget) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('budgetObtenu', budget);
+  }
+
 
   // Suppression function
   Future<void> _deleteDevisGasoil(int idDevisG) async {
@@ -425,15 +434,70 @@ class _GasoilPageState extends State<GasoilPage> {
                                     ),
                                   ),
                                 ),
-                                Text(
-                                  "Enregistre",
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.green,
-                                      fontWeight: FontWeight.w500,
-                                      letterSpacing: 1
+                                SizedBox(
+                                  height: 30,
+                                  child: ElevatedButton(
+                                    child: Text(
+                                      "Enregistrer",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          letterSpacing: 1,
+                                          fontSize: 14
+                                      ),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red.withOpacity(0.4),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      await _saveBudget(widget.budgetObtenu);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SommePage(budgetGasoil: devis.budgetObtenu),
+                                        ),
+                                      );
+                                    },
+                                    /*style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red.withOpacity(0.4),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text("Confirmer l'enregistrement"),
+                                            content: Text("Voulez-vous vraiment enregistrer ?"),
+                                            actions: [
+                                              TextButton(
+                                                child: Text("NON"),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: Text("OUI"),
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) => SommePage(budgetObtenu: devis.budgetObtenu),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },*/
                                   ),
-                                ),
+                                )
                               ],
                             ),
                           ),

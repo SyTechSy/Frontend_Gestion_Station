@@ -122,7 +122,10 @@ class _PageChampsInputAjouterBonState extends State<PageChampsInputAjouterBon> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => const AppHomes(initialTabIndex: 1),
+          builder: (context) => const AppHomes(
+            //initialTabIndexx: 0,
+            //budgetObtenu: 0.0,
+          ),
         ),
             (Route<dynamic> route) => false,
       );

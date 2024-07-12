@@ -4,12 +4,15 @@ import 'package:frontend_gestion_station/Utilisateur/profilUtilisateur.dart';
 import 'package:frontend_gestion_station/models/utilisateurModel.dart';
 
 import '../models/devisStationModel.dart';
+import '../stationPage/sommePage.dart';
 import 'bonAccueil.dart';
 
 class AppHomes extends StatefulWidget {
   //final UserModel utilisateur;
   final int initialTabIndex;
-  const AppHomes({super.key, this.initialTabIndex = 0});
+  final double budgetObtenu;
+
+  const AppHomes({super.key, this.budgetObtenu = 0.0, this.initialTabIndex = 0});
 
   @override
   State<AppHomes> createState() => _AppHomesState();
@@ -25,9 +28,10 @@ class _AppHomesState extends State<AppHomes> {
     super.initState();
     _currentIndex = widget.initialTabIndex;
     screens = [
-      AccueilPage(initialTabIndexx: widget.initialTabIndex),
+      AccueilPage(),
       AccueilBon(),
-      Center(child: Text("Historique", style: TextStyle(fontSize: 30))),
+      //SommePage(budgetObtenu: 0.0, ),
+      Center(child: Text("Page history")),
       ProfilPageUtilisateur()
     ];
   }
@@ -46,10 +50,9 @@ class _AppHomesState extends State<AppHomes> {
       showSelectedLabels: false,
       showUnselectedLabels: false,
       items: [
-
         BottomNavigationBarItem(icon: Icon(Icons.local_gas_station_rounded), label: 'Station'),
         BottomNavigationBarItem(icon: Icon(Icons.screen_rotation_alt), label: 'Bons'),
-        BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Historique'),
+        BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Historiques'),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
         /*BottomNavigationBarItem(icon: CircleAvatar(
           backgroundImage: AssetImage(

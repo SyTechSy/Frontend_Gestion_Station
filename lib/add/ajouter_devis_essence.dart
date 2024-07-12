@@ -151,7 +151,10 @@ class _PageChampsInputState extends State<PageChampsInput> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => AppHomes(initialTabIndex: 0), // Rediriger vers AppHomes avec l'onglet Gasoil
+          builder: (context) => AppHomes(
+            //initialTabIndexx: 0,
+            //budgetObtenu: 0.0,
+          ),
         ),
             (Route<dynamic> route) => false,
       );

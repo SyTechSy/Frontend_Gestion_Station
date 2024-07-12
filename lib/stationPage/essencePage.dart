@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:frontend_gestion_station/models/devisStationModel.dart';
 import 'package:frontend_gestion_station/stationPage/sommePage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../EditPage/editDevisEssence.dart';
+import '../Utilisateur/AppHome.dart';
 import '../models/utilisateurModel.dart';
 import '../services/devisStationService.dart';
 import '../services/utilisateurService.dart';
 
 class EssencePage extends StatefulWidget {
-  const EssencePage({super.key});
+  final double budgetObtenu;
+  const EssencePage({super.key, this.budgetObtenu = 0});
 
   @override
   State<EssencePage> createState() => _EssencePageState();
@@ -20,11 +24,18 @@ class _EssencePageState extends State<EssencePage> {
   final _utilisateurService = GetIt.instance<UtilisateurService>();
   bool isLoading = true;
   List<DevisModel> devisStations = [];
+  //late TextEditingController _budgetController;
 
   @override
   void initState() {
     super.initState();
     _fetchDevis();
+    //_budgetController = TextEditingController(text: widget.budgetObtenu.toString());
+  }
+
+  Future<void> _saveBudget(double budget) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('budgetObtenu', budget);
   }
 
   Future<void> _deleteDevisEssence(int idDevis) async {
@@ -106,8 +117,6 @@ class _EssencePageState extends State<EssencePage> {
       isLoading = false;
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -485,48 +494,71 @@ class _EssencePageState extends State<EssencePage> {
                                     },
                                   ),
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text("Confirmer l'enregistrement"),
-                                          content: Text("Voulez-vous vraiment enregistrer ?"),
-                                          actions: [
-                                            TextButton(
-                                              child: Text("OUI"),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) => SommePage(budgetObtenu: devis.budgetObtenu),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                            TextButton(
-                                              child: Text("NON"),
-                                              onPressed: () {
-                                                Navigator.pop(context); // Ferme la boîte de dialogue
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  },
-                                  child: Text(
-                                    "Enregistrer",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.green,
-                                      fontWeight: FontWeight.w500,
-                                      letterSpacing: 1,
-                                    ),
-                                  ),
-                                ),
 
+                                SizedBox(
+                                  height: 30,
+                                  child: ElevatedButton(
+                                    child: Text(
+                                      "Enregistrer",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          letterSpacing: 1,
+                                          fontSize: 14
+                                      ),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red.withOpacity(0.4),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      await _saveBudget(widget.budgetObtenu);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SommePage(budgetEssence: devis.budgetObtenu),
+                                        ),
+                                      );
+                                    },
+                                    /*style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red.withOpacity(0.4),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text("Confirmer l'enregistrement"),
+                                            content: Text("Voulez-vous vraiment enregistrer ?"),
+                                            actions: [
+                                              TextButton(
+                                                child: Text("NON"),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: Text("OUI"),
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) => SommePage(budgetObtenu: devis.budgetObtenu),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },*/
+                                  ),
+                                )
                               ],
                             ),
                           ),
@@ -568,3 +600,5 @@ class _EssencePageState extends State<EssencePage> {
     ScaffoldMessenger.of(context as BuildContext).showSnackBar(snackBar);
   }
 }
+
+
