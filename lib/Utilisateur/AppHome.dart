@@ -10,16 +10,16 @@ import 'bonAccueil.dart';
 class AppHomes extends StatefulWidget {
   //final UserModel utilisateur;
   final int initialTabIndex;
-  final double budgetObtenu;
 
-  const AppHomes({super.key, this.budgetObtenu = 0.0, this.initialTabIndex = 0});
+  const AppHomes({super.key, this.initialTabIndex = 0});
 
   @override
   State<AppHomes> createState() => _AppHomesState();
 }
 
 class _AppHomesState extends State<AppHomes> {
-  int _currentIndex = 0;
+  //int _currentIndex = 0;
+  late int _currentIndex;
 
   late final List<Widget> screens;
 
@@ -30,7 +30,7 @@ class _AppHomesState extends State<AppHomes> {
     screens = [
       AccueilPage(),
       AccueilBon(),
-      //SommePage(budgetObtenu: 0.0, ),
+      SommePage(),
       Center(child: Text("Page history")),
       ProfilPageUtilisateur()
     ];
@@ -52,6 +52,7 @@ class _AppHomesState extends State<AppHomes> {
       items: [
         BottomNavigationBarItem(icon: Icon(Icons.local_gas_station_rounded), label: 'Station'),
         BottomNavigationBarItem(icon: Icon(Icons.screen_rotation_alt), label: 'Bons'),
+        BottomNavigationBarItem(icon: Icon(Icons.calculate_outlined), label: 'Calculator'),
         BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Historiques'),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
         /*BottomNavigationBarItem(icon: CircleAvatar(

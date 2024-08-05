@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend_gestion_station/stationPage/essencePage.dart';
-import 'package:frontend_gestion_station/stationPage/gasoilPage.dart';
 
-import '../add/choix_pour_devis.dart';
-import '../stationPage/sommePage.dart';
+import '../usersCreation/bons.dart';
+import '../usersCreation/essence.dart';
+import '../usersCreation/gasoil.dart';
 
 
 class AccueilPage extends StatefulWidget {
@@ -22,7 +21,7 @@ class _AccueilPageState extends State<AccueilPage> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this, initialIndex: widget.initialTabIndexx);
+    _tabController = TabController(length: 3, vsync: this, initialIndex: widget.initialTabIndexx);
   }
 
   String _getGreeting() {
@@ -45,11 +44,12 @@ class _AccueilPageState extends State<AccueilPage> with SingleTickerProviderStat
         headerSliverBuilder: (_, innerBoxIsScrolled) {
           return [
             SliverAppBar(
-              collapsedHeight: 120,
+              collapsedHeight: 80,
               automaticallyImplyLeading: false,
               pinned: true,
               floating: false,
-              backgroundColor: Colors.grey[350],
+              //backgroundColor: Colors.grey[350],
+              backgroundColor: Colors.grey[300],
               flexibleSpace: Padding(
                 padding: EdgeInsets.all(18.0),
                 child: ListView(
@@ -84,7 +84,7 @@ class _AccueilPageState extends State<AccueilPage> with SingleTickerProviderStat
                           ],
                         ),
 
-                        Spacer(),
+                        /*Spacer(),
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -97,61 +97,16 @@ class _AccueilPageState extends State<AccueilPage> with SingleTickerProviderStat
                             size: 25,
                             color: Color(0xff12343b),
                           ),
-                        )
+                        )*/
                       ],
                     ),
-                    Container(
-                      margin: EdgeInsets.only(top: 10, left: 15, right: 15),
-                      width: double.infinity,
-                      child: Card(
-                        color: Color(0xff12343b),
-                        elevation: 1.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 15.0, top: 10.0, bottom: 10.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Créer mon devis",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Vous avez la possibilité de créer plusieurs devis.",
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.white38,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => ChoixDevisPage()));
-                              },
-                              child: Container(
-                                margin: EdgeInsets.only(right: 15.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: Icon(
-                                  Icons.add,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    SizedBox(height: 10),
+                    Text(
+                      "Devis",
+                      style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold
+                      )
                     ),
                   ],
                 ),
@@ -181,6 +136,7 @@ class _AccueilPageState extends State<AccueilPage> with SingleTickerProviderStat
                     tabs: [
                       Tab(child: Text("Essence")),
                       Tab(child: Text("Gasoil")),
+                      Tab(child: Text("Bons")),
                       //Tab(child: Text("Somme total")),
                     ],
                   ),
@@ -192,8 +148,12 @@ class _AccueilPageState extends State<AccueilPage> with SingleTickerProviderStat
         body: TabBarView(
           controller: _tabController,
           children: [
-            EssencePage(),
-            GasoilPage(),
+            //EssencePage(),
+            //GasoilPage(),
+            //SectionBon(),
+            SectionEssence(),
+            SectionGasoil(),
+            SectionBons(),
             //SommePage(budgetObtenu: 0.0),
           ],
         ),

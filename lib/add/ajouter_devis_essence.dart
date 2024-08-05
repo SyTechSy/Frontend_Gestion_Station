@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 
 import '../Utilisateur/AppHome.dart';
 import '../Utilisateur/accueil.dart';
+import '../Utilisateur/navBar.dart';
 import '../models/devisStationModel.dart';
 import '../services/utilisateurService.dart';
 
@@ -151,7 +152,7 @@ class _PageChampsInputState extends State<PageChampsInput> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => AppHomes(
+          builder: (context) => NavBarSection(
             //initialTabIndexx: 0,
             //budgetObtenu: 0.0,
           ),

@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:frontend_gestion_station/models/devisStationModel.dart';
-import 'package:frontend_gestion_station/stationPage/sommePage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../EditPage/editDevisEssence.dart';
-import '../Utilisateur/AppHome.dart';
 import '../models/utilisateurModel.dart';
 import '../services/devisStationService.dart';
 import '../services/utilisateurService.dart';
 
 class EssencePage extends StatefulWidget {
-  final double budgetObtenu;
-  const EssencePage({super.key, this.budgetObtenu = 0});
+  //final double budgetObtenu;
+  const EssencePage({super.key});
 
   @override
   State<EssencePage> createState() => _EssencePageState();
@@ -134,7 +132,7 @@ class _EssencePageState extends State<EssencePage> {
               itemBuilder: (context, index) {
                 final devis = devisStations[index];
                 return Transform.translate(
-                  offset: Offset(0, -15),
+                  offset: Offset(0, 10),
                   child: Container(
                     width: double.infinity,
                     child: Card(
@@ -417,9 +415,9 @@ class _EssencePageState extends State<EssencePage> {
                           ),
 
                           Container(
-                            margin: EdgeInsets.only(top: 2, bottom: 8),
+                            margin: EdgeInsets.only(top: 2, bottom: 8, left: 10, right: 10),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 GestureDetector(
                                   onTap: () {
@@ -495,7 +493,7 @@ class _EssencePageState extends State<EssencePage> {
                                   ),
                                 ),
 
-                                SizedBox(
+                                /*SizedBox(
                                   height: 30,
                                   child: ElevatedButton(
                                     child: Text(
@@ -512,15 +510,7 @@ class _EssencePageState extends State<EssencePage> {
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                     ),
-                                    onPressed: () async {
-                                      await _saveBudget(widget.budgetObtenu);
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => SommePage(budgetEssence: devis.budgetObtenu),
-                                        ),
-                                      );
-                                    },
+                                    onPressed: () {},
                                     /*style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.red.withOpacity(0.4),
                                       shape: RoundedRectangleBorder(
@@ -558,7 +548,7 @@ class _EssencePageState extends State<EssencePage> {
                                       );
                                     },*/
                                   ),
-                                )
+                                )*/
                               ],
                             ),
                           ),

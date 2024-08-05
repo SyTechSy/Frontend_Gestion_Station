@@ -12,8 +12,8 @@ import '../services/devisStationGasoilService.dart';
 import '../services/utilisateurService.dart';
 
 class GasoilPage extends StatefulWidget {
-  final double budgetObtenu;
-  const GasoilPage({super.key, this.budgetObtenu = 0});
+  //final double budgetObtenu;
+  const GasoilPage({super.key});
 
   @override
   State<GasoilPage> createState() => _GasoilPageState();
@@ -106,7 +106,7 @@ class _GasoilPageState extends State<GasoilPage> {
               itemBuilder: (context, index) {
                 final devis = devisStationsGasoil[index];
                 return Transform.translate(
-                  offset: Offset(0, -15),
+                  offset: Offset(0, 10),
                   child: Container(
                     width: double.infinity,
                     child: Card(
@@ -114,7 +114,7 @@ class _GasoilPageState extends State<GasoilPage> {
                       elevation: 1.0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),
-                        side: BorderSide(width: 1, color: Colors.black),
+                        side: const BorderSide(width: 1, color: Colors.black),
                       ),
                       child: ExpansionTile(
                         title: Column(
@@ -452,13 +452,7 @@ class _GasoilPageState extends State<GasoilPage> {
                                       ),
                                     ),
                                     onPressed: () async {
-                                      await _saveBudget(widget.budgetObtenu);
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => SommePage(budgetGasoil: devis.budgetObtenu),
-                                        ),
-                                      );
+
                                     },
                                     /*style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.red.withOpacity(0.4),

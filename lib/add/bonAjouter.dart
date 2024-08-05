@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 
 import '../Utilisateur/AppHome.dart';
 import '../Utilisateur/bonAccueil.dart';
+import '../Utilisateur/navBar.dart';
 import '../models/bonModel.dart';
 import '../services/bonService.dart';
 import '../services/utilisateurService.dart';
@@ -73,6 +74,7 @@ class _PageChampsInputAjouterBonState extends State<PageChampsInputAjouterBon> {
 
   final _nomDestinataireController = TextEditingController();
   final _prixDemanderController = TextEditingController();
+  final _motifController = TextEditingController();
   bool isLoading = true;
 
   String message = '';
@@ -81,6 +83,7 @@ class _PageChampsInputAjouterBonState extends State<PageChampsInputAjouterBon> {
   void _onAddBon() async {
     String nomDestinataire = _nomDestinataireController.text.trim();
     String prixDemander = _prixDemanderController.text.trim();
+    String motif = _motifController.text.trim();
 
     int? idUser = _utilisateurService.connectedUser?.idUser;
     String nomUtilisateur = _utilisateurService.connectedUser?.nomUtilisateur ?? 'N/A';
@@ -91,6 +94,7 @@ class _PageChampsInputAjouterBonState extends State<PageChampsInputAjouterBon> {
         idBon: null,
         nomDestinataire: nomDestinataire,
         prixDemander: prixDemander,
+        motif: motif,
         idUser: idUser,
         nomUtilisateur: nomUtilisateur,
         prenomUtilisateur: prenomUtilisateur,
@@ -109,6 +113,7 @@ class _PageChampsInputAjouterBonState extends State<PageChampsInputAjouterBon> {
         print('Id Bon: ${champsInBon!.idBon}');
         print('Nom Destinataire: ${champsInBon!.nomDestinataire}');
         print('Prix Demander: ${champsInBon!.prixDemander}');
+        print('Motif : ${champsInBon!.motif}');
         print('Date add bon: ${champsInBon!.dateAddBon}');
         print('Id User: ${champsInBon!.idUser}');
         print('Nom Utilisateur: ${champsInBon!.nomUtilisateur}');
@@ -122,7 +127,7 @@ class _PageChampsInputAjouterBonState extends State<PageChampsInputAjouterBon> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => const AppHomes(
+          builder: (context) => const NavBarSection(
             //initialTabIndexx: 0,
             //budgetObtenu: 0.0,
           ),
@@ -185,8 +190,34 @@ class _PageChampsInputAjouterBonState extends State<PageChampsInputAjouterBon> {
               ),
               TextField(
                 controller: _prixDemanderController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   hintText: 'Saisissez le prix donner à la personne',
+                ),
+              ),
+
+              SizedBox(height: 20),
+
+              Stack(
+                children: [
+                  Transform.translate(offset: Offset(0, 5),
+                    child: Text(
+                      "Motif",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                        letterSpacing: 1
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              TextField(
+                controller: _motifController,
+                maxLines: 2,
+                decoration: InputDecoration(
+                  hintText: 'La raison de la demande de bon ...',
                 ),
               ),
 

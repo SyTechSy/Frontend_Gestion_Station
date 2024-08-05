@@ -11,6 +11,8 @@ import 'package:frontend_gestion_station/stationPage/tab_bar_page.dart';
 import 'Administrateur/AdminAppHome.dart';
 import 'Administrateur/profileAdmin.dart';
 import 'Utilisateur/AppHome.dart';
+import 'Utilisateur/homes.dart';
+import 'Utilisateur/navBar.dart';
 import 'brouillon/admin_inscription_user.txt';
 import 'compte/connexion.dart';
 
@@ -45,8 +47,10 @@ class MyApp extends StatelessWidget {
         //"/" : (context) => LoginPage()
         //"/" : (context) => InscriptionPage()
         //"/" : (context) => AdminAppHomesPage()
-        "/" : (context) => const WelcomeUserPage()
         //"/" : (context) => ProfilPageAdmin()
+        "/" : (context) => const WelcomeUserPage()
+        //"/" : (context) => const HomesSection()
+        //"/" : (context) => const NavBarSection()
       },
     );
   }

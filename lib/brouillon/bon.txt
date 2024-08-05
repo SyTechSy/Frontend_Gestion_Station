@@ -1,0 +1,152 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:frontend_gestion_station/models/devisStationModel.dart';
+import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../EditPage/editDevisEssence.dart';
+import '../models/utilisateurModel.dart';
+import '../services/devisStationService.dart';
+import '../services/utilisateurService.dart';
+
+class SectionBon extends StatefulWidget {
+  //final double budgetObtenu;
+  const SectionBon({super.key});
+
+  @override
+  State<SectionBon> createState() => _SectionBonState();
+}
+
+class _SectionBonState extends State<SectionBon> {
+  bool isLoading = true;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        color: Colors.grey[200],
+        padding: const  EdgeInsets.only(left: 10, right: 10),
+        child: Transform.translate(
+          offset: Offset(0, -25),
+          child: ListView.builder(
+            //itemCount: devisStations.length,
+            itemCount: 1,
+            itemBuilder: (context, index) {
+              //final devis = devisStations[index];
+              return Transform.translate(
+                offset: Offset(0, 10),
+                child: Container(
+                  width: double.infinity,
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 1.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      side: BorderSide(width: 1, color: Colors.black),
+                    ),
+                    child: ExpansionTile(
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                maxLines: 2,
+                                //devis.dateAddDevis.toString() ?? 'N/A',
+                                "XOP 150000 donner à",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                "Diakaridia",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            "Vendredi 12/12/2020",
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.black.withOpacity(0.8),
+                            ),
+                          ),
+                        ],
+                      ),
+                      shape: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xff12343b).withOpacity(0.6)),
+                      ),
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only( bottom: 10, left: 15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Modif",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Color(0xff12343b),
+                                  fontWeight: FontWeight.w500
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Container(
+                                width: 280,
+                                child: Text(
+                                  maxLines: 2,
+                                  "J'ai donner 50000 à Diakaridia 20000 fcfa pour le carburant...",
+                                  style: TextStyle(
+                                    fontSize: 12
+                                  ),
+                                ),
+                              ),
+                              Row()
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  void showSuccessMessage(String message) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(
+            color: Colors.white
+        ),
+      ),
+      backgroundColor: Color(0xff12343b),
+    );
+    ScaffoldMessenger.of(context as BuildContext).showSnackBar(snackBar);
+  }
+  void showErrorMessage(String message) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(
+            color: Colors.white
+        ),
+      ),
+      backgroundColor: Colors.red,
+    );
+    ScaffoldMessenger.of(context as BuildContext).showSnackBar(snackBar);
+  }
+}
+
+

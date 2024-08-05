@@ -2,6 +2,7 @@ class BonModel {
   int? idBon;
   String nomDestinataire;
   String prixDemander;
+  String motif;
   DateTime dateAddBon;
   int? idUser;
   String nomUtilisateur;
@@ -11,6 +12,7 @@ class BonModel {
     this.idBon,
     required this.nomDestinataire,
     required this.prixDemander,
+    required this.motif,
     required this.dateAddBon,
     required this.idUser,
     required this.nomUtilisateur,
@@ -22,6 +24,7 @@ class BonModel {
       idBon: json['idBon'],
       nomDestinataire: json['nomDestinataire'] ?? '',
       prixDemander: json['prixDemander'] ?? '',
+      motif: json['motif'] ?? '',
       dateAddBon: json['dateAddDevis'] != null && json['dateAddDevis'] is Map<String, dynamic>
           ? DateTime.parse(json['dateAddDevis']['date'])
           : DateTime.now(),
@@ -31,12 +34,13 @@ class BonModel {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  /*Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {
       'idBon': idBon,
       'nomDestinataire': nomDestinataire,
       'prixDemander': prixDemander,
-      'dateAddBon': dateAddBon.toIso8601String(),
+      'motif': motif,
+      'dateAddBon': dateAddBon,
       'utilisateur': {
         'id': idUser,
         'nomUtilisateur': nomUtilisateur,
@@ -44,5 +48,20 @@ class BonModel {
       },
     };
     return data;
+  }*/
+
+  Map<String, dynamic> toJson() {
+    return {
+      'idBon': idBon,
+      'nomDestinataire': nomDestinataire,
+      'prixDemander': prixDemander,
+      'motif': motif,
+      'dateAddBon': dateAddBon.toIso8601String(),
+      'utilisateur': {
+        'id': idUser,
+        'nomUtilisateur': nomUtilisateur,
+        'prenomUtilisateur': prenomUtilisateur,
+      },
+    };
   }
 }

@@ -74,6 +74,7 @@ class _PageChampsInputModifierBonState extends State<PageChampsInputModifierBon>
   final _bonService = GetIt.instance<BonService>();
   late TextEditingController _nomDestinataireController;
   late TextEditingController _prixDemanderController;
+  late TextEditingController _motifController;
   bool isLoading = true;
 
   String message = '';
@@ -83,6 +84,7 @@ class _PageChampsInputModifierBonState extends State<PageChampsInputModifierBon>
     super.initState();
     _nomDestinataireController = TextEditingController(text: widget.bon.nomDestinataire);
     _prixDemanderController = TextEditingController(text: widget.bon.prixDemander);
+    _motifController = TextEditingController(text: widget.bon.motif);
   }
 
   void _modifierBon() async {
@@ -91,6 +93,7 @@ class _PageChampsInputModifierBonState extends State<PageChampsInputModifierBon>
         idBon: widget.bon.idBon,
         nomDestinataire: _nomDestinataireController.text,
         prixDemander: _prixDemanderController.text,
+        motif: _motifController.text,
         dateAddBon: widget.bon.dateAddBon,
         idUser: widget.bon.idUser,
         nomUtilisateur: widget.bon.nomDestinataire,
@@ -109,6 +112,7 @@ class _PageChampsInputModifierBonState extends State<PageChampsInputModifierBon>
   void dispose() {
     _nomDestinataireController.dispose();
     _prixDemanderController.dispose();
+    _motifController.dispose();
     super.dispose();
   }
   @override
@@ -156,13 +160,38 @@ class _PageChampsInputModifierBonState extends State<PageChampsInputModifierBon>
               ),
               TextField(
                 controller: _prixDemanderController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   hintText: 'Saisissez le prix donner à la personne',
                 ),
               ),
 
+              SizedBox(height: 20),
 
-              SizedBox(height: 10),
+              Stack(
+                children: [
+                  Transform.translate(offset: Offset(0, 5),
+                    child: Text(
+                      "Motif",
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                          letterSpacing: 1
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              TextField(
+                controller: _motifController,
+                maxLines: 2,
+                decoration: InputDecoration(
+                  hintText: 'La raison de la demande de bon',
+                ),
+              ),
+
+              //SizedBox(height: 10),
               //Text(message, style: TextStyle(color: Colors.red)),
 
               SizedBox(height: 10),
