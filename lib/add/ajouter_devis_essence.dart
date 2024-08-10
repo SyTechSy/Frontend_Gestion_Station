@@ -8,7 +8,7 @@ import '../Utilisateur/navBar.dart';
 import '../models/devisStationModel.dart';
 import '../services/utilisateurService.dart';
 
-class AjouterDevisEssence extends StatelessWidget {
+  class AjouterDevisEssence extends StatelessWidget {
   const AjouterDevisEssence({super.key});
 
   @override

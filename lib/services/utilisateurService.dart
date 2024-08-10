@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend_gestion_station/models/utilisateurModel.dart';
@@ -40,11 +41,12 @@ class UtilisateurService {
     throw Exception('Erreur de connexion');
   }
 
-  void logout() async {
+  Future<void> logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('connectedUser');
     _connectedUser = null;
   }
+
 
   // Creation des utilisateur
   Future<UserModel> createUser(UserModel user) async {
@@ -111,7 +113,43 @@ class UtilisateurService {
     }
   }
 
+  // Méthode pour changer le mot de passe
+  Future<bool> changePassword({
+    required int idUser,
+    required String currentPassword,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    try {
+      final dio = Dio();
+
+      // Construire le corps de la requête
+      final data = {
+        'currentPassword': currentPassword,
+        'newPassword': newPassword,
+        'confirmPassword': confirmPassword,
+      };
+
+      // Envoyer la requête à l'API
+      final response = await dio.post(
+        '$baseUrl/change_password/$idUser',
+        data: data,
+      );
+
+      // Vérifier si le mot de passe a été changé avec succès
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print('Erreur lors du changement de mot de passe : $e');
+      return false;
+    }
+  }
+
 }
+
 
 
 /*Future<UserModel> createUser(UserModel utilisateur) async {

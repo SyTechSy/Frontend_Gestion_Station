@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_gestion_station/Utilisateur/welcomePage.dart';
 import 'package:frontend_gestion_station/models/utilisateurModel.dart';
 import 'package:get_it/get_it.dart';
 
@@ -14,7 +15,7 @@ class ProfilPageUtilisateur extends StatefulWidget {
 }
 
 class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
-  final _utilisateurService = GetIt.instance<UtilisateurService>();
+  final utilisateurService = GetIt.instance<UtilisateurService>();
   bool isLoading = true;
 
   @override
@@ -25,13 +26,13 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
 
   Future<void> _fetchDevis() async {
     try {
-      UserModel? connectedUser = _utilisateurService.connectedUser;
+      UserModel? connectedUser = utilisateurService.connectedUser;
 
       if (connectedUser != null) {
         int? idUser = connectedUser.idUser; // Récupérer l'ID de l'utilisateur connecté
 
         // Récupérer l'utilisateur complet par son ID
-        UserModel user = await _utilisateurService.getUserById(idUser!);
+        UserModel user = await utilisateurService.getUserById(idUser!);
 
         // Affichage des informations de l'utilisateur dans le terminal ou dans les logs
         print('Informations de l\'utilisateur:');
@@ -328,14 +329,7 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
                     color: Colors.black,
                   ),
                 ),
-                trailing: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context, MaterialPageRoute(
-                        builder: (context) => ChangerPasswordPage()
-                    ));
-                  },
-                  child: Container(
+                trailing: Container(
                     width: 25,
                     height: 25,
                     decoration: BoxDecoration(
@@ -348,7 +342,12 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
                       size: 16,
                     ),
                   ),
-                ),
+                onTap: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(
+                      builder: (context) => ChangerPasswordPage()
+                  ));
+                },
               ),
               // DECONNEXION
               ListTile(
@@ -372,9 +371,42 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
                     color: Colors.red,
                   ),
                 ),
-                onTap: () {
-                  // Ajoutez ici la logique pour déconnecter l'administrateur
+                onTap: () async {
+                  bool shouldLogout = await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Confirmation'),
+                        content: Text('Voulez-vous vraiment vous déconnecter ?'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('Annuler'),
+                            onPressed: () {
+                              Navigator.of(context).pop(false); // Retourner false si l'utilisateur annule
+                            },
+                          ),
+                          TextButton(
+                            child: Text('Déconnecter'),
+                            onPressed: () {
+                              Navigator.of(context).pop(true); // Retourner true si l'utilisateur confirme
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+
+                  if (shouldLogout == true) {
+                    // Appeler la méthode de déconnexion
+                    await utilisateurService.logout();
+
+                    // Naviguer vers la page de connexion
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => WelcomeUserPage()),
+                    );
+                  }
                 },
+
               ),
             ],
           ),
