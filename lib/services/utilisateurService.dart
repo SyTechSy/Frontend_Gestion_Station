@@ -11,6 +11,14 @@ class UtilisateurService {
 
   UserModel? get connectedUser => _connectedUser;
 
+  Future<void> initialize() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userJson = prefs.getString('connectedUser');
+    if (userJson != null) {
+      _connectedUser = UserModel.fromJson(jsonDecode(userJson));
+    }
+  }
+
   Future<UserModel> loginUtilisateur(UserModel utilisateur) async {
     final response = await http.post(
       Uri.parse('$baseUrl/login/user'),
@@ -22,55 +30,21 @@ class UtilisateurService {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> responseData = jsonDecode(response.body);
-
       if (responseData.containsKey('utilisateur')) {
-        print('Réponse de l\'API: ${response.body}');
         _connectedUser = UserModel.fromJson(responseData['utilisateur']);
-
-        // Extraire et stocker le cookie de session
-        String? sessionId = response.headers['set-cookie']?.split(';')?.firstWhere((c) => c.startsWith('PHPSESSID='));
-        if (sessionId != null) {
-          await _storeSessionId(sessionId);
-        }
-
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('connectedUser', jsonEncode(_connectedUser!.toJson())); // Sauvegarde de l'utilisateur connecté
         return _connectedUser!;
-      } else {
-        throw Exception('Données de l\'Utilisateur manquantes dans la réponse');
       }
-    } else {
-      throw Exception('Erreur lors de la connexion utilisateur: ${response.statusCode}');
     }
+    throw Exception('Erreur de connexion');
   }
 
-  Future<void> _storeSessionId(String sessionId) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('sessionId', sessionId);
+  void logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('connectedUser');
+    _connectedUser = null;
   }
-
-  Future<String?> _getSessionId() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('sessionId');
-  }
-
-  Future<UserModel?> fetchProtectedResource() async {
-    final sessionId = await _getSessionId();
-    final url = Uri.parse('$baseUrl/protected-resource');
-    final response = await http.get(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Cookie': sessionId ?? '',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
-      return UserModel.fromJson(responseData);
-    } else {
-      throw Exception('Failed to fetch protected resource');
-    }
-  }
-
 
   // Creation des utilisateur
   Future<UserModel> createUser(UserModel user) async {

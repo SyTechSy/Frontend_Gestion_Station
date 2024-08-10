@@ -30,19 +30,38 @@ void setupLocator() {
   //sl.registerLazySingleton<UtilisateurService>(() => UtilisateurService());
 }
 
-void main() {
+/*void main() {
   setupLocator();
   runApp(const MyApp());
+}*/
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  setupLocator();
+  final utilisateurService = GetIt.instance<UtilisateurService>();
+  await utilisateurService.initialize(); // Charge l'utilisateur stocké
+  runApp(MyApp(utilisateurService: utilisateurService));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final UtilisateurService utilisateurService;
+  const MyApp({super.key, required this.utilisateurService});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
+        "/" : (context) => utilisateurService.connectedUser != null
+            ? const NavBarSection() // Redirige vers NavBarSection si connecté
+            : const WelcomeUserPage(), // Sinon vers la page de connexion
+      },
+    );
+  }
+}
+
+/*
+routes: {
         //"/" : (context) => const AppHomes()
         //"/" : (context) => LoginPage()
         //"/" : (context) => InscriptionPage()
@@ -52,6 +71,4 @@ class MyApp extends StatelessWidget {
         //"/" : (context) => const HomesSection()
         //"/" : (context) => const NavBarSection()
       },
-    );
-  }
-}
+ */

@@ -22,6 +22,22 @@ class _WelcomeUserPageState extends State<WelcomeUserPage> {
   UserModel? loggedInUser;
 
   @override
+  void initState() {
+    super.initState();
+    checkIfLoggedIn();
+  }
+
+  Future<void> checkIfLoggedIn() async {
+    await _utilisateurService.initialize();
+    if (_utilisateurService.connectedUser != null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => NavBarSection()),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xff12343b).withOpacity(0.6),

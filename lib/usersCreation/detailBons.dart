@@ -79,33 +79,6 @@ class _SectionDetailBonsPageState extends State<SectionDetailBonsPage> {
                 ),
               ),
               SizedBox(height: 15),
-              // Copier le budget
-              Row(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Colors.black12
-                    ),
-                    child: Icon(
-                      Icons.copy_rounded,
-                      size: 22,
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    'Copier la somme budget',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                    ),
-                  )
-                  //SizedBox(height: 100),
-                ],
-              ),
-              SizedBox(height: 15),
               // Annuler
               Row(
                 children: [
@@ -222,7 +195,7 @@ class _SectionDetailBonsPageState extends State<SectionDetailBonsPage> {
                               ],
                             ),
                             Text(
-                              'Diakaridia Koureissi SY',
+                              widget.bons.nomDestinataire,
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Color(0xff12343b),
@@ -265,7 +238,7 @@ class _SectionDetailBonsPageState extends State<SectionDetailBonsPage> {
                               ],
                             ),
                             Text(
-                              '2,300,000',
+                              widget.bons.prixDemander.toString(),
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Color(0xff12343b),
@@ -307,7 +280,7 @@ class _SectionDetailBonsPageState extends State<SectionDetailBonsPage> {
                               ),
                               SizedBox(height: 5),
                               Text(
-                                "~ Jai donner 5000 en tout a Mamoutou 3000 pour le carburant et 2000 pour une affaire personnel. une autre messsage pour voir la resposiviter de mon text",
+                                widget.bons.motif,
                                 style: TextStyle(
                                     fontSize: 13
                                 ),
@@ -323,7 +296,7 @@ class _SectionDetailBonsPageState extends State<SectionDetailBonsPage> {
 
             SizedBox(height: 10),
             Text(
-              "Dimanche le 28/07/2024"
+              widget.bons.dateAddBon.toString(),
             ),
           ],
         ),
