@@ -402,7 +402,7 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
 
                     // Naviguer vers la page de connexion
                     Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => WelcomeUserPage(utilisateur: widget.utilisateur)),
+                      MaterialPageRoute(builder: (context) => WelcomeUserPage()),
                     );
                   }
                 },

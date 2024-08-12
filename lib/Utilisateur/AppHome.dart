@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:frontend_gestion_station/Utilisateur/accueil.dart';
 import 'package:frontend_gestion_station/Utilisateur/profilUtilisateur.dart';
 import 'package:frontend_gestion_station/models/utilisateurModel.dart';
+import 'package:get_it/get_it.dart';
 
 import '../models/devisStationModel.dart';
+import '../services/utilisateurService.dart';
 import '../stationPage/sommePage.dart';
 import 'bonAccueil.dart';
 
 class AppHomes extends StatefulWidget {
-  final UserModel utilisateur;
+  //final UserModel utilisateur;
   final int initialTabIndex;
 
-  const AppHomes({super.key, this.initialTabIndex = 0, required this.utilisateur});
+  const AppHomes({super.key, this.initialTabIndex = 0});
 
   @override
   State<AppHomes> createState() => _AppHomesState();
@@ -20,19 +22,19 @@ class AppHomes extends StatefulWidget {
 class _AppHomesState extends State<AppHomes> {
   //int _currentIndex = 0;
   late int _currentIndex;
-
   late final List<Widget> screens;
+  final UtilisateurService utilisateurService = GetIt.instance<UtilisateurService>();
 
   @override
   void initState() {
     super.initState();
     _currentIndex = widget.initialTabIndex;
     screens = [
-      AccueilPage(utilisateur: widget.utilisateur,),
-      AccueilBon(utilisateur: widget.utilisateur,),
+      AccueilPage(),
+      AccueilBon(),
       SommePage(),
       Center(child: Text("Page history")),
-      ProfilPageUtilisateur(utilisateur: widget.utilisateur,)
+      ProfilPageUtilisateur(utilisateur: utilisateurService.connectedUser!)
     ];
   }
 

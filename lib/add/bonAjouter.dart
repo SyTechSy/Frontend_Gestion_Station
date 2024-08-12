@@ -10,8 +10,8 @@ import '../services/bonService.dart';
 import '../services/utilisateurService.dart';
 
 class AjouterBonPage extends StatelessWidget {
-  final UserModel utilisateur;
-  const AjouterBonPage({super.key, required this.utilisateur});
+  //final UserModel utilisateur;
+  const AjouterBonPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class AjouterBonPage extends StatelessWidget {
             ),
           ),
 
-          PageChampsInputAjouterBon(utilisateur: utilisateur,)
+          PageChampsInputAjouterBon()
         ],
 
       ),
@@ -64,8 +64,8 @@ class AjouterBonPage extends StatelessWidget {
 }
 
 class PageChampsInputAjouterBon extends StatefulWidget {
-  final UserModel utilisateur;
-  const PageChampsInputAjouterBon({super.key, required this.utilisateur});
+  //final UserModel utilisateur;
+  const PageChampsInputAjouterBon({super.key});
 
   @override
   State<PageChampsInputAjouterBon> createState() => _PageChampsInputAjouterBonState();
@@ -131,7 +131,7 @@ class _PageChampsInputAjouterBonState extends State<PageChampsInputAjouterBon> {
         context,
         MaterialPageRoute(
           builder: (context) =>  NavBarSection(
-            utilisateur: widget.utilisateur,
+            // utilisateur: utilisateurService.connectedUser!
             //initialTabIndexx: 0,
             //budgetObtenu: 0.0,
           ),

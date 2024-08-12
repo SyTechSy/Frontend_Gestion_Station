@@ -10,8 +10,8 @@ import '../services/bonService.dart';
 import '../services/utilisateurService.dart';
 
 class AccueilBon extends StatefulWidget {
-  final UserModel utilisateur;
-  const AccueilBon({super.key, required this.utilisateur});
+  //final UserModel utilisateur;
+  const AccueilBon({super.key,});
 
   @override
   State<AccueilBon> createState() => _AccueilBonState();
@@ -92,7 +92,7 @@ class _AccueilBonState extends State<AccueilBon> {
             onTap: () {
               Navigator.push(
                   context, MaterialPageRoute(
-                builder: (context) => AjouterBonPage(utilisateur: widget.utilisateur,),
+                builder: (context) => AjouterBonPage(),
               ));
             },
             child: Container(

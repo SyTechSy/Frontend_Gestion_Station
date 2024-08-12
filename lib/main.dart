@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "/" : (context) {
           if (utilisateurService.connectedUser != null) {
-            return NavBarSection(utilisateur: utilisateurService.connectedUser!); // Ajoutez '!' pour dire à Dart que vous êtes sûr que ce n'est pas null
+            return NavBarSection(); // Ajoutez '!' pour dire à Dart que vous êtes sûr que ce n'est pas null
           } else {
             return WelcomeUserPage(); // Redirection vers la page de connexion si l'utilisateur est null
           }

@@ -1,16 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 import '../models/utilisateurModel.dart';
+import '../services/utilisateurService.dart';
 import 'ajouter_devis_essence.dart';
 import 'ajouter_devis_gasoil.dart';
 
 class ChoixDevisPage extends StatelessWidget {
-  final UserModel utilisateur;
-  const ChoixDevisPage({super.key, required this.utilisateur});
+  //final UserModel utilisateur;
+  const ChoixDevisPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final UtilisateurService utilisateurService = GetIt.instance<UtilisateurService>();
     return Scaffold(
       body: Column(
         children: [
@@ -52,8 +55,8 @@ class ChoixDevisPage extends StatelessWidget {
           ),
           
           ImageStation(),
-          ChoixDevisEssence(utilisateur: utilisateur,),
-          ChoixDevisGasoil(utilisateur: utilisateur,),
+          ChoixDevisEssence(utilisateur: utilisateurService.connectedUser!),
+          ChoixDevisGasoil(utilisateur: utilisateurService.connectedUser!),
 
           Container(
             margin: EdgeInsets.only(top: 15.0),
@@ -100,11 +103,13 @@ class ChoixDevisEssence extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final UtilisateurService utilisateurService = GetIt.instance<UtilisateurService>();
     return Container(
       margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AjouterDevisEssence(utilisateur: utilisateur,)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AjouterDevisEssence()));
         },
         child: Card(
           color: Color(0xff12343b),
@@ -141,7 +146,7 @@ class ChoixDevisGasoil extends StatelessWidget {
       margin: EdgeInsets.only(left: 20, right: 20),
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AjouterDevisGasoil(utilisateur: utilisateur,)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AjouterDevisGasoil()));
         },
         child: Card(
           color: Color(0xff12343b),

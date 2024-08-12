@@ -9,9 +9,9 @@ import '../usersCreation/gasoil.dart';
 
 class AccueilPage extends StatefulWidget {
   final int initialTabIndexx;
-  final UserModel utilisateur;
+  //final UserModel utilisateur;
 
-  const AccueilPage({super.key, this.initialTabIndexx = 0, required this.utilisateur});
+  const AccueilPage({super.key, this.initialTabIndexx = 0});
 
   @override
   _AccueilPageState createState() => _AccueilPageState();
@@ -153,8 +153,8 @@ class _AccueilPageState extends State<AccueilPage> with SingleTickerProviderStat
             //EssencePage(),
             //GasoilPage(),
             //SectionBon(),
-            SectionEssence(utilisateur: widget.utilisateur,),
-            SectionGasoil(utilisateur: widget.utilisateur,),
+            SectionEssence(),
+            SectionGasoil(),
             SectionBons(),
             //SommePage(budgetObtenu: 0.0),
           ],

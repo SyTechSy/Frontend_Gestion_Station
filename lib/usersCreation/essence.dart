@@ -13,8 +13,8 @@ import '../services/utilisateurService.dart';
 import 'detailEssence.dart';
 
 class SectionEssence extends StatefulWidget {
-  final UserModel utilisateur;
-  const SectionEssence({super.key, required this.utilisateur});
+  //final UserModel utilisateur;
+  const SectionEssence({super.key});
 
   @override
   State<SectionEssence> createState() => _SectionEssenceState();
@@ -170,7 +170,7 @@ class _SectionEssenceState extends State<SectionEssence> {
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => SectionDetailPage(devis: devis, utilisateur: widget.utilisateur,)
+                            builder: (context) => SectionDetailPage(devis: devis)
                         ));
                       },
                       child: Column(

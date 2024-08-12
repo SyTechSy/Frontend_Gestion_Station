@@ -12,8 +12,8 @@ import '../resetPassword/resetKeyOnLigneAdmin/VerifEmailConnexionAdmin.dart';
 import 'AdminAppHome.dart';
 
 class WelcomeAdminPage extends StatefulWidget {
-  final UserModel utilisateur;
-  WelcomeAdminPage({super.key, required this.utilisateur});
+  //final UserModel utilisateur;
+  WelcomeAdminPage({super.key});
 
   @override
   State<WelcomeAdminPage> createState() => _WelcomeAdminPageState();
@@ -93,7 +93,7 @@ class _WelcomeAdminPageState extends State<WelcomeAdminPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>  WelcomeUserPage(utilisateur: widget.utilisateur,)));
+                              builder: (context) =>  WelcomeUserPage()));
                     },
                     child: Text(
                       " Connectez-vous",

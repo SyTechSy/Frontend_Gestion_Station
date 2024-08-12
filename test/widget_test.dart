@@ -16,7 +16,7 @@ void main() {
     );
 
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp(utilisateurService: utilisateurService, utilisateur: utilisateur));
+    await tester.pumpWidget(MyApp(utilisateurService: utilisateurService));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

@@ -11,8 +11,8 @@ import '../services/devisStationGasoilService.dart';
 import '../services/utilisateurService.dart';
 
 class AjouterDevisGasoil extends StatelessWidget {
-  final UserModel utilisateur;
-  const AjouterDevisGasoil({super.key, required this.utilisateur});
+  //final UserModel utilisateur;
+  const AjouterDevisGasoil({super.key,});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class AjouterDevisGasoil extends StatelessWidget {
             ),
           ),
 
-          PageChampsInput(utilisateur: utilisateur)
+          PageChampsInput()
         ],
       ),
     );
@@ -64,8 +64,8 @@ class AjouterDevisGasoil extends StatelessWidget {
 }
 
 class PageChampsInput extends StatefulWidget {
-  final UserModel utilisateur;
-  const PageChampsInput({super.key, required this.utilisateur});
+  //final UserModel utilisateur;
+  const PageChampsInput({super.key});
 
   @override
   State<PageChampsInput> createState() => _PageChampsInputState();
@@ -256,7 +256,7 @@ class _PageChampsInputState extends State<PageChampsInput> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => NavBarSection(
-                              utilisateur: widget.utilisateur,
+                              // utilisateur: utilisateurService.connectedUser!
                               //initialTabIndexx: 0,
                               //budgetObtenu: 0.0,
                             ), // Rediriger vers AppHomes avec l'onglet Gasoil

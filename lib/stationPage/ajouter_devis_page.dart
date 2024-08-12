@@ -6,8 +6,8 @@ import 'essencePage.dart';
 import 'gasoilPage.dart';
 
 class AjouterDevis extends StatefulWidget {
-  final UserModel utilisateur;
-  const AjouterDevis({super.key, required this.utilisateur});
+  //final UserModel utilisateur;
+  const AjouterDevis({super.key});
 
   @override
   State<AjouterDevis> createState() => _AjouterDevisState();
@@ -64,7 +64,7 @@ class _AjouterDevisState extends State<AjouterDevis> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ChoixDevisPage(utilisateur: widget.utilisateur,)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ChoixDevisPage()));
                   },
                   child: Container(
                     margin: EdgeInsets.only(right: 15.0),
