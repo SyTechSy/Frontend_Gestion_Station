@@ -3,6 +3,7 @@ import 'package:frontend_gestion_station/Administrateur/welcomeAdminPage.dart';
 import 'package:frontend_gestion_station/models/utilisateurModel.dart';
 import 'package:frontend_gestion_station/services/utilisateurService.dart';
 import 'package:get_it/get_it.dart';
+import '../resetPassword/resetKeyOffLigneUser/verifEmailResetPasswordOffLigneUser.dart';
 import 'AppHome.dart';
 import 'navBar.dart';
 
@@ -210,11 +211,21 @@ class _WelcomeUserPageState extends State<WelcomeUserPage> {
                           const SizedBox(height: 20),
                           Transform.translate(
                             offset: Offset(-65, 0),
-                            child: Text(
-                              "Mot de passe oublié?",
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.green,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => VerifEmailResetNavBarOffLigneUser(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Mot de passe oublié?",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.green,
+                                ),
                               ),
                             ),
                           ),

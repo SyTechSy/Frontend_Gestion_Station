@@ -15,51 +15,51 @@ import '../services/utilisateurService.dart';
 
   @override
   Widget build(BuildContext context) {
-        return Scaffold(
-          body: Column(
-            children: [
-              Container(
-                height: 80,
-                decoration: BoxDecoration(
-                  color: Color(0xff12343b),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 35, left: 15),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Icon(
-                          Icons.arrow_back_ios_new,
-                          color: Colors.white,
-                          size: 15,
-                        ),
-                      ),
+    return Scaffold(
+      body: Column(
+        children: [
+          Container(
+            height: 80,
+            decoration: BoxDecoration(
+              color: Color(0xff12343b),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 35, left: 15),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Colors.white,
+                      size: 15,
                     ),
-                    Container(
-                      margin: EdgeInsets.only(top: 35, right: 35),
-                      child: Text(
-                        "Ajouter devis essence",
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.white
-                        ),
-                      ),
-                    ),
-
-                    Container(),
-                  ],
+                  ),
                 ),
-              ),
+                Container(
+                  margin: EdgeInsets.only(top: 35, right: 35),
+                  child: Text(
+                    "Ajouter devis essence",
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white
+                    ),
+                  ),
+                ),
 
-              PageChampsInput()
-            ],
-
+                Container(),
+              ],
+            ),
           ),
-        );
+
+          PageChampsInput()
+        ],
+
+      ),
+    );
   }
 }
 
