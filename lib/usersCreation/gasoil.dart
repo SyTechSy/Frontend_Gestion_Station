@@ -15,7 +15,8 @@ import 'detailEssence.dart';
 import 'detailGasoil.dart';
 
 class SectionGasoil extends StatefulWidget {
-  const SectionGasoil({super.key});
+  final UserModel utilisateur;
+  const SectionGasoil({super.key, required this.utilisateur});
 
   @override
   State<SectionGasoil> createState() => _SectionGasoilState();
@@ -144,7 +145,7 @@ class _SectionGasoilState extends State<SectionGasoil> {
                       child: GestureDetector(
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => SectionDetailGasoilPage(devis: devis)
+                              builder: (context) => SectionDetailGasoilPage(devis: devis, utilisateur: widget.utilisateur,)
                           ));
                         },
                         child: Column(

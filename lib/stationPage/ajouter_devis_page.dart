@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../add/choix_pour_devis.dart';
+import '../models/utilisateurModel.dart';
 import 'essencePage.dart';
 import 'gasoilPage.dart';
 
 class AjouterDevis extends StatefulWidget {
-  const AjouterDevis({super.key});
+  final UserModel utilisateur;
+  const AjouterDevis({super.key, required this.utilisateur});
 
   @override
   State<AjouterDevis> createState() => _AjouterDevisState();
@@ -62,7 +64,7 @@ class _AjouterDevisState extends State<AjouterDevis> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ChoixDevisPage()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ChoixDevisPage(utilisateur: widget.utilisateur,)));
                   },
                   child: Container(
                     margin: EdgeInsets.only(right: 15.0),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_gestion_station/models/devisStationGasoilModel.dart';
+import 'package:frontend_gestion_station/models/utilisateurModel.dart';
 import 'package:get_it/get_it.dart';
 
 import '../Utilisateur/AppHome.dart';
@@ -10,7 +11,8 @@ import '../services/devisStationGasoilService.dart';
 import '../services/utilisateurService.dart';
 
 class AjouterDevisGasoil extends StatelessWidget {
-  const AjouterDevisGasoil({super.key});
+  final UserModel utilisateur;
+  const AjouterDevisGasoil({super.key, required this.utilisateur});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +56,7 @@ class AjouterDevisGasoil extends StatelessWidget {
             ),
           ),
 
-          PageChampsInput()
+          PageChampsInput(utilisateur: utilisateur)
         ],
       ),
     );
@@ -62,7 +64,8 @@ class AjouterDevisGasoil extends StatelessWidget {
 }
 
 class PageChampsInput extends StatefulWidget {
-  const PageChampsInput({super.key});
+  final UserModel utilisateur;
+  const PageChampsInput({super.key, required this.utilisateur});
 
   @override
   State<PageChampsInput> createState() => _PageChampsInputState();
@@ -253,6 +256,7 @@ class _PageChampsInputState extends State<PageChampsInput> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => NavBarSection(
+                              utilisateur: widget.utilisateur,
                               //initialTabIndexx: 0,
                               //budgetObtenu: 0.0,
                             ), // Rediriger vers AppHomes avec l'onglet Gasoil

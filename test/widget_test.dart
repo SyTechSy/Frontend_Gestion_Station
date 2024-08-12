@@ -1,19 +1,22 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:frontend_gestion_station/main.dart';
+import 'package:frontend_gestion_station/services/utilisateurService.dart';
+import 'package:frontend_gestion_station/models/utilisateurModel.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+    // Créer des instances factices pour les services
+    final utilisateurService = UtilisateurService();
+    final utilisateur = UserModel(
+      idUser: 1,
+      nomUtilisateur: '',
+      prenomUtilisateur: '',
+    );
+
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(MyApp(utilisateurService: utilisateurService, utilisateur: utilisateur));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

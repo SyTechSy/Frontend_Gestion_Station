@@ -1,12 +1,14 @@
 
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend_gestion_station/models/adminModel.dart';
 import '../models/adminModel.dart';
 
 class AdminService {
   final String baseUrl = 'http://10.0.2.2:8000';
+  final Dio _dio = Dio();
 
   // SERVICE CONNEXION ADMIN
   /*Future<AdminModel> loginAdmin(AdminModel admin) async {
@@ -45,6 +47,7 @@ class AdminService {
         AdminModel admin = AdminModel.fromJson(responseData['admin']);
 
         // Par exemple, vous pouvez accéder à ses propriétés ainsi
+        print('Connection de l\'admin est fait avec succès');
         print('ID de l\'admin: ${admin.idAdmin}');
         print('Nom de l\'admin: ${admin.nomAdmin}');
         print('Prénom de l\'admin: ${admin.prenomAdmin}');
@@ -74,6 +77,22 @@ class AdminService {
       throw Exception('Échec de l\'obtention du profil administrateur');
     }
   }
+  // Verrification de code
+  Future<bool> verifyAdmin(String emailAdmin, String code) async {
+    try {
+      final response = await _dio.post(
+        '$baseUrl/verify/admin',
+        data: {
+          'emailAdmin': emailAdmin,
+          'code': code,
+        },
+      );
 
+      return response.statusCode == 200;
+    } catch (e) {
+      print('Erreur lors de la vérification: $e');
+      return false;
+    }
+  }
 
 }

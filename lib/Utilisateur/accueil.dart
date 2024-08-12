@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../models/utilisateurModel.dart';
 import '../usersCreation/bons.dart';
 import '../usersCreation/essence.dart';
 import '../usersCreation/gasoil.dart';
@@ -8,8 +9,9 @@ import '../usersCreation/gasoil.dart';
 
 class AccueilPage extends StatefulWidget {
   final int initialTabIndexx;
+  final UserModel utilisateur;
 
-  const AccueilPage({super.key, this.initialTabIndexx = 0});
+  const AccueilPage({super.key, this.initialTabIndexx = 0, required this.utilisateur});
 
   @override
   _AccueilPageState createState() => _AccueilPageState();
@@ -151,8 +153,8 @@ class _AccueilPageState extends State<AccueilPage> with SingleTickerProviderStat
             //EssencePage(),
             //GasoilPage(),
             //SectionBon(),
-            SectionEssence(),
-            SectionGasoil(),
+            SectionEssence(utilisateur: widget.utilisateur,),
+            SectionGasoil(utilisateur: widget.utilisateur,),
             SectionBons(),
             //SommePage(budgetObtenu: 0.0),
           ],

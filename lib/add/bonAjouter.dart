@@ -5,11 +5,13 @@ import '../Utilisateur/AppHome.dart';
 import '../Utilisateur/bonAccueil.dart';
 import '../Utilisateur/navBar.dart';
 import '../models/bonModel.dart';
+import '../models/utilisateurModel.dart';
 import '../services/bonService.dart';
 import '../services/utilisateurService.dart';
 
 class AjouterBonPage extends StatelessWidget {
-  const AjouterBonPage({super.key});
+  final UserModel utilisateur;
+  const AjouterBonPage({super.key, required this.utilisateur});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +55,7 @@ class AjouterBonPage extends StatelessWidget {
             ),
           ),
 
-          PageChampsInputAjouterBon()
+          PageChampsInputAjouterBon(utilisateur: utilisateur,)
         ],
 
       ),
@@ -62,7 +64,8 @@ class AjouterBonPage extends StatelessWidget {
 }
 
 class PageChampsInputAjouterBon extends StatefulWidget {
-  const PageChampsInputAjouterBon({super.key});
+  final UserModel utilisateur;
+  const PageChampsInputAjouterBon({super.key, required this.utilisateur});
 
   @override
   State<PageChampsInputAjouterBon> createState() => _PageChampsInputAjouterBonState();
@@ -127,7 +130,8 @@ class _PageChampsInputAjouterBonState extends State<PageChampsInputAjouterBon> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => const NavBarSection(
+          builder: (context) =>  NavBarSection(
+            utilisateur: widget.utilisateur,
             //initialTabIndexx: 0,
             //budgetObtenu: 0.0,
           ),

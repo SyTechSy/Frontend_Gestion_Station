@@ -7,10 +7,13 @@ import 'package:frontend_gestion_station/models/adminModel.dart';
 import 'package:frontend_gestion_station/Utilisateur/welcomePage.dart';
 import 'package:get_it/get_it.dart';
 
+import '../models/utilisateurModel.dart';
+import '../resetPassword/resetKeyOnLigneAdmin/VerifEmailConnexionAdmin.dart';
 import 'AdminAppHome.dart';
 
 class WelcomeAdminPage extends StatefulWidget {
-  WelcomeAdminPage({super.key});
+  final UserModel utilisateur;
+  WelcomeAdminPage({super.key, required this.utilisateur});
 
   @override
   State<WelcomeAdminPage> createState() => _WelcomeAdminPageState();
@@ -90,14 +93,15 @@ class _WelcomeAdminPageState extends State<WelcomeAdminPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const WelcomeUserPage()));
+                              builder: (context) =>  WelcomeUserPage(utilisateur: widget.utilisateur,)));
                     },
                     child: Text(
                       " Connectez-vous",
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.green,
-                          letterSpacing: 0.5),
+                          letterSpacing: 0.5
+                      ),
                     ),
                   ),
                 ],
@@ -203,7 +207,6 @@ class _WelcomeAdminPageState extends State<WelcomeAdminPage> {
 
                                 try {
                                   // Appeler la méthode de connexion de AdminService
-                                  //AdminModel loggedInAdmin = await _adminService.loginAdmin(admin);
                                   loggedInAdmin = await _adminService.loginAdmin(admin);
 
                                   if (loggedInAdmin != null && loggedInAdmin!.idAdmin != null) {
@@ -216,18 +219,24 @@ class _WelcomeAdminPageState extends State<WelcomeAdminPage> {
                                     print('ID: ${loggedInAdmin!.idAdmin}');
                                     print('Nom: ${loggedInAdmin!.nomAdmin}');
                                     print('Prénom: ${loggedInAdmin!.prenomAdmin}');
+                                    print('email: ${loggedInAdmin!.emailAdmin}');
+                                    print('Password: ${loggedInAdmin!.motDePasse}');
+
+                                    // Naviguer vers PageHeaderVerifEmail avec les paramètres requis
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => PageHeaderVerifEmail(
+                                          admin: loggedInAdmin!,
+                                          emailAdmin: emailAdmin,
+                                        ),
+                                      ),
+                                    );
                                   } else {
                                     setState(() {
                                       message = 'Erreur: données de l\'administrateur manquantes';
                                     });
                                   }
-
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => AdminAppHomesPage(admin: admin)
-                                    ),
-                                  );
                                 } catch (e) {
                                   // Gérer les erreurs, par exemple email ou mot de passe incorrect
                                   print('Erreur lors de la connexion: $e');
@@ -238,6 +247,7 @@ class _WelcomeAdminPageState extends State<WelcomeAdminPage> {
                                   });
                                 }
                               },
+
                               child: Text(
                                 "Se connecter",
                                 style: TextStyle(

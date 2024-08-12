@@ -6,10 +6,12 @@ import '../Utilisateur/AppHome.dart';
 import '../Utilisateur/accueil.dart';
 import '../Utilisateur/navBar.dart';
 import '../models/devisStationModel.dart';
+import '../models/utilisateurModel.dart';
 import '../services/utilisateurService.dart';
 
   class AjouterDevisEssence extends StatelessWidget {
-  const AjouterDevisEssence({super.key});
+    final UserModel utilisateur;
+  const AjouterDevisEssence({super.key, required this.utilisateur});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +55,7 @@ import '../services/utilisateurService.dart';
                 ),
               ),
 
-              PageChampsInput()
+              PageChampsInput(utilisateur: utilisateur)
             ],
 
           ),
@@ -62,7 +64,8 @@ import '../services/utilisateurService.dart';
 }
 
 class PageChampsInput extends StatefulWidget {
-  const PageChampsInput({super.key});
+    final UserModel utilisateur;
+  const PageChampsInput({super.key, required this.utilisateur});
 
   @override
   State<PageChampsInput> createState() => _PageChampsInputState();
@@ -153,6 +156,7 @@ class _PageChampsInputState extends State<PageChampsInput> {
         context,
         MaterialPageRoute(
           builder: (context) => NavBarSection(
+            utilisateur: widget.utilisateur,
             //initialTabIndexx: 0,
             //budgetObtenu: 0.0,
           ),

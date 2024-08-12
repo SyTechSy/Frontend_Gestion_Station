@@ -5,12 +5,14 @@ import 'package:frontend_gestion_station/models/devisStationModel.dart';
 import 'package:get_it/get_it.dart';
 
 import '../Utilisateur/navBar.dart';
+import '../models/utilisateurModel.dart';
 import '../services/devisStationService.dart';
 import 'essence.dart';
 
 class SectionDetailPage extends StatefulWidget {
     final DevisModel devis;
-  const SectionDetailPage({super.key, required this.devis});
+    final UserModel utilisateur;
+  const SectionDetailPage({super.key, required this.devis, required this.utilisateur});
 
   @override
   State<SectionDetailPage> createState() => _SectionDetailPageState();
@@ -189,7 +191,7 @@ class _SectionDetailPageState extends State<SectionDetailPage> {
                 await _deleteDevisEssence(idDevis);
                 Navigator.push(
                   context, MaterialPageRoute(
-                    builder: (context) => NavBarSection(),
+                    builder: (context) => NavBarSection(utilisateur: widget.utilisateur,),
                   )
                 );
               },

@@ -38,8 +38,8 @@ class _SectionBonsState extends State<SectionBons> {
       });
       showSuccessMessage('Devis supprimé avec succès');
     } catch (e) {
-      print('Erreur lors de la suppression de devis essence: $e');
-      showErrorMessage('Erreur lors de la suppression de devis essence');
+      print('Erreur lors de la suppression de devis bonss: $e');
+      showErrorMessage('Erreur lors de la suppression de devis bonssss');
     }
   }
 

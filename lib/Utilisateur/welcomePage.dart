@@ -7,7 +7,8 @@ import 'AppHome.dart';
 import 'navBar.dart';
 
 class WelcomeUserPage extends StatefulWidget {
-  const WelcomeUserPage({super.key});
+  final UserModel utilisateur;
+  const WelcomeUserPage({super.key, required this.utilisateur});
 
   @override
   State<WelcomeUserPage> createState() => _WelcomeUserPageState();
@@ -32,7 +33,7 @@ class _WelcomeUserPageState extends State<WelcomeUserPage> {
     if (_utilisateurService.connectedUser != null) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => NavBarSection()),
+        MaterialPageRoute(builder: (context) => NavBarSection(utilisateur: widget.utilisateur)),
       );
     }
   }
@@ -111,7 +112,7 @@ class _WelcomeUserPageState extends State<WelcomeUserPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => WelcomeAdminPage(),
+                          builder: (context) => WelcomeAdminPage(utilisateur: widget.utilisateur,),
                         ),
                       );
                     },
@@ -255,7 +256,7 @@ class _WelcomeUserPageState extends State<WelcomeUserPage> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => NavBarSection(),
+                                        builder: (context) => NavBarSection(utilisateur: widget.utilisateur),
                                       ),
                                     );
                                   } else {

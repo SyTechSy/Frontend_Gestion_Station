@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
 
+import '../models/utilisateurModel.dart';
 import '../stationPage/essencePage.dart';
 import '../stationPage/gasoilPage.dart';
 import '../usersCreation/essence.dart';
 import '../usersCreation/gasoil.dart';
 
 class HomesSection extends StatelessWidget {
-  const HomesSection({super.key});
+  final UserModel utilisateur;
+  const HomesSection({super.key, required this.utilisateur});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomesPageSection(),
+      home: HomesPageSection(utilisateur: utilisateur,),
     );
   }
 }
 
 class HomesPageSection extends StatefulWidget {
-  const HomesPageSection({super.key});
+  final UserModel utilisateur;
+  const HomesPageSection({super.key, required this.utilisateur});
 
   @override
   State<HomesPageSection> createState() => _HomesPageSectionState();
@@ -68,8 +71,8 @@ class _HomesPageSectionState extends State<HomesPageSection> {
       body: IndexedStack(
         index: _selectedSegment,
         children: [
-          SectionEssence(),
-          SectionGasoil(),
+          SectionEssence(utilisateur: widget.utilisateur,),
+          SectionGasoil(utilisateur: widget.utilisateur,),
           Center(child: Text("Les devis bons")),
         ],
       ),

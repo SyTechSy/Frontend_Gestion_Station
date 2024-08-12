@@ -15,6 +15,7 @@ import 'Utilisateur/homes.dart';
 import 'Utilisateur/navBar.dart';
 import 'brouillon/admin_inscription_user.txt';
 import 'compte/connexion.dart';
+import 'models/utilisateurModel.dart';
 
 
 final GetIt locator = GetIt.instance;
@@ -44,6 +45,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  //final UserModel utilisateur;
   final UtilisateurService utilisateurService;
   const MyApp({super.key, required this.utilisateurService});
 
@@ -52,10 +54,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        "/" : (context) => utilisateurService.connectedUser != null
-            ? const NavBarSection() // Redirige vers NavBarSection si connecté
-            : const WelcomeUserPage(), // Sinon vers la page de connexion
+        "/" : (context) {
+          if (utilisateurService.connectedUser != null) {
+            return NavBarSection(utilisateur: utilisateurService.connectedUser!); // Ajoutez '!' pour dire à Dart que vous êtes sûr que ce n'est pas null
+          } else {
+            return WelcomeUserPage(); // Redirection vers la page de connexion si l'utilisateur est null
+          }
+        },
       },
+
     );
   }
 }

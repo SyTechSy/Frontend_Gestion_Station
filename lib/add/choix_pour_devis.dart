@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../models/utilisateurModel.dart';
 import 'ajouter_devis_essence.dart';
 import 'ajouter_devis_gasoil.dart';
 
 class ChoixDevisPage extends StatelessWidget {
-  const ChoixDevisPage({super.key});
+  final UserModel utilisateur;
+  const ChoixDevisPage({super.key, required this.utilisateur});
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +52,8 @@ class ChoixDevisPage extends StatelessWidget {
           ),
           
           ImageStation(),
-          ChoixDevisEssence(),
-          ChoixDevisGasoil(),
+          ChoixDevisEssence(utilisateur: utilisateur,),
+          ChoixDevisGasoil(utilisateur: utilisateur,),
 
           Container(
             margin: EdgeInsets.only(top: 15.0),
@@ -93,7 +95,8 @@ class ImageStation extends StatelessWidget {
 
 // CHOIX DEVIS ESSENCE
 class ChoixDevisEssence extends StatelessWidget {
-  const ChoixDevisEssence({super.key});
+  final UserModel utilisateur;
+  const ChoixDevisEssence({super.key, required this.utilisateur});
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +104,7 @@ class ChoixDevisEssence extends StatelessWidget {
       margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AjouterDevisEssence()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AjouterDevisEssence(utilisateur: utilisateur,)));
         },
         child: Card(
           color: Color(0xff12343b),
@@ -129,7 +132,8 @@ class ChoixDevisEssence extends StatelessWidget {
 
 // CHOIX DEVIS GASOIL
 class ChoixDevisGasoil extends StatelessWidget {
-  const ChoixDevisGasoil({super.key});
+  final UserModel utilisateur;
+  const ChoixDevisGasoil({super.key, required this.utilisateur});
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +141,7 @@ class ChoixDevisGasoil extends StatelessWidget {
       margin: EdgeInsets.only(left: 20, right: 20),
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AjouterDevisGasoil()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AjouterDevisGasoil(utilisateur: utilisateur,)));
         },
         child: Card(
           color: Color(0xff12343b),

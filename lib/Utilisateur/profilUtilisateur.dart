@@ -7,8 +7,8 @@ import '../services/utilisateurService.dart';
 import 'changerPassword.dart';
 
 class ProfilPageUtilisateur extends StatefulWidget {
-  //final UserModel utilisateur;
-  const ProfilPageUtilisateur({super.key});
+  final UserModel utilisateur;
+  const ProfilPageUtilisateur({super.key, required this.utilisateur});
 
   @override
   State<ProfilPageUtilisateur> createState() => _ProfilPageUtilisateurState();
@@ -56,7 +56,7 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
   }
   @override
   Widget build(BuildContext context) {
-    //final utilisateur = widget.utilisateur;
+    final utilisateur = widget.utilisateur;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -160,7 +160,7 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
                       ),
                     ),
                     Text(
-                      'utilisateur.nomUtilisateur',
+                      utilisateur.nomUtilisateur ?? 'Aucun Nom',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
@@ -190,7 +190,7 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
                       ),
                     ),
                     Text(
-                      'utilisateur.prenomUtilisateur',
+                      utilisateur.prenomUtilisateur ?? 'Aucun Nom',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
@@ -220,7 +220,7 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
                       ),
                     ),
                     Text(
-                      'utilisateur.emailUtilisateur',
+                      utilisateur.emailUtilisateur ?? 'Aucun Nom',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
@@ -250,7 +250,7 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
                       ),
                     ),
                     Text(
-                      'utilisateur.motDePasse',
+                      utilisateur.motDePasse ?? 'Aucun Nom',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
@@ -402,7 +402,7 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
 
                     // Naviguer vers la page de connexion
                     Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => WelcomeUserPage()),
+                      MaterialPageRoute(builder: (context) => WelcomeUserPage(utilisateur: widget.utilisateur)),
                     );
                   }
                 },

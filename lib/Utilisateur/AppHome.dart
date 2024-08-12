@@ -8,10 +8,10 @@ import '../stationPage/sommePage.dart';
 import 'bonAccueil.dart';
 
 class AppHomes extends StatefulWidget {
-  //final UserModel utilisateur;
+  final UserModel utilisateur;
   final int initialTabIndex;
 
-  const AppHomes({super.key, this.initialTabIndex = 0});
+  const AppHomes({super.key, this.initialTabIndex = 0, required this.utilisateur});
 
   @override
   State<AppHomes> createState() => _AppHomesState();
@@ -28,11 +28,11 @@ class _AppHomesState extends State<AppHomes> {
     super.initState();
     _currentIndex = widget.initialTabIndex;
     screens = [
-      AccueilPage(),
-      AccueilBon(),
+      AccueilPage(utilisateur: widget.utilisateur,),
+      AccueilBon(utilisateur: widget.utilisateur,),
       SommePage(),
       Center(child: Text("Page history")),
-      ProfilPageUtilisateur()
+      ProfilPageUtilisateur(utilisateur: widget.utilisateur,)
     ];
   }
 

@@ -5,11 +5,13 @@ import 'package:get_it/get_it.dart';
 
 import '../Utilisateur/navBar.dart';
 import '../models/devisStationGasoilModel.dart';
+import '../models/utilisateurModel.dart';
 import '../services/devisStationGasoilService.dart';
 
 class SectionDetailGasoilPage extends StatefulWidget {
   final DevisGasoilModel devis;
-  const SectionDetailGasoilPage({super.key, required this.devis});
+  final UserModel utilisateur;
+  const SectionDetailGasoilPage({super.key, required this.devis, required this.utilisateur});
 
   @override
   State<SectionDetailGasoilPage> createState() => _SectionDetailGasoilPageState();
@@ -184,7 +186,7 @@ class _SectionDetailGasoilPageState extends State<SectionDetailGasoilPage> {
                 await _deleteDevisGasoil(idDevis);
                 Navigator.push(
                     context, MaterialPageRoute(
-                  builder: (context) => NavBarSection(),
+                  builder: (context) => NavBarSection(utilisateur: widget.utilisateur,),
                 )
                 );
               },

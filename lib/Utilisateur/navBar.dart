@@ -7,14 +7,16 @@ import 'package:frontend_gestion_station/Utilisateur/profilUtilisateur.dart';
 import '../add/ajouter_devis_essence.dart';
 import '../add/ajouter_devis_gasoil.dart';
 import '../add/bonAjouter.dart';
+import '../models/utilisateurModel.dart';
 import '../stationPage/sommePage.dart';
 import 'accueil.dart';
 import 'homes.dart';
 
 class NavBarSection extends StatefulWidget {
   final int initialTabIndex;
+  final UserModel utilisateur;
 
-  const NavBarSection({super.key, this.initialTabIndex = 0});
+  const NavBarSection({super.key, this.initialTabIndex = 0, required this.utilisateur});
 
   @override
   State<NavBarSection> createState() => _NavBarSectionState();
@@ -31,11 +33,11 @@ class _NavBarSectionState extends State<NavBarSection> {
     _currentIndex = widget.initialTabIndex;
     screens = [
       //HomesSection(),
-      AccueilPage(),
+      AccueilPage(utilisateur: widget.utilisateur),
       SommePage(),
       Center(child: Text("")),
       Center(child: Text("Page history",style: TextStyle(fontSize: 30),)),
-      ProfilPageUtilisateur()
+      ProfilPageUtilisateur(utilisateur: widget.utilisateur),
     ];
   }
 
@@ -66,7 +68,7 @@ class _NavBarSectionState extends State<NavBarSection> {
               SizedBox(height: 10),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => AjouterDevisEssence()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => AjouterDevisEssence(utilisateur: widget.utilisateur)));
                 },
                 child: Card(
                   color: Colors.white,
@@ -110,7 +112,7 @@ class _NavBarSectionState extends State<NavBarSection> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => AjouterDevisGasoil()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => AjouterDevisGasoil(utilisateur: widget.utilisateur)));
                 },
                 child: Card(
                   color: Colors.white,
@@ -154,7 +156,7 @@ class _NavBarSectionState extends State<NavBarSection> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => AjouterBonPage()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => AjouterBonPage(utilisateur: widget.utilisateur)));
                 },
                 child: Card(
                   color: Colors.white,
