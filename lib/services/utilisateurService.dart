@@ -20,6 +20,38 @@ class UtilisateurService {
     }
   }
 
+  // Méthode pour vérifier l'email
+  Future<bool> verifEmail(String emailUtilisateur) async {
+    try {
+      final response = await Dio().get('$baseUrl/check_email/$emailUtilisateur');
+      if (response.statusCode == 200) {
+        return true;
+      }
+    } catch (e) {
+      print('Erreur lors de la vérification de l\'email: $e');
+    }
+    return false;
+  }
+
+
+  // Méthode pour réinitialiser le mot de passe
+  Future<bool> resetPassword(String email, String newPassword) async {
+    try {
+      final response = await Dio().post(
+        '$baseUrl/reset_password/$email',
+        data: jsonEncode({'newPassword': newPassword}),
+        options: Options(headers: {'Content-Type': 'application/json'}),
+      );
+      if (response.statusCode == 200) {
+        return true;
+      }
+    } catch (e) {
+      print('Erreur lors de la réinitialisation du mot de passe: $e');
+    }
+    return false;
+  }
+
+
   Future<UserModel> loginUtilisateur(UserModel utilisateur) async {
     final response = await http.post(
       Uri.parse('$baseUrl/login/user'),
@@ -46,7 +78,6 @@ class UtilisateurService {
     await prefs.remove('connectedUser');
     _connectedUser = null;
   }
-
 
   // Creation des utilisateur
   Future<UserModel> createUser(UserModel user) async {
@@ -147,6 +178,9 @@ class UtilisateurService {
       return false;
     }
   }
+
+
+
 
 }
 
