@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../services/utilisateurService.dart';
-import 'createPasswordOffLigneUser.dart';
+import 'createPasswordOnLigneUser.dart';
 
-class VerifEmailResetNavBarOffLigneUser extends StatefulWidget {
-  const VerifEmailResetNavBarOffLigneUser({super.key});
+class VerifEmailResetNavBarOnLigneUser extends StatefulWidget {
+  const VerifEmailResetNavBarOnLigneUser({super.key});
 
   @override
-  State<VerifEmailResetNavBarOffLigneUser> createState() => _VerifEmailResetNavBarOffLigneUserState();
+  State<VerifEmailResetNavBarOnLigneUser> createState() => _VerifEmailResetNavBarOnLigneUserState();
 }
 
-class _VerifEmailResetNavBarOffLigneUserState extends State<VerifEmailResetNavBarOffLigneUser> {
+class _VerifEmailResetNavBarOnLigneUserState extends State<VerifEmailResetNavBarOnLigneUser> {
   final TextEditingController emailController = TextEditingController();
   final UtilisateurService utilisateurService = GetIt.I<UtilisateurService>();
 
@@ -42,7 +42,7 @@ class _VerifEmailResetNavBarOffLigneUserState extends State<VerifEmailResetNavBa
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CreatePasswordNavBarOffLigneUser(email: email),
+          builder: (context) => CreatePasswordNavBarOnLigneUser(email: email),
         ),
       );
     }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 
+import '../resetPassword/resetKeyOnLigneUser/verifEmailResetPasswordOnLigneUser.dart';
 import '../services/utilisateurService.dart';
 
 
@@ -331,12 +332,12 @@ class _PageChampsInputChangerPasswordState extends State<PageChampsInputChangerP
             ),
             const SizedBox(height: 20),
             GestureDetector(
-              /*onTap: () {
+              onTap: () {
                 Navigator.push(
                     context, MaterialPageRoute(
-                    builder: (context) => PageHeaderVerifEmail(),
+                    builder: (context) => VerifEmailResetNavBarOnLigneUser(),
                 ));
-              },*/
+              },
               child: Text(
                 "Mot de passe oublié ?",
                 style: TextStyle(

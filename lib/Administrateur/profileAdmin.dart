@@ -83,7 +83,32 @@ class _ProfilPageAdminState extends State<ProfilPageAdmin> {
                 ],
               ),
 
-              SizedBox(height: 20),
+              SizedBox(height: 25),
+
+              SizedBox(
+                height: 45,
+                child: ElevatedButton(
+                  child: Text(
+                    "Modifier le profil",
+                    style: TextStyle(
+                        color: Colors.black,
+                        letterSpacing: 1,
+                        fontSize: 16
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green.shade50, // Couleur de fond
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      side: BorderSide(color: Colors.green, width: 0.5), // Bordure verte
+                    ),
+                    elevation: 0, // Enlève l'ombre
+                  ),
+                  onPressed: () {},
+                ),
+              ),
+
+              SizedBox(height: 15),
               // INFORMATION PERSONNELS
               Align(
                 alignment: Alignment.centerLeft,
