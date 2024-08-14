@@ -180,6 +180,12 @@ class UtilisateurService {
   }
 
 
+  void setConnectedUser(UserModel updatedUser) {
+    // Mise à jour de l'utilisateur connecté
+    _connectedUser = updatedUser;
+    // Optionnel : sauvegarder l'utilisateur dans SharedPreferences ou autre
+  }
+
 
 
 }

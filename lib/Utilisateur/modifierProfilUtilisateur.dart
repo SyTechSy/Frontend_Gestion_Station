@@ -1,17 +1,48 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get_it/get_it.dart';
 
+import '../models/utilisateurModel.dart';
+import '../services/utilisateurService.dart';
 import 'champsNomEditProfil.dart';
 
 class ModifierProfilUserPage extends StatefulWidget {
-  const ModifierProfilUserPage({super.key});
+  const ModifierProfilUserPage({super.key,});
 
   @override
   State<ModifierProfilUserPage> createState() => _ModifierProfilUserPageState();
 }
 
 class _ModifierProfilUserPageState extends State<ModifierProfilUserPage> {
+  final utilisateurService = GetIt.instance<UtilisateurService>();
+  late UserModel? user;
+
+  @override
+  void initState() {
+    super.initState();
+    user = utilisateurService.connectedUser;  // Utilisation correcte de la variable d'instance
+  }
+
+  Future<void> _navigateAndUpdate(String field) async {
+    final updatedUser = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChampsEditNomProfil(
+          utilisateurService: utilisateurService,  // Utilisation correcte de la variable d'instance
+          field: field,
+        ),
+      ),
+    );
+
+    // Si l'utilisateur est mis à jour, actualiser l'état
+    if (updatedUser != null) {
+      setState(() {
+        user = updatedUser;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +50,7 @@ class _ModifierProfilUserPageState extends State<ModifierProfilUserPage> {
         backgroundColor: Color(0xff12343b),
         leading: GestureDetector(
           onTap: () {
-            Navigator.pop(context);
+            Navigator.pop(context, user);
           },
           child: Icon(
             Icons.arrow_back_ios,
@@ -32,8 +63,8 @@ class _ModifierProfilUserPageState extends State<ModifierProfilUserPage> {
           child: Text(
             "Modifier le profil",
             style: TextStyle(
-              fontSize: 18,
-              color: Colors.white
+                fontSize: 18,
+                color: Colors.white
             ),
           ),
         ),
@@ -97,7 +128,7 @@ class _ModifierProfilUserPageState extends State<ModifierProfilUserPage> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "À propos de toi"
+                    "À propos de toi"
                 ),
               ),
             ),
@@ -110,16 +141,13 @@ class _ModifierProfilUserPageState extends State<ModifierProfilUserPage> {
                 ),
               ),
               trailing: Text(
-                'Koureissi',
+                user?.nomUtilisateur ?? "",
                 style: TextStyle(
-                  fontSize: 18
+                    fontSize: 18
                 ),
               ),
               onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(
-                    builder: (context) => ChampsEditNomProfil(),
-                ));
+                _navigateAndUpdate("nom");
               },
             ),
             SizedBox(height: 10),
@@ -131,13 +159,13 @@ class _ModifierProfilUserPageState extends State<ModifierProfilUserPage> {
                 ),
               ),
               trailing: Text(
-                'Diakaridia',
+                user?.prenomUtilisateur ?? "",
                 style: TextStyle(
-                  fontSize: 18
+                    fontSize: 18
                 ),
               ),
               onTap: () {
-                // Action pour modifier le nom
+                _navigateAndUpdate("prenom");
               },
             ),
             SizedBox(height: 10),
@@ -153,19 +181,18 @@ class _ModifierProfilUserPageState extends State<ModifierProfilUserPage> {
                 ),
               ),
               trailing: Text(
-                'sydiakaridia38@gmail.com',
+                user?.emailUtilisateur ?? "",
                 style: TextStyle(
-                  fontSize: 16
+                    fontSize: 16
                 ),
               ),
               onTap: () {
-                // Action pour modifier le nom
+                _navigateAndUpdate("email");
               },
             ),
           ],
         ),
       ),
-
     );
   }
 }
