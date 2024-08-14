@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 
 import '../services/utilisateurService.dart';
 import 'changerPassword.dart';
+import 'modifierProfilUtilisateur.dart';
 
 class ProfilPageUtilisateur extends StatefulWidget {
   final UserModel utilisateur;
@@ -142,7 +143,12 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
                     ),
                     elevation: 0, // Enlève l'ombre
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context, MaterialPageRoute(
+                        builder: (context) => ModifierProfilUserPage(),
+                    ));
+                  },
                 ),
               ),
 
