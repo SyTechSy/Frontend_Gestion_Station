@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 
 import '../resetPassword/resetKeyOnLigneUser/verifEmailResetPasswordOnLigneUser.dart';
 import '../services/utilisateurService.dart';
+import 'navBar.dart';
 
 
 class ChangerPasswordPage extends StatefulWidget {
@@ -301,6 +302,12 @@ class _PageChampsInputChangerPasswordState extends State<PageChampsInputChangerP
                     if (success) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Mot de passe modifié avec succès votre nouveau mot de passe est : ${newPassword}')),
+                      );
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NavBarSection(initialTabIndex: 4),
+                        ),
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(

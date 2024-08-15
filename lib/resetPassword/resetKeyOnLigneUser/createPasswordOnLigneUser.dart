@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import '../../Utilisateur/changerPassword.dart';
+import '../../Utilisateur/navBar.dart';
 import '../../Utilisateur/welcomePage.dart';
 import '../../services/utilisateurService.dart';
 
@@ -139,10 +140,10 @@ class _CreatePasswordNavBarOnLigneUserState extends State<CreatePasswordNavBarOn
                       String newPassword = passwordController.text.trim();
                       bool success = await utilisateurService.resetPassword(widget.email, newPassword);
                       if (success) {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ChangerPasswordPage(),
+                            builder: (context) => NavBarSection(initialTabIndex: 4),
                           ),
                         );
                         ScaffoldMessenger.of(context).showSnackBar(

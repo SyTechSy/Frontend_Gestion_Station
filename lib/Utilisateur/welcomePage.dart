@@ -48,7 +48,7 @@ class _WelcomeUserPageState extends State<WelcomeUserPage> {
           children: [
             SizedBox(height: 20),
             Transform.translate(
-              offset: Offset(-40, 50),
+              offset: Offset(-40, 20),
               child: Image.asset(
                 "assets/sttt.png",
               ),
@@ -88,229 +88,237 @@ class _WelcomeUserPageState extends State<WelcomeUserPage> {
                 ],
               ),
             ),
-            Container(
-              margin: EdgeInsets.only(left: 20),
-              child: Row(
+            Transform.translate(
+                offset: Offset(0, -50),
+              child: Column(
                 children: [
-                  Text(
-                    "Je suis un administrateur ",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                  Text(
-                    "~",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => WelcomeAdminPage(),
+                  Container(
+                    margin: EdgeInsets.only(left: 20),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Je suis un administrateur ",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                            letterSpacing: 0.5,
+                          ),
                         ),
-                      );
-                    },
-                    child: Text(
-                      " Connectez-vous",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.green,
-                        letterSpacing: 0.5,
+                        Text(
+                          "~",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => WelcomeAdminPage(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            " Connectez-vous",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.green,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: EdgeInsets.only(left: 20, top: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Connexion",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Color(0xfff3a22e),
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                "utilisateur",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white.withOpacity(0.4),
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+                          Form(
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 250,
+                                  height: 60,
+                                  child: TextField(
+                                    controller: emailController,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      hintText: 'Email',
+                                      hintStyle: TextStyle(
+                                        color: Colors.white.withOpacity(0.6),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(color: Colors.green),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+                                Container(
+                                  width: 250,
+                                  height: 60,
+                                  child: TextField(
+                                    controller: passwordController,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      hintText: 'Mot de passe',
+                                      hintStyle: TextStyle(
+                                        color: Colors.white.withOpacity(0.6),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(color: Colors.green),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                Transform.translate(
+                                  offset: Offset(-65, 0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => VerifEmailResetNavBarOffLigneUser(),
+                                        ),
+                                      );
+                                    },
+                                    child: Text(
+                                      "Mot de passe oublié?",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+                                Transform.translate(
+                                  offset: Offset(-20, 0),
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      String emailUtilisateur = emailController.text.trim();
+                                      String motDePasse = passwordController.text.trim();
+
+                                      int? idUser = _utilisateurService.connectedUser?.idUser;
+                                      String nomUtilisateur = _utilisateurService.connectedUser?.nomUtilisateur ?? 'N/A';
+                                      String prenomUtilisateur = _utilisateurService.connectedUser?.prenomUtilisateur ?? 'N/A';
+
+                                      UserModel utilisateur = UserModel(
+                                        idUser: idUser,
+                                        emailUtilisateur: emailUtilisateur,
+                                        motDePasse: motDePasse,
+                                        nomUtilisateur: nomUtilisateur,
+                                        prenomUtilisateur: prenomUtilisateur,
+                                      );
+
+                                      try {
+                                        loggedInUser = await _utilisateurService.loginUtilisateur(utilisateur);
+
+                                        if (loggedInUser != null && loggedInUser!.idUser != null) {
+                                          setState(() {
+                                            message = 'Utilisateur connecté avec succès';
+                                          });
+
+                                          print('User connecté avec succès:');
+                                          print('ID: ${loggedInUser!.idUser}');
+                                          print('Nom: ${loggedInUser!.nomUtilisateur}');
+                                          print('Prénom: ${loggedInUser!.prenomUtilisateur}');
+                                          print('Email Utilisateur: ${loggedInUser!.emailUtilisateur}');
+                                          print('Mode Passe: ${loggedInUser!.motDePasse}');
+
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => NavBarSection(),
+                                            ),
+                                          );
+                                        } else {
+                                          setState(() {
+                                            message = 'Erreur: données de l\'utilisateur manquantes';
+                                          });
+                                        }
+                                      } catch (e) {
+                                        print('Erreur Utilisateur lors de la connexion: $e');
+
+                                        setState(() {
+                                          message = 'Erreur de connexion: vérifiez vos informations';
+                                        });
+                                      }
+                                    },
+                                    child: Text(
+                                      "Se connecter",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        letterSpacing: 1,
+                                      ),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.green,
+                                      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 12),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(30.0),
+                                          bottomRight: Radius.circular(30.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(message, style: TextStyle(color: Colors.green)),
+                        ],
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                margin: EdgeInsets.only(left: 20, top: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          "Connexion",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Color(0xfff3a22e),
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                        SizedBox(width: 5),
-                        Text(
-                          "utilisateur",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white.withOpacity(0.4),
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Form(
-                      child: Column(
-                        children: [
-                          Container(
-                            width: 250,
-                            height: 60,
-                            child: TextField(
-                              controller: emailController,
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                hintText: 'Email',
-                                hintStyle: TextStyle(
-                                  color: Colors.white.withOpacity(0.6),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: Colors.green),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          Container(
-                            width: 250,
-                            height: 60,
-                            child: TextField(
-                              controller: passwordController,
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                hintText: 'Mot de passe',
-                                hintStyle: TextStyle(
-                                  color: Colors.white.withOpacity(0.6),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: Colors.green),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Transform.translate(
-                            offset: Offset(-65, 0),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => VerifEmailResetNavBarOffLigneUser(),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                "Mot de passe oublié?",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 30),
-                          Transform.translate(
-                            offset: Offset(-20, 0),
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                String emailUtilisateur = emailController.text.trim();
-                                String motDePasse = passwordController.text.trim();
-
-                                int? idUser = _utilisateurService.connectedUser?.idUser;
-                                String nomUtilisateur = _utilisateurService.connectedUser?.nomUtilisateur ?? 'N/A';
-                                String prenomUtilisateur = _utilisateurService.connectedUser?.prenomUtilisateur ?? 'N/A';
-
-                                UserModel utilisateur = UserModel(
-                                  idUser: idUser,
-                                  emailUtilisateur: emailUtilisateur,
-                                  motDePasse: motDePasse,
-                                  nomUtilisateur: nomUtilisateur,
-                                  prenomUtilisateur: prenomUtilisateur,
-                                );
-
-                                try {
-                                  loggedInUser = await _utilisateurService.loginUtilisateur(utilisateur);
-
-                                  if (loggedInUser != null && loggedInUser!.idUser != null) {
-                                    setState(() {
-                                      message = 'Utilisateur connecté avec succès';
-                                    });
-
-                                    print('User connecté avec succès:');
-                                    print('ID: ${loggedInUser!.idUser}');
-                                    print('Nom: ${loggedInUser!.nomUtilisateur}');
-                                    print('Prénom: ${loggedInUser!.prenomUtilisateur}');
-                                    print('Email Utilisateur: ${loggedInUser!.emailUtilisateur}');
-                                    print('Mode Passe: ${loggedInUser!.motDePasse}');
-
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => NavBarSection(),
-                                      ),
-                                    );
-                                  } else {
-                                    setState(() {
-                                      message = 'Erreur: données de l\'utilisateur manquantes';
-                                    });
-                                  }
-                                } catch (e) {
-                                  print('Erreur Utilisateur lors de la connexion: $e');
-
-                                  setState(() {
-                                    message = 'Erreur de connexion: vérifiez vos informations';
-                                  });
-                                }
-                              },
-                              child: Text(
-                                "Se connecter",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  letterSpacing: 1,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
-                                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 12),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(30.0),
-                                    bottomRight: Radius.circular(30.0),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Text(message, style: TextStyle(color: Colors.green)),
-                  ],
-                ),
-              ),
-            ),
+            )
           ],
         ),
       ),
