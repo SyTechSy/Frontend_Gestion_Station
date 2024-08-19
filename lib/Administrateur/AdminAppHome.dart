@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_gestion_station/Administrateur/gestionnaire.dart';
 import 'package:frontend_gestion_station/Administrateur/listDesGestionnaire.dart';
+import 'package:frontend_gestion_station/Administrateur/payment/choixMethodePayment.dart';
 import 'package:frontend_gestion_station/Administrateur/profileAdmin.dart';
 
 import '../models/adminModel.dart';
@@ -27,7 +28,7 @@ class _AdminAppHomesPageState extends State<AdminAppHomesPage> {
       AdminGestionnairePage(),
       //InscriptionPage(),
       ListGestionnairePage(),
-      Center(child: Text("Historique", style: TextStyle(fontSize: 30))),
+      SectonChoixMethodePage(),
       ProfilPageAdmin(admin: widget.admin), // Pass the admin object here
     ];
   }
@@ -45,7 +46,7 @@ class _AdminAppHomesPageState extends State<AdminAppHomesPage> {
       items: [
         BottomNavigationBarItem(icon: Icon(Icons.home_outlined, size: 30,), label: 'Station'),
         BottomNavigationBarItem(icon: Icon(Icons.supervised_user_circle_outlined), label: 'jout User'),
-        BottomNavigationBarItem(icon: Icon(Icons.screen_rotation_alt), label: 'Bons'),
+        BottomNavigationBarItem(icon: Icon(Icons.payment_rounded), label: 'Methode de payment'),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
       ],
       onTap: (index) {

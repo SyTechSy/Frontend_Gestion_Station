@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:frontend_gestion_station/models/adminModel.dart';
 import 'package:get_it/get_it.dart';
 
+import '../Utilisateur/welcomePage.dart';
 import '../models/utilisateurModel.dart';
+import '../services/adminService.dart';
 import '../services/utilisateurService.dart';
 
 class ProfilPageAdmin extends StatefulWidget {
@@ -14,6 +16,7 @@ class ProfilPageAdmin extends StatefulWidget {
 }
 
 class _ProfilPageAdminState extends State<ProfilPageAdmin> {
+  final adminService = GetIt.instance<AdminService>();
   @override
   Widget build(BuildContext context) {
     final admin = widget.admin;
@@ -351,8 +354,40 @@ class _ProfilPageAdminState extends State<ProfilPageAdmin> {
                     color: Colors.red,
                   ),
                 ),
-                onTap: () {
-                  // Ajoutez ici la logique pour déconnecter l'administrateur
+                onTap: () async {
+                  bool shouldLogout = await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Confirmation'),
+                        content: Text('Voulez-vous vraiment vous déconnecter ?'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('Annuler'),
+                            onPressed: () {
+                              Navigator.of(context).pop(false); // Retourner false si l'utilisateur annule
+                            },
+                          ),
+                          TextButton(
+                            child: Text('Déconnecter'),
+                            onPressed: () {
+                              Navigator.of(context).pop(true); // Retourner true si l'utilisateur confirme
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+
+                  if (shouldLogout == true) {
+                    // Appeler la méthode de déconnexion
+                    await adminService.logout();
+
+                    // Naviguer vers la page de connexion
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => WelcomeUserPage()),
+                    );
+                  }
                 },
               ),
             ],

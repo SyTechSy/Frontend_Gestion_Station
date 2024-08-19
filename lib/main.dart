@@ -15,6 +15,7 @@ import 'Utilisateur/homes.dart';
 import 'Utilisateur/navBar.dart';
 import 'brouillon/admin_inscription_user.txt';
 import 'compte/connexion.dart';
+import 'models/adminModel.dart';
 import 'models/utilisateurModel.dart';
 
 
@@ -40,25 +41,36 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   final utilisateurService = GetIt.instance<UtilisateurService>();
+  final adminService = GetIt.instance<AdminService>();
   await utilisateurService.initialize(); // Charge l'utilisateur stocké
-  runApp(MyApp(utilisateurService: utilisateurService));
+  await adminService.initialize();
+  runApp(MyApp(utilisateurService: utilisateurService, adminService: adminService,));
 }
 
 class MyApp extends StatelessWidget {
   //final UserModel utilisateur;
   final UtilisateurService utilisateurService;
-  const MyApp({super.key, required this.utilisateurService});
+  final AdminService adminService;
+ // final AdminModel admin;
+  const MyApp({super.key, required this.utilisateurService, required this.adminService,});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: {
-        "/" : (context) {
-          if (utilisateurService.connectedUser != null) {
-            return NavBarSection(); // Ajoutez '!' pour dire à Dart que vous êtes sûr que ce n'est pas null
-          } else {
-            return WelcomeUserPage(); // Redirection vers la page de connexion si l'utilisateur est null
+        "/": (context) {
+          // Vérifier si un administrateur est connecté
+          if (adminService.connectedAdmin != null) {
+            return AdminAppHomesPage(admin: adminService.connectedAdmin!);
+          }
+          // Sinon, vérifier si un utilisateur est connecté
+          else if (utilisateurService.connectedUser != null) {
+            return NavBarSection();
+          }
+          // Si aucun des deux n'est connecté, retourner à la page de bienvenue
+          else {
+            return WelcomeUserPage();
           }
         },
       },

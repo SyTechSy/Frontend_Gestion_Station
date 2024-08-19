@@ -20,7 +20,7 @@ class UtilisateurService {
     }
   }
 
-  // Méthode pour vérifier l'email
+  // Méthode pour vérifier l'email pour mot de passse
   Future<bool> verifEmail(String emailUtilisateur) async {
     try {
       final response = await Dio().get('$baseUrl/check_email/$emailUtilisateur');
@@ -187,9 +187,7 @@ class UtilisateurService {
   }
 
 
-
 }
-
 
 
 /*Future<UserModel> createUser(UserModel utilisateur) async {
@@ -227,7 +225,6 @@ class UtilisateurService {
       throw Exception('Erreur lors de la connexion: ${response.statusCode}');
     }
   }*/
-
 
 /*Future<UserModel> loginUtilisateur(UserModel utilisateur) async {
     final response = await http.post(
