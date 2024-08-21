@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -12,6 +14,30 @@ class ListGestionnairePage extends StatefulWidget {
 }
 
 class _ListGestionnairePageState extends State<ListGestionnairePage> {
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Gestionnaires'),
+        ),
+        body: GestionnairesPage(),
+      ),
+    );
+  }
+  
+}
+ 
+class GestionnairesPage extends StatefulWidget {
+  const GestionnairesPage({super.key});
+
+  @override
+  State<GestionnairesPage> createState() => _GestionnairesPageState();
+}
+
+class _GestionnairesPageState extends State<GestionnairesPage> with SingleTickerProviderStateMixin {
   final _utilisateurService = GetIt.instance<UtilisateurService>();
   bool isLoading = true;
   List<UserModel> utilisateurs = [];
@@ -21,6 +47,7 @@ class _ListGestionnairePageState extends State<ListGestionnairePage> {
 
   @override
   void dispose() {
+    _controller.dispose();
     _nomController.dispose();
     _prenomController.dispose();
     super.dispose();
@@ -30,6 +57,10 @@ class _ListGestionnairePageState extends State<ListGestionnairePage> {
   void initState() {
     super.initState();
     _fetchUsers();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 2),
+    )..repeat();
   }
   // Funtion pour les lists d'User
   Future<void> _fetchUsers() async {
@@ -59,220 +90,204 @@ class _ListGestionnairePageState extends State<ListGestionnairePage> {
       showErrorMessage('Erreur lors de la suppression de l\'utilisateur');
     }
   }
-  // Fonction pour envoyer un SMS
-  /*void _sendSMS(String message, List<String> recipients) async {
-    String result = await sendSMS(
-      message: message,
-      recipients: recipients,
-    ).catchError((onError) {
-      print(onError);
-    });
-    print(result);
-  }*/
-  // Fonction pour partager un utilisateur via SMS
-  /*void _shareUser(UserModel utilisateur) {
-    String message = 'Nom: ${utilisateur.nomUtilisateur}\n'
-        'Prénom: ${utilisateur.prenomUtilisateur}\n'
-        'Gestionnaire de service station';
-    List<String> recipients = []; // Ajoutez des numéros de téléphone si nécessaire
 
-    _sendSMS(message, recipients);
-  }*/
+  late AnimationController _controller;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Color(0xff12343b),
-        title: Center(child: Text('Page ajout',style: TextStyle(color: Colors.white),)),
-      ),
-      body: Container(
-        margin: EdgeInsets.only(top: 10),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(left: 10),
-                  padding: EdgeInsets.symmetric(horizontal: 80, vertical: 10),
-                  decoration: BoxDecoration(
-                      color: Color(0xff12343b),
-                      borderRadius: BorderRadius.circular(20.0)
-                  ),
-                  child: Text(
-                    'Mes Gestionnaires',
-                    style: TextStyle(
-                        color: Colors.white
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(right: 10),
-                  child: ElevatedButton(
-                    child: Text(
-                      'Ajouter',
+  void _showBottomSheetAjoutUsers(BuildContext context) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: Colors.grey[50],
+      context: context,
+      builder: (context) {
+        return Container(
+          width: double.infinity,
+          child: Wrap(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 20, left: 20, right: 20,),
+                child: Column(
+                  //mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "Création de gestionnaire",
                       style: TextStyle(
-                          color: Colors.white
+                        fontSize: 20,
+
                       ),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xff12343b),
-                      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              scrollable: true,
-                              title: const Text("Inscription", style: TextStyle(fontSize: 18),),
-                              content: Form(
-                                child: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            "NOM",
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        TextField(
-                                          controller: _nomController,
-                                          decoration: InputDecoration(
-                                            hintText: 'Votre Nom ici',
-                                          ),
-                                        ),
-                                        SizedBox(height: 20),
-
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            "PRENOM",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        TextField(
-                                          controller: _prenomController,
-                                          decoration: InputDecoration(
-                                            hintText: 'Votre Prénom ici',
-                                          ),
-                                        ),
-                                        SizedBox(height: 30),
-                                        ElevatedButton(
-                                          onPressed: () async {
-
-                                            UserModel newUser = UserModel(
-                                                nomUtilisateur: _nomController.text,
-                                                prenomUtilisateur: _prenomController.text
-                                            );
-
-                                            try {
-                                              UserModel createdUser = await _utilisateurService.createUser(newUser);
-                                              print('Creation de l\'utilisateur a été effectuer avec succès: $createdUser');
-                                              showSuccessMessage('Creation avec succès');
-
-                                              Navigator.pop(context);
-
-                                              _nomController.text = '';
-                                              _prenomController.text = '';
-
-                                              setState(() {
-                                                _fetchUsers();
-                                              });
-
-                                            } catch (e) {
-                                              print('Erreur lors de la creation de l\'utilisateur: $e');
-                                              showErrorMessage('Erreur de creation verifie que je champs ne sont pas vide');
-                                            }
-
-                                          },
-                                          child: Text(
-                                            "Inscrire",
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.white,
-                                              letterSpacing: 1,
-                                            ),
-                                          ),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Color(0xff12343b),
-                                            padding: EdgeInsets.symmetric(horizontal: 80, vertical: 10),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(10),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(height: 20),
-                                        Text(
-                                          "En appuyant sur \"Inscrire\", l'email et le \nmot de passe de l'utilisateur sont \ngénérés automatiquement.",
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            letterSpacing: 0.5,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        SizedBox(height: 60),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                    const SizedBox(height: 20),
+                    Form(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "NOM",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
-                            );
-                          }
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-            Expanded(
-              child: Visibility(
-                visible: isLoading,
-                child: Center(child: CircularProgressIndicator()),
-                replacement: RefreshIndicator(
-                  onRefresh: _fetchUsers,
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 5.0,
-                      // crossAxisSpacing: 0.0,
-                      childAspectRatio: 0.8,
+                            ),
+                          ),
+                          TextField(
+                            controller: _nomController,
+                            decoration: InputDecoration(
+                              hintText: 'Votre Nom ici',
+                            ),
+                          ),
+                          SizedBox(height: 20),
+
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "PRENOM",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          TextField(
+                            controller: _prenomController,
+                            decoration: InputDecoration(
+                              hintText: 'Votre Prénom ici',
+                            ),
+                          ),
+                          SizedBox(height: 30),
+                          ElevatedButton(
+                            onPressed: () async {
+
+                              UserModel newUser = UserModel(
+                                  nomUtilisateur: _nomController.text,
+                                  prenomUtilisateur: _prenomController.text
+                              );
+
+                              try {
+                                UserModel createdUser = await _utilisateurService.createUser(newUser);
+                                print('Creation de l\'utilisateur a été effectuer avec succès: $createdUser');
+                                showSuccessMessage('Creation avec succès');
+
+                                Navigator.pop(context);
+
+                                _nomController.text = '';
+                                _prenomController.text = '';
+
+                                setState(() {
+                                  _fetchUsers();
+                                });
+
+                              } catch (e) {
+                                print('Erreur lors de la creation de l\'utilisateur: $e');
+                                showErrorMessage('Erreur de creation verifie que je champs ne sont pas vide');
+                              }
+
+                            },
+                            child: Text(
+                              "Inscrire",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xff12343b),
+                              padding: EdgeInsets.symmetric(horizontal: 100, vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            "En appuyant sur \"Inscrire\", l'email et le \nmot de passe de l'utilisateur sont \ngénérés automatiquement.",
+                            style: TextStyle(
+                              fontSize: 13,
+                              letterSpacing: 0.5,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 60),
+                        ],
+                      ),
                     ),
-                    itemCount: utilisateurs.length,
-                    itemBuilder: (context, index) {
-                      return buildGestionnaireCard(
-                        // Afficher
-                        nomUtilisateur: utilisateurs[index].nomUtilisateur!,
-                        prenomUtilisateur: utilisateurs[index].prenomUtilisateur!,
-                        // Supprimer
-                        utilisateur: utilisateurs[index],
-                      );
-                    },
-                  ),
+                  ],
                 ),
-              ),
-            ),
-          ],
-        ),
-      ),
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Section "Ajouter un Gestionnaire"
+          GestureDetector(
+            onTap: () => _showBottomSheetAjoutUsers(context),
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                return DashedBorder(
+                  progress: _controller.value,
+                  child: Container(
+                    width: double.infinity,
+                    height: 100,
+                    child: Center(
+                      child: Icon(
+                        Icons.person_add,
+                        size: 40,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          SizedBox(height: 16),
+          // Titre "Les Gestionnaires"
+          Text(
+            'Tous les Gestionnaires',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          SizedBox(height: 10),
+          // Gestionnaire existant
+          Expanded(
+            child: Visibility(
+              visible: isLoading,
+              child: Center(child: CircularProgressIndicator()),
+              replacement: RefreshIndicator(
+                onRefresh: _fetchUsers,
+                child: ListView.builder(
+                  itemCount: utilisateurs.length,
+                  itemBuilder: (context, index) {
+                    return buildGestionnaireCard(
+                      // Afficher
+                      nomUtilisateur: utilisateurs[index].nomUtilisateur,
+                      prenomUtilisateur: utilisateurs[index].prenomUtilisateur,
+                      // Supprimer
+                      utilisateur: utilisateurs[index],
+                    );
+                  }
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
 
   void showSuccessMessage(String message) {
     final snackBar = SnackBar(
@@ -305,72 +320,137 @@ class _ListGestionnairePageState extends State<ListGestionnairePage> {
     required UserModel utilisateur
   }) {
     return Container(
-      margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 10),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+      margin: const EdgeInsets.only(bottom: 15),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(width: 0.5, color: Colors.black12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            title: Text(
+              '${utilisateur.nomUtilisateur} ${utilisateur.prenomUtilisateur}',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            trailing: Transform.translate(
+              offset: Offset(25, 0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  PopupMenuButton<String>(
-                    icon: Icon(Icons.more_vert),
-                    onSelected: (String result) {
-                      switch (result) {
-                        case 'Modifier':
-                        // Logique pour modifier
-                          print('Modifier sélectionné');
-                          break;
-                        case 'Supprimer':
-                          _deleteUser(utilisateur.idUser!);
-                          print('Supprimer sélectionné');
-                          break;
-                        case 'Partager':
-                          //_shareUser(utilisateur);
-                          print('Partager sélectionné');
-                          break;
-                      }
+                  IconButton(
+                    icon: Icon(Icons.edit, size: 20, color: Colors.blue,),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete, size: 20, color: Colors.red),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("Confirmation"),
+                            content: Text("Êtes-vous sûr de vouloir supprimer cet utilisateur ?"),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text("Annuler"),
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // Ferme la boîte de dialogue
+                                },
+                              ),
+                              TextButton(
+                                child: Text("Confirmer"),
+                                onPressed: () {
+                                  _deleteUser(utilisateur.idUser!); // Appelle la méthode de suppression
+                                  Navigator.of(context).pop(); // Ferme la boîte de dialogue
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
-                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                      const PopupMenuItem<String>(
-                        value: 'Modifier',
-                        child: Text('Modifier'),
-                      ),
-                      const PopupMenuItem<String>(
-                        value: 'Supprimer',
-                        child: Text('Supprimer'),
-                      ),
-                      const PopupMenuItem<String>(
-                        value: 'Partager',
-                        child: Text('Partager'),
-                      ),
-                    ],
                   ),
                 ],
               ),
-              CircleAvatar(
-                radius: 40,
-                backgroundImage: AssetImage("assets/logoHy.png"),
-              ),
-              SizedBox(height: 8),
-              Text(
-                '${utilisateur.nomUtilisateur} ${utilisateur.prenomUtilisateur}',
-                style: TextStyle(fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 4),
-              Text(
-                'Gestionnaire de service station',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 12
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+          Container(
+            width: double.infinity,
+            height: 130,
+            margin: EdgeInsets.only(left: 10, bottom: 10, right: 10),
+            decoration: BoxDecoration(
+              border: Border.all(width: 1, color: Color(0xff12343b).withOpacity(0.2)),
+              borderRadius: BorderRadius.circular(15),
+              image: DecorationImage(
+                image: AssetImage("assets/logo/image_icon_homme_femme.jpg"),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
+
+
+
+class DashedBorder extends StatelessWidget {
+  final Widget child;
+  final double progress;
+
+  DashedBorder({required this.child, required this.progress});
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: DashedBorderPainter(progress),
+      child: child,
+    );
+  }
+}
+
+class DashedBorderPainter extends CustomPainter {
+  final double progress;
+
+  DashedBorderPainter(this.progress);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint paint = Paint()
+      ..color = Colors.grey
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+
+    final Path path = Path()
+      ..addRRect(RRect.fromRectAndRadius(
+          Rect.fromLTWH(0, 0, size.width, size.height),
+          Radius.circular(10)));
+
+    final dashWidth = 5.0;
+    final dashSpace = 5.0;
+    double distance = (progress * (dashWidth + dashSpace)) % (dashWidth + dashSpace);
+
+    for (PathMetric pathMetric in path.computeMetrics()) {
+      while (distance < pathMetric.length) {
+        final extractPath = pathMetric.extractPath(
+          distance,
+          distance + dashWidth,
+        );
+        canvas.drawPath(extractPath, paint);
+        distance += dashWidth + dashSpace;
+      }
+      distance -= pathMetric.length;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
+}
+

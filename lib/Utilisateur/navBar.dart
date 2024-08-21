@@ -11,6 +11,7 @@ import '../add/bonAjouter.dart';
 import '../models/utilisateurModel.dart';
 import '../services/utilisateurService.dart';
 import '../stationPage/sommePage.dart';
+import '../usersCreation/budgetSommeTotal.dart';
 import 'accueil.dart';
 import 'homes.dart';
 
@@ -36,9 +37,9 @@ class _NavBarSectionState extends State<NavBarSection> {
     screens = [
       //HomesSection(),
       AccueilPage(),
-      SommePage(),
+      BudgetSommeTotal(),
       Center(child: Text("")),
-      Center(child: Text("Page history",style: TextStyle(fontSize: 30),)),
+      SommePage(),
       ProfilPageUtilisateur(utilisateur: utilisateurService.connectedUser!),
     ];
   }
