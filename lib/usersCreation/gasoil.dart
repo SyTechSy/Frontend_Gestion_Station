@@ -18,6 +18,13 @@ class SectionGasoil extends StatefulWidget {
   //final UserModel utilisateur;
   const SectionGasoil({super.key});
 
+  static double getLatestBudgetObtenu(List<DevisGasoilModel> devisStationsGasoil) {
+    if (devisStationsGasoil.isNotEmpty) {
+      return devisStationsGasoil.last.budgetObtenu ?? 0.0;
+    }
+    return 0.0;
+  }
+
   @override
   State<SectionGasoil> createState() => _SectionGasoilState();
 }

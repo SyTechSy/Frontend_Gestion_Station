@@ -5,8 +5,10 @@ import 'package:frontend_gestion_station/services/budgetTotalService.dart';
 import 'package:get_it/get_it.dart';
 
 import '../EditPage/editBudgetTotal.dart';
+import '../models/devisStationGasoilModel.dart';
 import '../models/devisStationModel.dart';
 import '../models/utilisateurModel.dart';
+import '../services/devisStationGasoilService.dart';
 import '../services/devisStationService.dart';
 import '../services/utilisateurService.dart';
 import 'detailBudgetSommeTotal.dart';
@@ -23,6 +25,7 @@ class _BudgetSommeTotalState extends State<BudgetSommeTotal> {
   final _budgetTotalService = GetIt.instance<BudgetTotalService>();
   final _utilisateurService = GetIt.instance<UtilisateurService>();
   final _devisService = GetIt.instance<DevisService>();
+  final _devisGasoilService = GetIt.instance<DevisGasoilService>();
 
   final _budgetTotalEssenceController = TextEditingController();
   final _budgetTotalGasoilController = TextEditingController();
@@ -107,6 +110,7 @@ class _BudgetSommeTotalState extends State<BudgetSommeTotal> {
 
   // Section de Auto Collage
   List<DevisModel> _devisStations = [];
+  List<DevisGasoilModel> _devisStationsGasoil = [];
 
   @override
   void initState() {
@@ -118,13 +122,17 @@ class _BudgetSommeTotalState extends State<BudgetSommeTotal> {
     try {
       int? idUser = _utilisateurService.connectedUser?.idUser;
       if (idUser != null) {
+        // Récupération des devis
         List<DevisModel> devisStations = await _devisService.fetchDevis(idUser);
+        List<DevisGasoilModel> devisStationsGasoil = await _devisGasoilService.fetchDevis(idUser);
 
-        // Trier les devis par date de création, du plus récent au plus ancien
+        // Trier les listes de devis par date de création, du plus récent au plus ancien
         devisStations.sort((a, b) => b.dateAddDevis.compareTo(a.dateAddDevis));
+        devisStationsGasoil.sort((a, b) => b.dateAddDevis.compareTo(a.dateAddDevis));
 
         setState(() {
           _devisStations = devisStations;
+          _devisStationsGasoil = devisStationsGasoil;
         });
       } else {
         print('ID utilisateur non disponible');
@@ -134,8 +142,7 @@ class _BudgetSommeTotalState extends State<BudgetSommeTotal> {
     }
   }
 
-
-  void _autoFillBudget() {
+  void _autoFillBudgetEssence() {
     if (_devisStations.isNotEmpty) {
       // Récupérer le dernier devis (le plus récent)
       DevisModel latestDevis = _devisStations.first;
@@ -145,7 +152,21 @@ class _BudgetSommeTotalState extends State<BudgetSommeTotal> {
         _budgetTotalEssenceController.text = latestBudgetObtenu.toString();
       });
     } else {
-      print('Aucun devis disponible');
+      print('Aucun budget de devis essence disponible');
+    }
+  }
+
+  void _autoFillBudgetGasoil() {
+    if (_devisStationsGasoil.isNotEmpty) {
+      // Récupérer le dernier devis gasoil (le plus récent)
+      DevisGasoilModel latestDevis = _devisStationsGasoil.first;
+      double latestBudgetObtenu = latestDevis.budgetObtenu;
+
+      setState(() {
+        _budgetTotalGasoilController.text = latestBudgetObtenu.toString();
+      });
+    } else {
+      print('Aucun budget de devis gasoil disponible');
     }
   }
 
@@ -181,22 +202,12 @@ class _BudgetSommeTotalState extends State<BudgetSommeTotal> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    onTap:  _autoFillBudget,
-                    child: Text(
-                      "Auto collage",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.green
-                      ),
-                    ),
-                  ),
                   TextFormField(
                     controller: _budgetTotalEssenceController,
                     keyboardType: TextInputType.number,
                     style: const TextStyle(color: Colors.black),
                     decoration: InputDecoration(
-                      labelText: "Total budget essence",
+                      labelText: "Budget essence",
                       labelStyle: TextStyle(color: Colors.black.withOpacity(0.8)),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: const Color(0xff12343b).withOpacity(0.6)),
@@ -204,7 +215,20 @@ class _BudgetSommeTotalState extends State<BudgetSommeTotal> {
                       focusedBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.green),
                       ),
-                      contentPadding: const EdgeInsets.only(bottom: -5, top: -5),
+                      suffixIcon: GestureDetector(
+                        onTap:  _autoFillBudgetEssence,
+                        child: Transform.translate(
+                          offset: Offset(0, 22),
+                          child: Text(
+                            "Auto collage",
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.green
+                            ),
+                          ),
+                        ),
+                      ),
+                      //contentPadding: const EdgeInsets.only(bottom: -2, top: -2),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -216,7 +240,7 @@ class _BudgetSommeTotalState extends State<BudgetSommeTotal> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   TextFormField(
                     controller: _budgetTotalGasoilController,
                     keyboardType: TextInputType.number,
@@ -230,7 +254,20 @@ class _BudgetSommeTotalState extends State<BudgetSommeTotal> {
                       focusedBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.green),
                       ),
-                      contentPadding: const EdgeInsets.only(bottom: -5, top: -5),
+                      suffixIcon: GestureDetector(
+                        onTap:  _autoFillBudgetGasoil,
+                        child: Transform.translate(
+                          offset: Offset(0, 22),
+                          child: Text(
+                            "Auto collage",
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.green
+                            ),
+                          ),
+                        ),
+                      ),
+                      //contentPadding: const EdgeInsets.only(bottom: -5, top: -5),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -242,7 +279,7 @@ class _BudgetSommeTotalState extends State<BudgetSommeTotal> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   TextFormField(
                     controller: _argentRecuTravailController,
                     keyboardType: TextInputType.number,
@@ -256,7 +293,7 @@ class _BudgetSommeTotalState extends State<BudgetSommeTotal> {
                       focusedBorder: const UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.green),
                       ),
-                      contentPadding: const EdgeInsets.only(bottom: -5, top: -5),
+                      //contentPadding: const EdgeInsets.only(bottom: -5, top: -5),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
