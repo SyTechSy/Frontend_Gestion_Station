@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend_gestion_station/models/budgetTotalModel.dart';
 import 'package:get_it/get_it.dart';
 
+import '../Utilisateur/navBar.dart';
 import '../services/budgetTotalService.dart';
 import '../services/utilisateurService.dart';
 
@@ -146,7 +147,17 @@ class _PageChampsModifierBudgetInputState extends State<PageChampsModifierBudget
       try {
         await _budgetTotalService.modifierBudgetTotal(widget.idBudgetTotal, budgetstation);
         // Renvoyer le budget modifié au parent
-        Navigator.pop(context, budgetstation);
+        //Navigator.pop(context, budgetstation);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NavBarSection(
+              initialTabIndex: 1,
+              budgetstation: budgetstation,
+            ),
+          ),
+              (Route<dynamic> route) => false,
+        );
       } catch (e) {
         print('Erreur lors de la modification du budget total: $e');
         setState(() {

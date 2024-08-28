@@ -5,6 +5,7 @@ import 'package:frontend_gestion_station/services/budgetTotalService.dart';
 import 'package:get_it/get_it.dart';
 
 import '../EditPage/editBudgetTotal.dart';
+import '../Utilisateur/navBar.dart';
 import '../models/devisStationGasoilModel.dart';
 import '../models/devisStationModel.dart';
 import '../models/utilisateurModel.dart';
@@ -85,11 +86,23 @@ class _BudgetSommeTotalState extends State<BudgetSommeTotal> {
         if (idUser != null && champsInBudgetTotal != null && champsInBudgetTotal!.idBudgetTotal != null) {
           setState(() {
             message = 'Budget Total créé avec succès';
+            //Navigator.pop(context, budgetstation);
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NavBarSection(
+                  initialTabIndex: 1,
+                  budgetstation: budgetstation,
+                ),
+              ),
+                  (Route<dynamic> route) => false,
+            );
 
             // Vider les champs après la validation et la soumission
             _budgetTotalEssenceController.clear();
             _budgetTotalGasoilController.clear();
             _argentRecuTravailController.clear();
+
           });
         } else {
           setState(() {
@@ -152,6 +165,7 @@ class _BudgetSommeTotalState extends State<BudgetSommeTotal> {
         _budgetTotalEssenceController.text = latestBudgetObtenu.toString();
       });
     } else {
+      showErrorMessage('Aucun budget de devis essence disponible');
       print('Aucun budget de devis essence disponible');
     }
   }
@@ -166,6 +180,7 @@ class _BudgetSommeTotalState extends State<BudgetSommeTotal> {
         _budgetTotalGasoilController.text = latestBudgetObtenu.toString();
       });
     } else {
+      showErrorMessage('Aucun budget de devis gasoil disponible');
       print('Aucun budget de devis gasoil disponible');
     }
   }
@@ -449,141 +464,183 @@ class _ListBudgetSommeTotalState extends State<ListBudgetSommeTotal> {
         ? Center(child: CircularProgressIndicator())
         : RefreshIndicator(
           onRefresh: _fetchBudgetTotal,
-          child: ListView.builder(
-            itemCount: budgetTotalStation.length,
-            itemBuilder: (context, index) {
-            final budget = budgetTotalStation[index];
-            return Slidable(
-            endActionPane: ActionPane(
-                motion: StretchMotion(),
-                children: [
-                  SlidableAction(
-                    backgroundColor: Colors.green,
-                    onPressed: (context) async {
-                      final result = await Navigator.push(
-                        context, MaterialPageRoute(
-                        builder: (context) => ModifierBudgetTotal(idBudgetTotal: budget.idBudgetTotal!, budget: budget), // Passez le devisId ici
-                      ),);
-                      if (result != null) {
-                        setState(() {
-                          budgetTotalStation[index] = result;
-                        });
-                      }
-                    },
-                    icon: Icons.edit,
-                    label: 'Modifier',
-                  ),
-                  SlidableAction(
-                    backgroundColor: Colors.red,
-                    onPressed: (context) {
-                      if (budget.idBudgetTotal != null) {
-                        _deleteBudgetTotal(budget.idBudgetTotal!);
-                      } else {
-                        print('Budget total ID is null, cannot delete');
-                      }
-                    },
-                    icon: Icons.delete,
-                    label: 'Supprimer',
-                  ),
-                ]),
-            child: GestureDetector(
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => DetailBudgetSommeTotal(budget: budget )
-              ));
-            },
-            child: Column(
-              children: [
-                ListTile(
-                  /*leading: Container(
-                    height: 50,
-                    width: 50,
-                    child: const CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      backgroundImage: AssetImage(
-                        "assets/logo/profillllllll.png"
-                      ),
-                    ),
-                  ),*/
-                  title: Transform.translate(
-                    offset: Offset(-8, 0),
-                    child: Text(
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      '${budget.nomUtilisateur} ${budget.prenomUtilisateur}',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  subtitle: Transform.translate(
-                    offset: Offset(-8, 0),
-                    child: Text(
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      budget.dateAddBudgetTotal.toString(),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ),
-                  trailing: Column(
+          child: Visibility(
+            visible: budgetTotalStation.isNotEmpty,
+            replacement: Transform.translate(
+              offset: Offset(0, -0),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  width: 300,
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
+                      /*SvgPicture.asset(
+                          "assets/svg/camera-add-svgrepo-com.svg",
+                        ),*/
+                      Icon(
+                        Icons.add_card_rounded,
+                        size: 50,
+                      ),
+                      SizedBox(height: 15),
                       Text(
-                        '${budget.sommeTotalBudgets.toString()} XOP',
+                        textAlign: TextAlign.center,
+                        "Vous n'avez pas encore créé de budget total",
                         style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 0.5,
+                            fontSize: 16,
+                            color: Colors.red
                         ),
                       ),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '${budget.perteArgent.toString()} XOP',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.red,
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                          const SizedBox(width: 5),
-                          const Text('||'),
-                          const SizedBox(width: 5),
-                          Text(
-                            '${budget.gainArgent.toString()} XOP',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.green,
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                        ],
+                      SizedBox(height: 10),
+                      Text(
+                        textAlign: TextAlign.center,
+                        "Créez votre budget total, et il s'affichera ici. Commencez dès maintenant.",
+                        style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.black54
+                        ),
                       ),
                     ],
                   ),
-
                 ),
-                Container(
-                  margin: EdgeInsets.only(left: 20),
-                  decoration: BoxDecoration(
-                      border: Border(bottom: BorderSide(width: 1, color: Colors.grey.withOpacity(0.1)))
-                  ),
-                )
-              ],
+              ),
             ),
+            child: ListView.builder(
+              itemCount: budgetTotalStation.length,
+              itemBuilder: (context, index) {
+              final budget = budgetTotalStation[index];
+              return Slidable(
+              endActionPane: ActionPane(
+                  motion: StretchMotion(),
+                  children: [
+                    SlidableAction(
+                      backgroundColor: Colors.green,
+                      onPressed: (context) async {
+                        final result = await Navigator.push(
+                          context, MaterialPageRoute(
+                          builder: (context) => ModifierBudgetTotal(idBudgetTotal: budget.idBudgetTotal!, budget: budget), // Passez le devisId ici
+                        ),);
+                        if (result != null) {
+                          setState(() {
+                            budgetTotalStation[index] = result;
+                          });
+                        }
+                      },
+                      icon: Icons.edit,
+                      label: 'Modifier',
+                    ),
+                    SlidableAction(
+                      backgroundColor: Colors.red,
+                      onPressed: (context) {
+                        if (budget.idBudgetTotal != null) {
+                          _deleteBudgetTotal(budget.idBudgetTotal!);
+                        } else {
+                          print('Budget total ID is null, cannot delete');
+                        }
+                      },
+                      icon: Icons.delete,
+                      label: 'Supprimer',
+                    ),
+                  ]),
+              child: GestureDetector(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => DetailBudgetSommeTotal(budget: budget )
+                ));
+              },
+              child: Column(
+                children: [
+                  ListTile(
+                    /*leading: Container(
+                      height: 50,
+                      width: 50,
+                      child: const CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: AssetImage(
+                          "assets/logo/profillllllll.png"
+                        ),
+                      ),
+                    ),*/
+                    title: Transform.translate(
+                      offset: Offset(-8, 0),
+                      child: Text(
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        '${budget.nomUtilisateur} ${budget.prenomUtilisateur}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    subtitle: Transform.translate(
+                      offset: Offset(-8, 0),
+                      child: Text(
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        budget.dateAddBudgetTotal.toString(),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ),
+                    trailing: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          '${budget.sommeTotalBudgets.toString()} XOP',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '${budget.perteArgent.toString()} XOP',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.red,
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            const Text('||'),
+                            const SizedBox(width: 5),
+                            Text(
+                              '${budget.gainArgent.toString()} XOP',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.green,
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 20),
+                    decoration: BoxDecoration(
+                        border: Border(bottom: BorderSide(width: 1, color: Colors.grey.withOpacity(0.1)))
+                    ),
+                  )
+                ],
+              ),
+            ),
+                    );
+                  },
+                ),
           ),
-        );
-      },
-    ),
     );
   }
 

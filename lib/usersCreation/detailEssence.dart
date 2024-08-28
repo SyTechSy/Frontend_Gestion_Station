@@ -66,7 +66,17 @@ class _SectionDetailPageState extends State<SectionDetailPage> {
                   ),
                   SizedBox(width: 10),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ModifierDevisEssence(
+                            devisId: widget.devis.id!,
+                            devis: widget.devis,
+                          ),
+                        ),
+                      );
+                    },
                     child: Text(
                       'Modifier',
                       style: TextStyle(

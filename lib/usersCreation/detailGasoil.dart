@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:frontend_gestion_station/models/devisStationModel.dart';
 import 'package:get_it/get_it.dart';
 
+import '../EditPage/editDevisGasoil.dart';
 import '../Utilisateur/navBar.dart';
 import '../models/devisStationGasoilModel.dart';
 import '../models/utilisateurModel.dart';
@@ -64,11 +65,24 @@ class _SectionDetailGasoilPageState extends State<SectionDetailGasoilPage> {
                     ),
                   ),
                   SizedBox(width: 10),
-                  Text(
-                    'Modifier',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ModifierDevisGasoil(
+                            devisId: widget.devis.id!,
+                            devis: widget.devis,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Modifier',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                      ),
                     ),
                   )
                   //SizedBox(height: 100),

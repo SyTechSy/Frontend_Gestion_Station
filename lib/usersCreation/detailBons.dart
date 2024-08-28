@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
+import '../EditPage/editBon.dart';
 import '../Utilisateur/navBar.dart';
 import '../models/bonModel.dart';
 import '../services/bonService.dart';
@@ -59,11 +61,24 @@ class _SectionDetailBonsPageState extends State<SectionDetailBonsPage> {
                     ),
                   ),
                   SizedBox(width: 10),
-                  Text(
-                    'Modifier',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditBonPage(
+                            bonId: widget.bons.idBon!,
+                            bon: widget.bons,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Modifier',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                      ),
                     ),
                   )
                   //SizedBox(height: 100),

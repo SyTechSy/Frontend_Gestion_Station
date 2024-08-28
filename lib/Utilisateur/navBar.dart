@@ -8,6 +8,7 @@ import 'package:get_it/get_it.dart';
 import '../add/ajouter_devis_essence.dart';
 import '../add/ajouter_devis_gasoil.dart';
 import '../add/bonAjouter.dart';
+import '../models/budgetTotalModel.dart';
 import '../models/utilisateurModel.dart';
 import '../services/utilisateurService.dart';
 import '../stationPage/sommePage.dart';
@@ -17,9 +18,10 @@ import 'homes.dart';
 
 class NavBarSection extends StatefulWidget {
   final int initialTabIndex;
+  final BudgetTotalModel? budgetstation;
   //final UserModel utilisateur;
 
-  const NavBarSection({super.key, this.initialTabIndex = 0});
+  const NavBarSection({super.key, this.initialTabIndex = 0, this.budgetstation});
 
   @override
   State<NavBarSection> createState() => _NavBarSectionState();
@@ -39,7 +41,8 @@ class _NavBarSectionState extends State<NavBarSection> {
       AccueilPage(),
       BudgetSommeTotal(),
       Center(child: Text("")),
-      SommePage(),
+      Center(child: Text("Aucun notification", style: TextStyle(fontSize: 20))),
+      //SommePage(),
       ProfilPageUtilisateur(utilisateur: utilisateurService.connectedUser!),
     ];
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
+import '../Utilisateur/navBar.dart';
 import '../models/bonModel.dart';
 import '../services/bonService.dart';
 
@@ -100,8 +101,15 @@ class _PageChampsInputModifierBonState extends State<PageChampsInputModifierBon>
         prenomUtilisateur: widget.bon.prenomUtilisateur,
       );
       showSuccessMessage('Bon modifier avec succès');
-      BonModel result = await _bonService.modifierBon(widget.bonId, updatedBon); // Utilisez le service pour appeler l'API
-      Navigator.pop(context, result);
+      await _bonService.modifierBon(widget.bonId, updatedBon); // Utilisez le service pour appeler l'API
+      //Navigator.pop(context, result);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => NavBarSection(initialTabIndex: 0),
+        ),
+            (Route<dynamic> route) => false,
+      );
     } catch (e) {
       print('Error: $e');
       showSuccessMessage('Erreur de modification');

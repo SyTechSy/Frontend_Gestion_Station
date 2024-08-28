@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:frontend_gestion_station/models/devisStationModel.dart';
 import 'package:get_it/get_it.dart';
 
+import '../EditPage/editBudgetTotal.dart';
 import '../Utilisateur/navBar.dart';
 import '../models/budgetTotalModel.dart';
 import '../models/utilisateurModel.dart';
@@ -65,11 +66,24 @@ class _DetailBudgetSommeTotalState extends State<DetailBudgetSommeTotal> {
                     ),
                   ),
                   SizedBox(width: 10),
-                  Text(
-                    'Modifier',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ModifierBudgetTotal(
+                            idBudgetTotal: widget.budget.idBudgetTotal!,
+                            budget: widget.budget,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Modifier',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                      ),
                     ),
                   )
                   //SizedBox(height: 100),

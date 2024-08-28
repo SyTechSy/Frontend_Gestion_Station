@@ -111,116 +111,155 @@ class _SectionGasoilState extends State<SectionGasoil> {
             child: Center(child: CircularProgressIndicator()),
             replacement: RefreshIndicator(
               onRefresh: _fetchDevisGasoil,
-              child: ListView.builder(
-                  itemCount: devisStationsGasoil.length,
-                  itemBuilder: (context, index) {
-                    final devis = devisStationsGasoil[index];
-                    return Slidable(
-                      endActionPane: ActionPane(
-                          motion: StretchMotion(),
-                          children: [
-                            SlidableAction(
-                              backgroundColor: Colors.green,
-                              onPressed: (context) async {
-                                final result = await Navigator.push(
-                                  context, MaterialPageRoute(
-                                  builder: (context) => ModifierDevisGasoil(devisId: devis.id!, devis: devis), // Passez le devisId ici
+              child: Visibility(
+                visible: devisStationsGasoil.isNotEmpty,
+                replacement: Align(
+                  alignment: Alignment.topCenter,
+                  child: Container(
+                    width: 300,
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        /*SvgPicture.asset(
+                        "assets/svg/camera-add-svgrepo-com.svg",
+                      ),*/
+                        Icon(
+                          Icons.add_card_rounded,
+                          size: 80,
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          textAlign: TextAlign.center,
+                          "Vous n'avez pas encore créé de devis gasoil",
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.red
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          textAlign: TextAlign.center,
+                          "Créez votre devis gasoil, et il s'affichera ici. Commencez dès maintenant.",
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.black54
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                child: ListView.builder(
+                    itemCount: devisStationsGasoil.length,
+                    itemBuilder: (context, index) {
+                      final devis = devisStationsGasoil[index];
+                      return Slidable(
+                        endActionPane: ActionPane(
+                            motion: StretchMotion(),
+                            children: [
+                              SlidableAction(
+                                backgroundColor: Colors.green,
+                                onPressed: (context) async {
+                                  final result = await Navigator.push(
+                                    context, MaterialPageRoute(
+                                    builder: (context) => ModifierDevisGasoil(devisId: devis.id!, devis: devis), // Passez le devisId ici
+                                  ),
+                                  );
+                                  if (result != null) {
+                                    setState(() {
+                                      devisStationsGasoil[index] = result;
+                                    });
+                                  }
+                                },
+                                icon: Icons.edit,
+                                label: 'Modifier',
+                              ),
+                              SlidableAction(
+                                backgroundColor: Colors.red,
+                                onPressed: (context) {
+                                  if (devis.id != null) {
+                                    _deleteDevisGasoil(devis.id!);
+                                  } else {
+                                    print('Devis ID is null, cannot delete');
+                                  }
+                                },
+                                icon: Icons.delete,
+                                label: 'Supprimer',
+                              ),
+                            ]),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (context) => SectionDetailGasoilPage(devis: devis,)
+                            ));
+                          },
+                          child: Column(
+                            children: [
+                              ListTile(
+                                leading: Container(
+                                  height: 17,
+                                  width: 17,
+                                  child: const CircleAvatar(
+                                    backgroundColor: Colors.black12,
+                                    child: Text(
+                                      '1',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 8
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                                );
-                                if (result != null) {
-                                  setState(() {
-                                    devisStationsGasoil[index] = result;
-                                  });
-                                }
-                              },
-                              icon: Icons.edit,
-                              label: 'Modifier',
-                            ),
-                            SlidableAction(
-                              backgroundColor: Colors.red,
-                              onPressed: (context) {
-                                if (devis.id != null) {
-                                  _deleteDevisGasoil(devis.id!);
-                                } else {
-                                  print('Devis ID is null, cannot delete');
-                                }
-                              },
-                              icon: Icons.delete,
-                              label: 'Supprimer',
-                            ),
-                          ]),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => SectionDetailGasoilPage(devis: devis,)
-                          ));
-                        },
-                        child: Column(
-                          children: [
-                            ListTile(
-                              leading: Container(
-                                height: 17,
-                                width: 17,
-                                child: const CircleAvatar(
-                                  backgroundColor: Colors.black12,
+                                title: Transform.translate(
+                                  offset: Offset(-8, 0),
                                   child: Text(
-                                    '1',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 8
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              title: Transform.translate(
-                                offset: Offset(-8, 0),
-                                child: Text(
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                  'Budget obtenu',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              trailing: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    devis.dateAddDevis.toString(),
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.black.withOpacity(0.6),
-                                      fontWeight: FontWeight.w500,
-                                      letterSpacing: 0.5,
-                                    ),
-                                  ),
-                                  Text(
-                                    'XOP : ${devis.budgetObtenu.toString()}',
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    'Budget obtenu',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: Color(0xff12343b),
-                                      fontWeight: FontWeight.w500,
-                                      letterSpacing: 0.5,
+                                      color: Colors.black,
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                                trailing: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      devis.dateAddDevis.toString(),
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.black.withOpacity(0.6),
+                                        fontWeight: FontWeight.w500,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
+                                    Text(
+                                      'XOP : ${devis.budgetObtenu.toString()}',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Color(0xff12343b),
+                                        fontWeight: FontWeight.w500,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
+                                  ],
+                                ),
 
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(left: 20),
-                              decoration: BoxDecoration(
-                                  border: Border(bottom: BorderSide(width: 1, color: Colors.grey.withOpacity(0.1)))
                               ),
-                            )
-                          ],
+                              Container(
+                                margin: EdgeInsets.only(left: 20),
+                                decoration: BoxDecoration(
+                                    border: Border(bottom: BorderSide(width: 1, color: Colors.grey.withOpacity(0.1)))
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  }
+                      );
+                    }
+                ),
               ),
             ),
           )

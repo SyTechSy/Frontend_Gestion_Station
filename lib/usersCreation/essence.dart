@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -136,116 +137,155 @@ class _SectionEssenceState extends State<SectionEssence> {
           child: Center(child: CircularProgressIndicator()),
           replacement: RefreshIndicator(
             onRefresh: _fetchDevis,
-            child: ListView.builder(
-                itemCount: devisStations.length,
-                itemBuilder: (context, index) {
-                  final devis = devisStations[index];
-                  return Slidable(
-                    endActionPane: ActionPane(
-                        motion: StretchMotion(),
-                        children: [
-                          SlidableAction(
-                            backgroundColor: Colors.green,
-                            onPressed: (context) async {
-                              final result = await Navigator.push(
-                                context, MaterialPageRoute(
-                                builder: (context) => ModifierDevisEssence(devisId: devis.id!, devis: devis,), // Passez le devisId ici
-                              ),);
-                              if (result != null) {
-                                setState(() {
-                                  devisStations[index] = result;
-                                });
-                              }
-                            },
-                            icon: Icons.edit,
-                            label: 'Modifier',
-                          ),
-                          SlidableAction(
-                            backgroundColor: Colors.red,
-                            onPressed: (context) {
-                              if (devis.id != null) {
-                                _deleteDevisEssence(devis.id!);
-                              } else {
-                                print('Devis ID is null, cannot delete');
-                              }
-                            },
-                            icon: Icons.delete,
-                            label: 'Supprimer',
-                          ),
-                        ]),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => SectionDetailPage(devis: devis)
-                        ));
-                      },
-                      child: Column(
-                        children: [
-                          ListTile(
-                            leading: Container(
-                              height: 17,
-                              width: 17,
-                              child: const CircleAvatar(
-                                backgroundColor: Colors.black12,
+            child: Visibility(
+              visible: devisStations.isNotEmpty,
+              replacement: Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  width: 300,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/svg/eye_open_lourd.svg",
+                      ),
+                      /*Icon(
+                        Icons.add_card_rounded,
+                        size: 80,
+                      ),*/
+                      SizedBox(height: 20),
+                      Text(
+                        textAlign: TextAlign.center,
+                        "Vous n'avez pas encore créé de devis essence",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.red
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        textAlign: TextAlign.center,
+                        "Créez votre devis d'essence, et il s'affichera ici. Commencez dès maintenant.",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black54
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              child: ListView.builder(
+                  itemCount: devisStations.length,
+                  itemBuilder: (context, index) {
+                    final devis = devisStations[index];
+                    return Slidable(
+                      endActionPane: ActionPane(
+                          motion: StretchMotion(),
+                          children: [
+                            SlidableAction(
+                              backgroundColor: Colors.green,
+                              onPressed: (context) async {
+                                final result = await Navigator.push(
+                                  context, MaterialPageRoute(
+                                  builder: (context) => ModifierDevisEssence(devisId: devis.id!, devis: devis,), // Passez le devisId ici
+                                ),);
+                                if (result != null) {
+                                  setState(() {
+                                    devisStations[index] = result;
+                                  });
+                                }
+                              },
+                              icon: Icons.edit,
+                              label: 'Modifier',
+                            ),
+                            SlidableAction(
+                              backgroundColor: Colors.red,
+                              onPressed: (context) {
+                                if (devis.id != null) {
+                                  _deleteDevisEssence(devis.id!);
+                                } else {
+                                  print('Devis ID is null, cannot delete');
+                                }
+                              },
+                              icon: Icons.delete,
+                              label: 'Supprimer',
+                            ),
+                          ]),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (context) => SectionDetailPage(devis: devis)
+                          ));
+                        },
+                        child: Column(
+                          children: [
+                            ListTile(
+                              leading: Container(
+                                height: 17,
+                                width: 17,
+                                child: const CircleAvatar(
+                                  backgroundColor: Colors.black12,
+                                  child: Text(
+                                    '1',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 8
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              title: Transform.translate(
+                                offset: Offset(-8, 0),
                                 child: Text(
-                                  '1',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 8
-                                  ),
-                                ),
-                              ),
-                            ),
-                            title: Transform.translate(
-                              offset: Offset(-8, 0),
-                              child: Text(
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                                'Budget obtenu',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                            trailing: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  devis.dateAddDevis.toString(),
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.black.withOpacity(0.6),
-                                    fontWeight: FontWeight.w500,
-                                    letterSpacing: 0.5,
-                                  ),
-                                ),
-                                Text(
-                                  'XOP : ${devis.budgetObtenu.toString()}',
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  'Budget obtenu',
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: Color(0xff12343b),
-                                    fontWeight: FontWeight.w500,
-                                    letterSpacing: 0.5,
+                                    color: Colors.black,
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                              trailing: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    devis.dateAddDevis.toString(),
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.black.withOpacity(0.6),
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                  Text(
+                                    'XOP : ${devis.budgetObtenu.toString()}',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Color(0xff12343b),
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
 
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(left: 20),
-                            decoration: BoxDecoration(
-                                border: Border(bottom: BorderSide(width: 1, color: Colors.grey.withOpacity(0.1)))
                             ),
-                          )
-                        ],
+                            Container(
+                              margin: EdgeInsets.only(left: 20),
+                              decoration: BoxDecoration(
+                                  border: Border(bottom: BorderSide(width: 1, color: Colors.grey.withOpacity(0.1)))
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                }
-              ),
+                    );
+                  }
+                ),
+            ),
           ),
         )
       ),

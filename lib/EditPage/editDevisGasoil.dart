@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
+import '../Utilisateur/navBar.dart';
 import '../models/devisStationGasoilModel.dart';
 import '../services/devisStationGasoilService.dart';
 import '../services/utilisateurService.dart';
@@ -150,7 +151,14 @@ class _PageChampsModifierGasoilInputState extends State<PageChampsModifierGasoil
     try {
       await _devisGasoilService.modifierDevisGasoil(widget.devisId, devis);
       showSuccessMessage('Devis modifié avec succès');
-      Navigator.pop(context);
+      //Navigator.pop(context);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const NavBarSection(initialTabIndex: 0),
+        ),
+            (Route<dynamic> route) => false,
+      );
       setState(() {
         isLoading = true;
       });// Navigate back after successful modification
