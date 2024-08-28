@@ -5,18 +5,38 @@ import 'package:frontend_gestion_station/models/devisStationModel.dart';
 import 'package:get_it/get_it.dart';
 
 import '../Utilisateur/navBar.dart';
+import '../models/budgetTotalModel.dart';
 import '../models/utilisateurModel.dart';
+import '../services/budgetTotalService.dart';
 import '../services/devisStationService.dart';
 import 'essence.dart';
 
 class DetailBudgetSommeTotal extends StatefulWidget {
-  const DetailBudgetSommeTotal({super.key});
+  final BudgetTotalModel budget;
+  const DetailBudgetSommeTotal({super.key, required this.budget});
 
   @override
   State<DetailBudgetSommeTotal> createState() => _DetailBudgetSommeTotalState();
 }
 
 class _DetailBudgetSommeTotalState extends State<DetailBudgetSommeTotal> {
+  final _budgetTotalService = GetIt.instance<BudgetTotalService>();
+  List<BudgetTotalModel> budgetTotalStation = [];
+
+  // Suppression de devis essence
+  Future<void> _deleteBudgetTotal(int idBudgetTotal) async {
+    print('Tentative de suppression de budget toptal avec ID: $idBudgetTotal');
+    try {
+      await _budgetTotalService.deleteBudgetTotal(idBudgetTotal);
+      setState(() {
+        budgetTotalStation.removeWhere((budget) => budget.idBudgetTotal == idBudgetTotal);
+      });
+      showSuccessMessage('Budget supprimé avec succès');
+    } catch (e) {
+      print('Erreur lors de la suppression de budget total: $e');
+      showErrorMessage('Erreur lors de la suppression de budget total station');
+    }
+  }
 
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
@@ -58,7 +78,7 @@ class _DetailBudgetSommeTotalState extends State<DetailBudgetSommeTotal> {
               SizedBox(height: 15),
               // Supprimer
               GestureDetector(
-                onTap: () {},
+                onTap: () => _confirmDelete(context, widget.budget.idBudgetTotal!),
                 child: Row(
                   children: [
                     Container(
@@ -154,7 +174,7 @@ class _DetailBudgetSommeTotalState extends State<DetailBudgetSommeTotal> {
     );
   }
 
-  void _confirmDelete(BuildContext context, int idDevis) {
+  void _confirmDelete(BuildContext context, int idBudgetTotal) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -170,7 +190,14 @@ class _DetailBudgetSommeTotalState extends State<DetailBudgetSommeTotal> {
             ),
             TextButton(
               child: Text('Supprimer'),
-              onPressed: ()  {},
+              onPressed: () async { // Fermer la boîte de dialogue
+                await _deleteBudgetTotal(idBudgetTotal);
+                Navigator.push(
+                    context, MaterialPageRoute(
+                  builder: (context) => NavBarSection(initialTabIndex : 1),
+                )
+                );
+              },
             ),
           ],
         );
@@ -253,7 +280,7 @@ class _DetailBudgetSommeTotalState extends State<DetailBudgetSommeTotal> {
                               ),
                             ),
                             Text(
-                              "500",
+                              widget.budget.budgetTotalEssence.toString(),
                               style: TextStyle(
                                   fontSize: 15
                               ),
@@ -277,7 +304,7 @@ class _DetailBudgetSommeTotalState extends State<DetailBudgetSommeTotal> {
                               ),
                             ),
                             Text(
-                              "200",
+                              widget.budget.budgetTotalGasoil.toString(),
                               style: TextStyle(
                                   fontSize: 15
                               ),
@@ -302,7 +329,7 @@ class _DetailBudgetSommeTotalState extends State<DetailBudgetSommeTotal> {
                               ),
                             ),
                             Text(
-                              "700",
+                              widget.budget.sommeTotalBudgets.toString(),
                               style: TextStyle(
                                   fontSize: 15
                               ),
@@ -342,7 +369,7 @@ class _DetailBudgetSommeTotalState extends State<DetailBudgetSommeTotal> {
                               ),
                             ),
                             Text(
-                              "600",
+                              widget.budget.argentRecuTravail.toString(),
                               style: TextStyle(
                                   fontSize: 15,
                                   color: Colors.black
@@ -383,7 +410,7 @@ class _DetailBudgetSommeTotalState extends State<DetailBudgetSommeTotal> {
                               ),
                             ),
                             Text(
-                              "00",
+                              widget.budget.gainArgent.toString(),
                               style: TextStyle(
                                   fontSize: 15,
                                   color: Colors.black
@@ -425,7 +452,7 @@ class _DetailBudgetSommeTotalState extends State<DetailBudgetSommeTotal> {
                               ),
                             ),
                             Text(
-                              "-100",
+                              widget.budget.perteArgent.toString(),
                               style: TextStyle(
                                   fontSize: 15,
                                   color: Colors.red
@@ -440,7 +467,7 @@ class _DetailBudgetSommeTotalState extends State<DetailBudgetSommeTotal> {
             ),
             SizedBox(height: 10),
             Text(
-              'Vendredi à 23h:30m:52sec'
+              widget.budget.dateAddBudgetTotal.toString(),
             ),
           ],
         ),

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:frontend_gestion_station/models/budgetTotalModel.dart';
 import 'package:http/http.dart' as http;
 
-class BudgetToatlService {
+class BudgetTotalService {
   final String baseUrl = 'http://10.0.2.2:8000';
 
   // Ajouter un budget toatl

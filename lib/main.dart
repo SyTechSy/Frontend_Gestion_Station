@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_gestion_station/services/adminService.dart';
 import 'package:frontend_gestion_station/services/bonService.dart';
+import 'package:frontend_gestion_station/services/budgetTotalService.dart';
 import 'package:frontend_gestion_station/services/devisStationGasoilService.dart';
 import 'package:frontend_gestion_station/services/devisStationService.dart';
 import 'package:frontend_gestion_station/services/utilisateurService.dart';
@@ -29,6 +30,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => DevisService());
   locator.registerLazySingleton(() => DevisGasoilService());
   locator.registerLazySingleton(() => BonService());
+  locator.registerLazySingleton(() => BudgetTotalService());
   //sl.registerLazySingleton<UtilisateurService>(() => UtilisateurService());
 }
 
@@ -42,6 +44,7 @@ void main() async {
   setupLocator();
   final utilisateurService = GetIt.instance<UtilisateurService>();
   final adminService = GetIt.instance<AdminService>();
+  final budgetTotalService = GetIt.instance<BudgetTotalService>();
   await utilisateurService.initialize(); // Charge l'utilisateur stocké
   await adminService.initialize();
   runApp(MyApp(utilisateurService: utilisateurService, adminService: adminService,));

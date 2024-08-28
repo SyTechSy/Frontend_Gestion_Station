@@ -219,6 +219,7 @@ class _PageChampsInputAjouterBonState extends State<PageChampsInputAjouterBon> {
               ),
               TextField(
                 controller: _motifController,
+                autocorrect: true,
                 maxLines: 2,
                 decoration: InputDecoration(
                   hintText: 'La raison de la demande de bon ...',

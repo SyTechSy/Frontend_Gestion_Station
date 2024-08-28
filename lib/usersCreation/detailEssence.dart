@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:frontend_gestion_station/models/devisStationModel.dart';
 import 'package:get_it/get_it.dart';
 
+import '../EditPage/editDevisEssence.dart';
 import '../Utilisateur/navBar.dart';
 import '../models/utilisateurModel.dart';
 import '../services/devisStationService.dart';
@@ -64,11 +65,14 @@ class _SectionDetailPageState extends State<SectionDetailPage> {
                     ),
                   ),
                   SizedBox(width: 10),
-                  Text(
-                    'Modifier',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
+                  GestureDetector(
+                    onTap: () {},
+                    child: Text(
+                      'Modifier',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                      ),
                     ),
                   )
                   //SizedBox(height: 100),
@@ -102,33 +106,6 @@ class _SectionDetailPageState extends State<SectionDetailPage> {
                     ),
                   ],
                 ),
-              ),
-              SizedBox(height: 15),
-              // Copier le budget
-              Row(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Colors.black12
-                    ),
-                    child: Icon(
-                      Icons.copy_rounded,
-                      size: 22,
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    'Copier la somme budget',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                    ),
-                  )
-                  //SizedBox(height: 100),
-                ],
               ),
               SizedBox(height: 15),
               // Annuler

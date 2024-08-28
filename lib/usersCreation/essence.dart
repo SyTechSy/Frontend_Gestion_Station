@@ -52,7 +52,6 @@ class _SectionEssenceState extends State<SectionEssence> {
     }
   }
 
-
   // Fonction pour les listes d'User
   /*Future<void> _fetchDevis() async {
     try {

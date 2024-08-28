@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
+import '../Utilisateur/navBar.dart';
 import '../models/bonModel.dart';
+import '../services/bonService.dart';
 
 class SectionDetailBonsPage extends StatefulWidget {
   final BonModel bons;
@@ -11,6 +14,23 @@ class SectionDetailBonsPage extends StatefulWidget {
 }
 
 class _SectionDetailBonsPageState extends State<SectionDetailBonsPage> {
+  final _bonService = GetIt.instance<BonService>();
+  List<BonModel> bonStations = [];
+
+  // Suppression de devis essence
+  Future<void> _deleteDevisBon(int idDevis) async {
+    print('Tentative de suppression de l\'essence devis avec ID: $idDevis');
+    try {
+      await _bonService.deleteBon(idDevis);
+      setState(() {
+        bonStations.removeWhere((bons) => bons.idBon == idDevis);
+      });
+      showSuccessMessage('Devis supprimé avec succès');
+    } catch (e) {
+      print('Erreur lors de la suppression de devis bon: $e');
+      showErrorMessage('Erreur lors de la suppression de devis bon');
+    }
+  }
 
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
@@ -52,7 +72,7 @@ class _SectionDetailBonsPageState extends State<SectionDetailBonsPage> {
               SizedBox(height: 15),
               // Supprimer
               GestureDetector(
-                //onTap: () => _confirmDelete(context, widget.devis.id!),
+                onTap: () => _confirmDelete(context, widget.bons.idBon!),
                 child: Row(
                   children: [
                     Container(
@@ -114,6 +134,37 @@ class _SectionDetailBonsPageState extends State<SectionDetailBonsPage> {
               SizedBox(height: 20),
             ],
           ),
+        );
+      },
+    );
+  }
+
+  void _confirmDelete(BuildContext context, int idDevis) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmer la suppression'),
+          content: Text('Voulez-vous vraiment supprimer ce bon?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Annuler'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Fermer la boîte de dialogue
+              },
+            ),
+            TextButton(
+              child: Text('Supprimer'),
+              onPressed: () async { // Fermer la boîte de dialogue
+                await _deleteDevisBon(idDevis);
+                Navigator.push(
+                    context, MaterialPageRoute(
+                  builder: (context) => NavBarSection(),
+                )
+                );
+              },
+            ),
+          ],
         );
       },
     );
@@ -252,7 +303,7 @@ class _SectionDetailBonsPageState extends State<SectionDetailBonsPage> {
                   )
               ),
             ),
-            // Motif
+              // Motif
             Card(
               elevation: 0,
               //color: Colors.black.withOpacity(0.2),

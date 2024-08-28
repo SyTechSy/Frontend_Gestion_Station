@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:frontend_gestion_station/models/devisStationModel.dart';
 import 'package:get_it/get_it.dart';
 
@@ -104,33 +105,6 @@ class _SectionDetailGasoilPageState extends State<SectionDetailGasoilPage> {
                 ),
               ),
               SizedBox(height: 15),
-              // Copier le budget
-              Row(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Colors.black12
-                    ),
-                    child: Icon(
-                      Icons.copy_rounded,
-                      size: 22,
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    'Copier la somme budget',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                    ),
-                  )
-                  //SizedBox(height: 100),
-                ],
-              ),
-              SizedBox(height: 15),
               // Annuler
               Row(
                 children: [
@@ -148,11 +122,16 @@ class _SectionDetailGasoilPageState extends State<SectionDetailGasoilPage> {
                     ),
                   ),
                   SizedBox(width: 10),
-                  Text(
-                    'Annuler',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 18,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Annuler',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 18,
+                      ),
                     ),
                   )
                   //SizedBox(height: 100),

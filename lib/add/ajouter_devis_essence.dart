@@ -114,6 +114,7 @@ class _PageChampsInputState extends State<PageChampsInput> {
     double budgetObtenu = consommation * prixUnite;
     DateTime dateAddDevis = DateTime.now();
 
+
     DevisModel devisstation = DevisModel(
         id: null,
         valeurArriver: valeurArriver,
