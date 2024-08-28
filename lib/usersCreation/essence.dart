@@ -16,6 +16,13 @@ class SectionEssence extends StatefulWidget {
   //final UserModel utilisateur;
   const SectionEssence({super.key});
 
+  static double getLatestBudgetObtenu(List<DevisModel> devisStations) {
+    if (devisStations.isNotEmpty) {
+      return devisStations.last.budgetObtenu ?? 0.0;
+    }
+    return 0.0;
+  }
+
   @override
   State<SectionEssence> createState() => _SectionEssenceState();
 }

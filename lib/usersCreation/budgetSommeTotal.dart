@@ -5,9 +5,12 @@ import 'package:frontend_gestion_station/services/budgetTotalService.dart';
 import 'package:get_it/get_it.dart';
 
 import '../EditPage/editBudgetTotal.dart';
+import '../models/devisStationModel.dart';
 import '../models/utilisateurModel.dart';
+import '../services/devisStationService.dart';
 import '../services/utilisateurService.dart';
 import 'detailBudgetSommeTotal.dart';
+import 'essence.dart';
 
 class BudgetSommeTotal extends StatefulWidget {
   const BudgetSommeTotal({super.key});
@@ -19,6 +22,7 @@ class BudgetSommeTotal extends StatefulWidget {
 class _BudgetSommeTotalState extends State<BudgetSommeTotal> {
   final _budgetTotalService = GetIt.instance<BudgetTotalService>();
   final _utilisateurService = GetIt.instance<UtilisateurService>();
+  final _devisService = GetIt.instance<DevisService>();
 
   final _budgetTotalEssenceController = TextEditingController();
   final _budgetTotalGasoilController = TextEditingController();
@@ -100,6 +104,52 @@ class _BudgetSommeTotalState extends State<BudgetSommeTotal> {
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  // Section de Auto Collage
+  List<DevisModel> _devisStations = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDevisStations();
+  }
+
+  void _fetchDevisStations() async {
+    try {
+      int? idUser = _utilisateurService.connectedUser?.idUser;
+      if (idUser != null) {
+        List<DevisModel> devisStations = await _devisService.fetchDevis(idUser);
+
+        // Trier les devis par date de création, du plus récent au plus ancien
+        devisStations.sort((a, b) => b.dateAddDevis.compareTo(a.dateAddDevis));
+
+        setState(() {
+          _devisStations = devisStations;
+        });
+      } else {
+        print('ID utilisateur non disponible');
+      }
+    } catch (e) {
+      print('Erreur lors de la récupération des devis: $e');
+    }
+  }
+
+
+  void _autoFillBudget() {
+    if (_devisStations.isNotEmpty) {
+      // Récupérer le dernier devis (le plus récent)
+      DevisModel latestDevis = _devisStations.first;
+      double latestBudgetObtenu = latestDevis.budgetObtenu;
+
+      setState(() {
+        _budgetTotalEssenceController.text = latestBudgetObtenu.toString();
+      });
+    } else {
+      print('Aucun devis disponible');
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,7 +182,7 @@ class _BudgetSommeTotalState extends State<BudgetSommeTotal> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    onTap: () {},
+                    onTap:  _autoFillBudget,
                     child: Text(
                       "Auto collage",
                       style: TextStyle(
