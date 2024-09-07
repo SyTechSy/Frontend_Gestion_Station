@@ -1,6 +1,6 @@
 class BonModel {
   int? idBon;
-  String nomDestinataire;
+  //String nomDestinataire;
   String prixDemander;
   String motif;
   DateTime dateAddBon;
@@ -10,7 +10,7 @@ class BonModel {
 
   BonModel({
     this.idBon,
-    required this.nomDestinataire,
+    //required this.nomDestinataire,
     required this.prixDemander,
     required this.motif,
     required this.dateAddBon,
@@ -22,7 +22,7 @@ class BonModel {
   factory BonModel.fromJson(Map<String, dynamic> json) {
     return BonModel(
       idBon: json['idBon'],
-      nomDestinataire: json['nomDestinataire'] ?? '',
+      //nomDestinataire: json['nomDestinataire'] ?? '',
       prixDemander: json['prixDemander'] ?? '',
       motif: json['motif'] ?? '',
       dateAddBon: json['dateAddDevis'] != null && json['dateAddDevis'] is Map<String, dynamic>
@@ -53,7 +53,7 @@ class BonModel {
   Map<String, dynamic> toJson() {
     return {
       'idBon': idBon,
-      'nomDestinataire': nomDestinataire,
+      //'nomDestinataire': nomDestinataire,
       'prixDemander': prixDemander,
       'motif': motif,
       'dateAddBon': dateAddBon.toIso8601String(),

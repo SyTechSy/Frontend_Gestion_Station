@@ -83,7 +83,7 @@ class _PageChampsInputModifierBonState extends State<PageChampsInputModifierBon>
   @override
   void initState() {
     super.initState();
-    _nomDestinataireController = TextEditingController(text: widget.bon.nomDestinataire);
+    //_nomDestinataireController = TextEditingController(text: widget.bon.nomDestinataire);
     _prixDemanderController = TextEditingController(text: widget.bon.prixDemander);
     _motifController = TextEditingController(text: widget.bon.motif);
   }
@@ -92,12 +92,12 @@ class _PageChampsInputModifierBonState extends State<PageChampsInputModifierBon>
     try {
       BonModel updatedBon = BonModel(
         idBon: widget.bon.idBon,
-        nomDestinataire: _nomDestinataireController.text,
+        //nomDestinataire: _nomDestinataireController.text,
         prixDemander: _prixDemanderController.text,
         motif: _motifController.text,
         dateAddBon: widget.bon.dateAddBon,
         idUser: widget.bon.idUser,
-        nomUtilisateur: widget.bon.nomDestinataire,
+        nomUtilisateur: widget.bon.nomUtilisateur,
         prenomUtilisateur: widget.bon.prenomUtilisateur,
       );
       showSuccessMessage('Bon modifier avec succès');

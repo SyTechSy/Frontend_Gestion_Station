@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -117,15 +118,14 @@ class _SectionGasoilState extends State<SectionGasoil> {
                   alignment: Alignment.topCenter,
                   child: Container(
                     width: 300,
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        /*SvgPicture.asset(
-                        "assets/svg/camera-add-svgrepo-com.svg",
-                      ),*/
-                        Icon(
-                          Icons.add_card_rounded,
-                          size: 80,
+                        SvgPicture.asset(
+                          "assets/svg/AAAAMessage.svg",
+                          width: 100,
+                          height: 100,
+                          color: Colors.black,
                         ),
                         SizedBox(height: 20),
                         Text(

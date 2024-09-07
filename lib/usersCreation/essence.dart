@@ -147,7 +147,10 @@ class _SectionEssenceState extends State<SectionEssence> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SvgPicture.asset(
-                        "assets/svg/eye_open_lourd.svg",
+                        "assets/svg/AAAAMessage.svg",
+                        width: 100,
+                        height: 100,
+                        color: Colors.black,
                       ),
                       /*Icon(
                         Icons.add_card_rounded,

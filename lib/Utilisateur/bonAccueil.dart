@@ -60,7 +60,7 @@ class _AccueilBonState extends State<AccueilBon> {
         // Ajout de logs pour vérifier les valeurs récupérées
         for (var bons in bonStations) {
           print('idBon: ${bons.idBon}');
-          print('nomDestinataire: ${bons.nomDestinataire}');
+          //print('nomDestinataire: ${bons.nomDestinataire}');
           print('prixDemander: ${bons.prixDemander}');
           print('dateAddBon: ${bons.dateAddBon}');
           print('id: ${bons.idUser}');
@@ -184,7 +184,7 @@ class _AccueilBonState extends State<AccueilBon> {
                                   ),
                                   SizedBox(width: 5),
                                   Text(
-                                    bons.nomDestinataire,
+                                    'bons.nomDestinataire',
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Color(0xff12343b),

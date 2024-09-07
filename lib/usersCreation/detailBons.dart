@@ -261,7 +261,7 @@ class _SectionDetailBonsPageState extends State<SectionDetailBonsPage> {
                               ],
                             ),
                             Text(
-                              widget.bons.nomDestinataire,
+                              'widget.bons.nomDestinataire',
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Color(0xff12343b),

@@ -84,7 +84,7 @@ class _PageChampsInputAjouterBonState extends State<PageChampsInputAjouterBon> {
   BonModel? champsInBon;
 
   void _onAddBon() async {
-    String nomDestinataire = _nomDestinataireController.text.trim();
+    //String nomDestinataire = _nomDestinataireController.text.trim();
     String prixDemander = _prixDemanderController.text.trim();
     String motif = _motifController.text.trim();
 
@@ -95,7 +95,7 @@ class _PageChampsInputAjouterBonState extends State<PageChampsInputAjouterBon> {
 
     BonModel bonstation = BonModel(
         idBon: null,
-        nomDestinataire: nomDestinataire,
+        //nomDestinataire: nomDestinataire,
         prixDemander: prixDemander,
         motif: motif,
         idUser: idUser,
@@ -114,7 +114,7 @@ class _PageChampsInputAjouterBonState extends State<PageChampsInputAjouterBon> {
 
         print('Bon créé avec succès:');
         print('Id Bon: ${champsInBon!.idBon}');
-        print('Nom Destinataire: ${champsInBon!.nomDestinataire}');
+        //print('Nom Destinataire: ${champsInBon!.nomDestinataire}');
         print('Prix Demander: ${champsInBon!.prixDemander}');
         print('Motif : ${champsInBon!.motif}');
         print('Date add bon: ${champsInBon!.dateAddBon}');

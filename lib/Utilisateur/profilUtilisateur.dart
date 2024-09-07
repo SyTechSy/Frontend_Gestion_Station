@@ -1,7 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:frontend_gestion_station/Utilisateur/welcomePage.dart';
 import 'package:frontend_gestion_station/models/utilisateurModel.dart';
 import 'package:get_it/get_it.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../services/utilisateurService.dart';
 import 'changerPassword.dart';
@@ -57,7 +63,6 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
     }
   }
 
-
   Future<void> _fetchDevis() async {
     try {
       UserModel? connectedUser = utilisateurService.connectedUser;
@@ -89,6 +94,9 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
     });
   }
 
+  // Section la modification de Profil
+  File? imageFile;
+
   @override
   Widget build(BuildContext context) {
     final utilisateur = widget.utilisateur;
@@ -118,52 +126,106 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
             padding: EdgeInsets.only(top: 15),
             child: Column(
               children: [
-                Stack(
-                  children: [
-                    SizedBox(
-                      width: 140,
-                      height: 140,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color(0xff12343b).withOpacity(0.2),
-                              spreadRadius: 5,
-                              blurRadius: 1,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
+                SizedBox(
+                  width: 120,
+                  height: 120,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0xff12343b).withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: 0,
+                          offset: Offset(0, 0),
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: Image(
-                            image: AssetImage('assets/logoHy.png'),
-                          ),
-                        ),
+                      ],
+                    ),
+                    child: imageFile == null
+                        ? Image.asset('assets/svg/avaProfil.png', height: 120.0, width: 120.0, fit: BoxFit.fill,)
+                        : ClipRRect(
+                        borderRadius: BorderRadius.circular(100.0),
+                        child: Image.file(imageFile!, height: 120.0, width: 120.0, fit: BoxFit.fill,)
+                    ),
+                  ),
+                ),
+                Transform.translate(
+                  offset: Offset(50, -30),
+                  child: Container(
+                    width: 35,
+                    height: 35,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: Color(0xff12343b),
+                    ),
+                    child: GestureDetector(
+                      onTap: () async {
+                        Map<Permission, PermissionStatus> statuses = await [
+                          Permission.storage, Permission.camera,
+                        ].request();
+                        if(statuses[Permission.storage]!.isGranted && statuses[Permission.camera]!.isGranted){
+                          showImagePicker(context);
+                        } else {
+                          print('no permission provided');
+                        }
+                      },
+                      child: Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                        size: 18,
                       ),
+                    ),
+                  ),
+                ),
+                /*Stack(
+                  children: [
+                    imageFile == null
+                        ? Image.asset('assets/logoHy.png', height: 140.0, width: 140.0,)
+                        : ClipRRect(
+                        borderRadius: BorderRadius.circular(100.0),
+                        child: Image.file(imageFile!, height: 140.0, width: 140.0, fit: BoxFit.fill,)
                     ),
                     Positioned(
                       bottom: 5,
                       right: 0,
                       child: Container(
-                        width: 30,
-                        height: 30,
+                        width: 50,
+                        height: 50,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(100),
                           color: Color(0xff12343b),
                         ),
-                        child: const Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                          size: 20,
-                        ),
+                        child: IconButton(
+                          onPressed: () async {
+                            Map<Permission, PermissionStatus> statuses = await [
+                              Permission.storage, Permission.camera,
+                            ].request();
+                            if(statuses[Permission.storage]!.isGranted && statuses[Permission.camera]!.isGranted){
+                              showImagePicker(context);
+                            } else {
+                              print('no permission provided');
+                            }
+                          },
+                          icon: Icon(
+                            Icons.edit,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        )
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () ,
+                      child: SvgPicture.asset(
+                        "assets/svg/addIcon.svg",
+                        width: 100,
+                        height: 100,
+                        color: Colors.black,
                       ),
                     ),
                   ],
-                ),
-                SizedBox(height: 25),
-
+                ),*/
+                //const SizedBox(height: 25),
                 SizedBox(
                   height: 45,
                   child: ElevatedButton(
@@ -186,8 +248,7 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
                     onPressed: _navigateAndUpdate,
                   ),
                 ),
-
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
                 // INFORMATION PERSONNELS
                 Align(
                   alignment: Alignment.centerLeft,
@@ -202,8 +263,7 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
                     ),
                   ),
                 ),
-
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 RefreshIndicator(
                   onRefresh: () async {
                     setState(() {
@@ -349,9 +409,6 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
                       }
                   ),
                 ),
-                /*
-
-                 */
                 // DIVIDER
                 SizedBox(height: 10),
                 Container(
@@ -361,9 +418,6 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
                     height: 0.5,
                   ),
                 ),
-                // AUTRES INFORMATIONS
-                // Ajoutez ici d'autres informations si nécessaire
-
                 // INFORMATION SUR LE DEV
                 ListTile(
                   leading: Container(
@@ -508,4 +562,134 @@ class _ProfilPageUtilisateurState extends State<ProfilPageUtilisateur> {
       ),
     );
   }
+
+  final picker = ImagePicker();
+
+  void showImagePicker(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (builder){
+          return Card(
+            child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height/5.2,
+                margin: const EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.all(12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                        child: InkWell(
+                          child: Column(
+                            children: const [
+                              Icon(Icons.image, size: 60.0,),
+                              SizedBox(height: 12.0),
+                              Text(
+                                "Gallery",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 16, color: Colors.black),
+                              )
+                            ],
+                          ),
+                          onTap: () {
+                            _imgFromGallery();
+                            Navigator.pop(context);
+                          },
+                        )),
+                    Expanded(
+                        child: InkWell(
+                          child: SizedBox(
+                            child: Column(
+                              children: const [
+                                Icon(Icons.camera_alt, size: 60.0,),
+                                SizedBox(height: 12.0),
+                                Text(
+                                  "Camera",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 16, color: Colors.black),
+                                )
+                              ],
+                            ),
+                          ),
+                          onTap: () {
+                            _imgFromCamera();
+                            Navigator.pop(context);
+                          },
+                        ))
+                  ],
+                )),
+          );
+        }
+    );
+  }
+
+  _imgFromGallery() async {
+    await  picker.pickImage(
+        source: ImageSource.gallery, imageQuality: 50
+    ).then((value){
+      if(value != null){
+        _cropImage(File(value.path));
+      }
+    });
+  }
+
+  _imgFromCamera() async {
+    await picker.pickImage(
+        source: ImageSource.camera, imageQuality: 50
+    ).then((value){
+      if(value != null){
+        _cropImage(File(value.path));
+      }
+    });
+  }
+
+  _cropImage(File imgFile) async {
+    final croppedFile = await ImageCropper().cropImage(
+      sourcePath: imgFile.path,
+      //compressFormat: ImageCompressFormat.jpg,
+      compressQuality: 100,
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Image Cropper ok',
+          toolbarColor: Colors.deepOrange,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.square,
+          lockAspectRatio: false,
+          aspectRatioPresets: [
+            CropAspectRatioPreset.original,
+            CropAspectRatioPreset.square,
+            CropAspectRatioPreset.ratio4x3,
+          ],
+        ),
+        IOSUiSettings(
+          title: 'Image Cropper',
+          aspectRatioPresets: [
+            CropAspectRatioPreset.original,
+            CropAspectRatioPreset.square,
+            CropAspectRatioPreset.ratio4x3,
+          ],
+        ),
+        WebUiSettings(
+          context: context,
+          presentStyle: WebPresentStyle.dialog,
+          size: const CropperSize(
+            width: 520,
+            height: 520,
+          ),
+        ),
+      ]
+    );
+
+    if (croppedFile != null) {
+      imageCache.clear();
+      setState(() {
+        imageFile = File(croppedFile.path);
+      });
+      // reload();
+    }
+  }
+
+
+
+
 }

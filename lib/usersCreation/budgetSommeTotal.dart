@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:frontend_gestion_station/models/budgetTotalModel.dart';
 import 'package:frontend_gestion_station/services/budgetTotalService.dart';
 import 'package:get_it/get_it.dart';
@@ -472,20 +473,12 @@ class _ListBudgetSommeTotalState extends State<ListBudgetSommeTotal> {
                 alignment: Alignment.topCenter,
                 child: Container(
                   width: 300,
-                  child: const Column(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      /*SvgPicture.asset(
-                          "assets/svg/camera-add-svgrepo-com.svg",
-                        ),*/
-                      Icon(
-                        Icons.add_card_rounded,
-                        size: 50,
-                      ),
-                      SizedBox(height: 15),
                       Text(
                         textAlign: TextAlign.center,
-                        "Vous n'avez pas encore créé de budget total",
+                        "Vous n'avez pas encore créé de \nbudget total",
                         style: TextStyle(
                             fontSize: 16,
                             color: Colors.red
@@ -494,7 +487,7 @@ class _ListBudgetSommeTotalState extends State<ListBudgetSommeTotal> {
                       SizedBox(height: 10),
                       Text(
                         textAlign: TextAlign.center,
-                        "Créez votre budget total, et il s'affichera ici. Commencez dès maintenant.",
+                        "Créez votre budget total, et il s'affichera ici. \nCommencez dès maintenant.",
                         style: TextStyle(
                             fontSize: 10,
                             color: Colors.black54

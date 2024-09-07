@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 
 import '../EditPage/editBon.dart';
@@ -59,7 +60,7 @@ class _SectionBonsState extends State<SectionBons> {
         // Ajout de logs pour vérifier les valeurs récupérées
         for (var bons in bonStations) {
           print('idBon: ${bons.idBon}');
-          print('nomDestinataire: ${bons.nomDestinataire}');
+          //print('nomDestinataire: ${bons.nomDestinataire}');
           print('prixDemander: ${bons.prixDemander}');
           print('dateAddBon: ${bons.dateAddBon}');
           print('id: ${bons.idUser}');
@@ -95,15 +96,14 @@ class _SectionBonsState extends State<SectionBons> {
                   alignment: Alignment.topCenter,
                   child: Container(
                     width: 300,
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        /*SvgPicture.asset(
-                        "assets/svg/camera-add-svgrepo-com.svg",
-                      ),*/
-                        Icon(
-                          Icons.add_card_rounded,
-                          size: 80,
+                        SvgPicture.asset(
+                          "assets/svg/AAAAMessage.svg",
+                          width: 100,
+                          height: 100,
+                          color: Colors.black,
                         ),
                         SizedBox(height: 20),
                         Text(
@@ -192,7 +192,7 @@ class _SectionBonsState extends State<SectionBons> {
                                     child: Text(
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
-                                      bons.nomDestinataire,
+                                      'bons.nomDestinataire',
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.black,
