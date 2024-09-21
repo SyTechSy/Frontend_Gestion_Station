@@ -88,6 +88,30 @@ class _ContenuSectionStationBonsState extends State<ContenuSectionStationBons> {
   String message = '';
   BonModel? champsInBon;
 
+  // Nouvelle variable pour la somme des prix
+  double totalPrixDemander = 0.0;
+
+  // Fonction pour calculer la somme des prixDemander
+  void _calculerTotalPrix() {
+    double total = bonStations.fold(0.0, (sum, bon) {
+      // Suppression des espaces dans la chaîne de caractères avant conversion
+      String prixSansEspace = bon.prixDemander.replaceAll(' ', '');
+      return (sum + (double.tryParse(prixSansEspace) ?? 0.0)).toDouble();
+    });
+
+    setState(() {
+      totalPrixDemander = total; // Mettre à jour l'état avec la somme calculée
+      print('Total recalculé: $totalPrixDemander'); // Pour déboguer
+    });
+  }
+
+  void ajouterBon(BonModel bon) {
+    setState(() {
+      bonStations.add(bon);
+      _calculerTotalPrix();  // Recalculer après ajout
+    });
+  }
+
   void _onAddBon() async {
     //String nomDestinataire = _nomDestinataireController.text.trim();
     String prixDemander = _prixDemanderController.text.trim();
@@ -115,35 +139,31 @@ class _ContenuSectionStationBonsState extends State<ContenuSectionStationBons> {
       if (idUser != null && champsInBon != null && champsInBon!.idBon != null) {
         setState(() {
           message = 'Bon créé avec succès';
-        });
 
-        print('Bon créé avec succès:');
-        print('Id Bon: ${champsInBon!.idBon}');
-        //('Nom Destinataire: ${champsInBon!.nomDestinataire}');
-        print('Prix Demander: ${champsInBon!.prixDemander}');
-        print('Motif : ${champsInBon!.motif}');
-        print('Date add bon: ${champsInBon!.dateAddBon}');
-        print('Id User: ${champsInBon!.idUser}');
-        print('Nom Utilisateur: ${champsInBon!.nomUtilisateur}');
-        print('Prenom Utilisateur: ${champsInBon!.prenomUtilisateur}');
+          // Vérifiez que champsInBon n'est pas nul avant d'ajouter
+          if (champsInBon != null) {
+            bonStations.add(champsInBon!);
+
+            // Ajoutez un log pour voir si la somme est correctement calculée
+            print("Ajout du bon: ${champsInBon!.prixDemander}");
+
+            // Recalculer la somme après l'ajout d'un bon
+            _calculerTotalPrix();
+          } else {
+            print("Erreur : champsInBon est nul après l'ajout.");
+          }
+        });
       } else {
         setState(() {
           message = 'Erreur: données de bon manquantes';
         });
       }
 
-      /*Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>  NavBarSection(
-            // utilisateur: utilisateurService.connectedUser!
-            //initialTabIndexx: 0,
-            //budgetObtenu: 0.0,
-          ),
-        ),
-            (Route<dynamic> route) => false,
-      );*/
       Navigator.pop(context, bonstation);
+
+      // Vider les champs après la validation et la soumission
+      _prixDemanderController.clear();
+      _motifController.clear();
 
     } catch (e) {
       print('Erreur lors de la création de bon: $e');
@@ -263,6 +283,7 @@ class _ContenuSectionStationBonsState extends State<ContenuSectionStationBons> {
         List<BonModel> bons = await _bonService.fetchBons(idUser!);
         setState(() {
           bonStations = bons;
+          _calculerTotalPrix();
         });
 
         // Ajout de logs pour vérifier les valeurs récupérées
@@ -299,7 +320,8 @@ class _ContenuSectionStationBonsState extends State<ContenuSectionStationBons> {
           child: ListTile(
             title: Text('Bon pour samedi'),
             trailing: Text(
-              '200 000 XOP',
+              // Utilisation de la somme calculée ici
+              '${totalPrixDemander.toStringAsFixed(0)} XOP',
               style: TextStyle(
                   fontSize: 15
               ),
@@ -313,8 +335,8 @@ class _ContenuSectionStationBonsState extends State<ContenuSectionStationBons> {
             replacement: RefreshIndicator(
               onRefresh: _fetchBons,
               child: Visibility(
-                  visible: bonStations.isNotEmpty,
-                  replacement: Align(
+                visible: bonStations.isNotEmpty,
+                replacement: Align(
                     alignment: Alignment.topCenter,
                     child: Container(
                       width: 300,
@@ -350,59 +372,59 @@ class _ContenuSectionStationBonsState extends State<ContenuSectionStationBons> {
                     ),
                   ),
                 child: ListView.builder(
-                    itemCount: bonStations.length,
-                    itemBuilder: (context, index) {
-                      final bons = bonStations[index];
-                      return Container(
-                        margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                        decoration: BoxDecoration(
-                          //color: Colors.black12,
-                            border: Border.all(color: Colors.black12, width: 1),
-                            borderRadius: BorderRadius.circular(5)
-                        ),
-                        child: ListTile(
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Transform.translate(
-                                offset: Offset(-16, 0),
-                                child: Row(
-                                  children: [
-                                    Checkbox(
-                                      value: selectedState == 'Payer',
-                                      onChanged: (bool? value) {  },
-                                      shape: CircleBorder(),
-                                      activeColor: Colors.green,
-                                      checkColor: Colors.white,
-                                      side: BorderSide(width: 1.5, color: Colors.black38),
+                  itemCount: bonStations.length,
+                  itemBuilder: (context, index) {
+                    final bons = bonStations[index];
+                    return Container(
+                      margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                      decoration: BoxDecoration(
+                        //color: Colors.black12,
+                          border: Border.all(color: Colors.black12, width: 1),
+                          borderRadius: BorderRadius.circular(5)
+                      ),
+                      child: ListTile(
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Transform.translate(
+                              offset: Offset(-16, 0),
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                    value: selectedState == 'Payer',
+                                    onChanged: (bool? value) {  },
+                                    shape: CircleBorder(),
+                                    activeColor: Colors.green,
+                                    checkColor: Colors.white,
+                                    side: BorderSide(width: 1.5, color: Colors.black38),
+                                  ),
+                                  Transform.translate(
+                                    offset: Offset(-5, 0),
+                                    child: Text(
+                                      '${bons.prixDemander} Fcfa',
                                     ),
-                                    Transform.translate(
-                                      offset: Offset(-5, 0),
-                                      child: Text(
-                                        '${bons.prixDemander} Fcfa',
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                              Text(
-                                bons.dateAddBon.toString(),
-                                style: TextStyle(
-                                    fontSize: 12
-                                ),
-                              )
-                            ],
-                          ),
-
-                          subtitle: Text(
-                            //maxLines: 2,
-                              bons.motif,
-                            //overflow: TextOverflow.ellipsis,
-                          ),
+                            ),
+                            Text(
+                              bons.dateAddBon.toString(),
+                              style: TextStyle(
+                                  fontSize: 12
+                              ),
+                            )
+                          ],
                         ),
-                      );
-                    }
-                )
+
+                        subtitle: Text(
+                          //maxLines: 2,
+                            bons.motif,
+                          //overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    );
+                  }
+                ),
               ),
             ),
           ),

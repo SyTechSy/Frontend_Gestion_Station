@@ -5,6 +5,7 @@ import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 import 'package:frontend_gestion_station/Utilisateur/profilUtilisateur.dart';
 import 'package:get_it/get_it.dart';
 
+import '../add/ajouter_devis_bon.dart';
 import '../add/ajouter_devis_essence.dart';
 import '../add/ajouter_devis_gasoil.dart';
 import '../add/bonAjouter.dart';
@@ -162,7 +163,7 @@ class _NavBarSectionState extends State<NavBarSection> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => AjouterBonPage()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => AddQuoteStationGood()));
                 },
                 child: Card(
                   color: Colors.white,

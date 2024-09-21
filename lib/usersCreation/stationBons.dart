@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get_it/get_it.dart';
 
+import '../models/bonModel.dart';
+import '../services/bonService.dart';
+import '../services/utilisateurService.dart';
 import 'detailStationBons.dart';
 
 class SectionStationBons extends StatefulWidget {
@@ -12,8 +16,15 @@ class SectionStationBons extends StatefulWidget {
 }
 
 class _SectionStationBonsState extends State<SectionStationBons> {
+  final _bonService = GetIt.instance<BonService>();
+  final _utilisateurService = GetIt.instance<UtilisateurService>();
+
 
   bool isLoading = true;
+  List<BonModel> bonStations = [];
+
+  String message = '';
+  //BonModel? champsInBon;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +33,7 @@ class _SectionStationBonsState extends State<SectionStationBons> {
       child: Container(
           margin: const EdgeInsets.only(top: 10, bottom: 5),
           child: ListView.builder(
-              itemCount: 2,
+              itemCount: 1,
               itemBuilder: (context, index) {
                 //final bons = bonStations[index];
                 return Slidable(
@@ -54,7 +65,7 @@ class _SectionStationBonsState extends State<SectionStationBons> {
                           title: Text(
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
-                            'Bon pour Samedi',
+                            'Bon pour Lundi',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.black,
