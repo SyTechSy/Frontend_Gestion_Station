@@ -3,7 +3,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 
+import '../models/BonDuJourModel.dart';
 import '../models/bonModel.dart';
+import '../models/utilisateurModel.dart';
+import '../services/BonDuJourService.dart';
 import '../services/bonService.dart';
 import '../services/utilisateurService.dart';
 import 'detailStationBons.dart';
@@ -16,12 +19,49 @@ class SectionStationBons extends StatefulWidget {
 }
 
 class _SectionStationBonsState extends State<SectionStationBons> {
-  final _bonService = GetIt.instance<BonService>();
+  final _bonDuJourService = GetIt.instance<BonDuJourService>();
   final _utilisateurService = GetIt.instance<UtilisateurService>();
 
-
   bool isLoading = true;
-  List<BonModel> bonStations = [];
+  List<BonDuJourModel> bonDuJourStations = [];
+  @override
+  void initState() {
+    super.initState();
+    _fetchDevisBonDuJour();
+  }
+
+  // Fonction pour les listes d'User
+  Future<void> _fetchDevisBonDuJour() async {
+    try {
+      UserModel? connectedUser = _utilisateurService.connectedUser;
+
+      if (connectedUser != null) {
+        int? idUser = connectedUser.idUser; // Récupérer l'ID de l'utilisateur connecté
+
+        List<BonDuJourModel> bonsdujour = await _bonDuJourService.fetchBonDuJour(idUser!);
+        setState(() {
+          bonDuJourStations = bonsdujour;
+        });
+
+        // Ajout de logs pour vérifier les valeurs récupérées
+        for (var bonsdujour in bonDuJourStations) {
+          print('idDevis: ${bonsdujour.idUser}');
+          print('ValeurArriver: ${bonsdujour.dateAddBonDuJour}');
+          print('id: ${bonsdujour.idUser}');
+          print('nomUtilisateur: ${bonsdujour.nomUtilisateur}');
+          print('prenomUtilisateur: ${bonsdujour.prenomUtilisateur}');
+        }
+      } else {
+        print('Aucun utilisateur connecté');
+      }
+
+    } catch (e) {
+      print('Erreur lors du chargement des bons du jours : $e');
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   String message = '';
   //BonModel? champsInBon;
@@ -33,9 +73,9 @@ class _SectionStationBonsState extends State<SectionStationBons> {
       child: Container(
           margin: const EdgeInsets.only(top: 10, bottom: 5),
           child: ListView.builder(
-              itemCount: 1,
+              itemCount: bonDuJourStations.length,
               itemBuilder: (context, index) {
-                //final bons = bonStations[index];
+                final bonsdujours = bonDuJourStations[index];
                 return Slidable(
                   endActionPane: ActionPane(
                       motion: StretchMotion(),
@@ -56,7 +96,7 @@ class _SectionStationBonsState extends State<SectionStationBons> {
                   child: GestureDetector(
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => SectionDetailStationBons()
+                          builder: (context) => SectionDetailStationBons(dateAddBonDuJour: bonsdujours.dateAddBonDuJour)
                       ));
                     },
                     child: Column(
@@ -65,7 +105,7 @@ class _SectionStationBonsState extends State<SectionStationBons> {
                           title: Text(
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
-                            'Bon pour Lundi',
+                            'Bon pour ${bonsdujours.dateAddBonDuJour}',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.black,

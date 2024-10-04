@@ -9,7 +9,8 @@ import '../services/bonService.dart';
 import '../services/utilisateurService.dart';
 
 class SectionDetailStationBons extends StatefulWidget {
-  const SectionDetailStationBons({super.key});
+  final String dateAddBonDuJour;
+  const SectionDetailStationBons({super.key, required this.dateAddBonDuJour});
 
   @override
   State<SectionDetailStationBons> createState() => _SectionDetailStationBonsState();
@@ -59,7 +60,7 @@ class _SectionDetailStationBonsState extends State<SectionDetailStationBons> {
           ),
 
           Expanded(
-            child: ContenuSectionStationBons(),
+            child: ContenuSectionStationBons(dateAddBonDuJour: widget.dateAddBonDuJour,),
           ),
         ],
 
@@ -69,7 +70,8 @@ class _SectionDetailStationBonsState extends State<SectionDetailStationBons> {
 }
 
 class ContenuSectionStationBons extends StatefulWidget {
-  const ContenuSectionStationBons({super.key});
+  final String dateAddBonDuJour;
+  const ContenuSectionStationBons({super.key, required this.dateAddBonDuJour});
 
   @override
   State<ContenuSectionStationBons> createState() => _ContenuSectionStationBonsState();
@@ -318,7 +320,7 @@ class _ContenuSectionStationBonsState extends State<ContenuSectionStationBons> {
               borderRadius: BorderRadius.circular(5)
           ),
           child: ListTile(
-            title: Text('Bon pour samedi'),
+            title: Text('Bon pour ${widget.dateAddBonDuJour}'),
             trailing: Text(
               // Utilisation de la somme calculée ici
               '${totalPrixDemander.toStringAsFixed(0)} XOP',
@@ -352,7 +354,7 @@ class _ContenuSectionStationBonsState extends State<ContenuSectionStationBons> {
                           SizedBox(height: 20),
                           Text(
                             textAlign: TextAlign.center,
-                            "Vous n'avez pas encore créé de bon",
+                            "Vous n'avez pas encore créé de bon pour ${widget.dateAddBonDuJour}",
                             style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.red

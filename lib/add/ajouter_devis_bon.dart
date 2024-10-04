@@ -3,13 +3,15 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 
 import '../Utilisateur/navBar.dart';
+import '../models/BonDuJourModel.dart';
 import '../models/bonModel.dart';
 import '../models/utilisateurModel.dart';
 import '../services/bonService.dart';
 import '../services/utilisateurService.dart';
 
 class AddQuoteStationGood extends StatefulWidget {
-  const AddQuoteStationGood({super.key});
+  //final String? dateAddBonDuJour;
+  const AddQuoteStationGood({super.key, });
 
   @override
   State<AddQuoteStationGood> createState() => _AddQuoteStationGoodState();
@@ -19,6 +21,7 @@ class _AddQuoteStationGoodState extends State<AddQuoteStationGood> {
 
   @override
   Widget build(BuildContext context) {
+    //String dateToDisplay = widget.dateAddBonDuJour ?? 'Date non spécifiée';
     return Scaffold(
       body: Column(
         children: [
@@ -82,7 +85,8 @@ class _AddQuoteStationGoodState extends State<AddQuoteStationGood> {
 }
 
 class ContentQuoteStationGood extends StatefulWidget {
-  const ContentQuoteStationGood({super.key});
+  //final String dateAddBonDuJour;
+  const ContentQuoteStationGood({super.key,});
 
   @override
   State<ContentQuoteStationGood> createState() => _ContentQuoteStationGoodState();
@@ -292,7 +296,7 @@ class _ContentQuoteStationGoodState extends State<ContentQuoteStationGood> {
               borderRadius: BorderRadius.circular(5)
           ),
           child: ListTile(
-            title: Text('Bon pour $dayName'),
+            title: Text('Bon pour ???'),
             trailing: Text(
               // Utilisation de la somme calculée ici
               '${totalPrixDemander.toStringAsFixed(0)} XOP',

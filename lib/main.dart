@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_gestion_station/services/BonDuJourService.dart';
 import 'package:frontend_gestion_station/services/adminService.dart';
 import 'package:frontend_gestion_station/services/bonService.dart';
 import 'package:frontend_gestion_station/services/budgetTotalService.dart';
@@ -31,6 +32,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => DevisGasoilService());
   locator.registerLazySingleton(() => BonService());
   locator.registerLazySingleton(() => BudgetTotalService());
+  locator.registerLazySingleton(() => BonDuJourService());
   //sl.registerLazySingleton<UtilisateurService>(() => UtilisateurService());
 }
 
@@ -44,6 +46,7 @@ void main() async {
   setupLocator();
   final utilisateurService = GetIt.instance<UtilisateurService>();
   final adminService = GetIt.instance<AdminService>();
+  final bonDuJourService = GetIt.instance<BonDuJourService>();
   final budgetTotalService = GetIt.instance<BudgetTotalService>();
   await utilisateurService.initialize(); // Charge l'utilisateur stocké
   await adminService.initialize();
