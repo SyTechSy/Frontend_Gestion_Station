@@ -10,7 +10,7 @@ class DevisService {
   // Ajouter un devis
   Future<DevisModel> createDevis(DevisModel devis) async {
     try {
-      final Map<String, dynamic> requestData = devis.toJson();
+      final Map<String, dynamic> requestData = devis.toMap();
       print('Request Data: $requestData');
 
       final response = await http.post(
@@ -27,7 +27,7 @@ class DevisService {
 
         // Ensure responseData is a map and contains expected keys
         if (responseData is Map<String, dynamic>) {
-          return DevisModel.fromJson(responseData);
+          return DevisModel.fromMap(responseData);
         } else {
           throw Exception('Invalid response data');
         }
@@ -43,7 +43,7 @@ class DevisService {
   // Moification de devis essence
   Future<DevisModel> modifierDevisEssence(int id, DevisModel devisessence) async {
     try {
-      final Map<String, dynamic> requestData = devisessence.toJson();
+      final Map<String, dynamic> requestData = devisessence.toMap();
       print('Request Data: $requestData');
 
       final response = await http.put(
@@ -60,7 +60,7 @@ class DevisService {
 
         // Ensure responseData is a map and contains expected keys
         if (responseData is Map<String, dynamic>) {
-          return DevisModel.fromJson(responseData);
+          return DevisModel.fromMap(responseData);
         } else {
           throw Exception('Invalid response data');
         }
@@ -82,7 +82,7 @@ class DevisService {
     if (response.statusCode == 200) {
       debugPrint(jsonDecode(response.body).toString());
       List<dynamic> body = jsonDecode(response.body);
-      List<DevisModel> devis = body.map((dynamic item) => DevisModel.fromJson(item)).toList();
+      List<DevisModel> devis = body.map((dynamic item) => DevisModel.fromMap(item)).toList();
       print('Devis Station récupérés: $devis');
       return devis;
     } else if (response.statusCode == 404) {

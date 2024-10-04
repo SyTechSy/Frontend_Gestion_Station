@@ -23,16 +23,7 @@ class DevisModel {
     required this.prenomUtilisateur,
   });
 
-  factory DevisModel.fromJson(Map<String, dynamic> json) {
-    /*print('Received JSON: $json');
-    print('Type of idDevis: ${json['idDevis'].runtimeType}');
-    print('Type of valeurArriver: ${json['valeurArriver'].runtimeType}');
-    print('Type of valeurDeDepart: ${json['valeurDeDepart'].runtimeType}');
-    print('Type of prixUnite: ${json['prixUnite'].runtimeType}');
-    print('Type of consommation: ${json['consommation'].runtimeType}');
-    print('Type of budgetObtenu: ${json['budgetObtenu'].runtimeType}');
-    print('Type of dateAddDevis: ${json['dateAddDevis'].runtimeType}');
-    print('Type of idUser: ${json['utilisateur']?['id'].runtimeType}');*/
+  factory DevisModel.fromMap(Map<String, dynamic> json) {
     return DevisModel(
       id: json['idDevis'] != null ? (json['idDevis'] is int ? json['idDevis'] : int.tryParse(json['idDevis'].toString())) : null,
       valeurArriver: json['valeurArriver'] != null ? (json['valeurArriver'] as num).toDouble() : 0.0,
@@ -47,14 +38,11 @@ class DevisModel {
       idUser: json['utilisateur'] != null ? (json['utilisateur']['id'] is int ? json['utilisateur']['id'] : int.tryParse(json['utilisateur']['id'].toString())) : null,
       nomUtilisateur: json['utilisateur'] != null ? json['utilisateur']['nomUtilisateur'] : null,
       prenomUtilisateur: json['utilisateur'] != null ? json['utilisateur']['prenomUtilisateur'] : null,
-      /*dateAddDevis: json['dateAddDevis'] != null ? DateTime.parse(json['dateAddDevis']) : DateTime.now(),
-      dateAddDevis: json['dateAddDevis'] != null ? DateTime.parse(json['dateAddDevis']['date']) : DateTime.now(),
-      idUser: json['utilisateur'] != null && json['utilisateur']['id'] is int ? json['utilisateur']['id'] : int.tryParse(json['utilisateur']?['id'].toString() ?? '0'),
-      idUser: json['utilisateur']['id'],*/
+
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       'idDevis': id,
       'valeurArriver': valeurArriver,

@@ -9,6 +9,7 @@ import 'package:frontend_gestion_station/services/utilisateurService.dart';
 import 'package:frontend_gestion_station/Utilisateur/welcomePage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:frontend_gestion_station/stationPage/tab_bar_page.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'Administrateur/AdminAppHome.dart';
 import 'Administrateur/profileAdmin.dart';
@@ -41,6 +42,14 @@ void setupLocator() {
   runApp(const MyApp());
 }*/
 
+Future<void> requestStoragePermission() async {
+  if (await Permission.storage.request().isGranted) {
+    // La permission est accordée, vous pouvez continuer.
+  } else {
+    // La permission est refusée, vous devez gérer cela.
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
@@ -50,6 +59,8 @@ void main() async {
   final budgetTotalService = GetIt.instance<BudgetTotalService>();
   await utilisateurService.initialize(); // Charge l'utilisateur stocké
   await adminService.initialize();
+  WidgetsFlutterBinding.ensureInitialized();
+  await requestStoragePermission();
   runApp(MyApp(utilisateurService: utilisateurService, adminService: adminService,));
 }
 

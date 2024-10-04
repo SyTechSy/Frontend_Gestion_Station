@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend_gestion_station/services/devisStationService.dart';
 import 'package:get_it/get_it.dart';
 
+import '../DataBase/database_helper.dart';
 import '../Utilisateur/AppHome.dart';
 import '../Utilisateur/accueil.dart';
 import '../Utilisateur/navBar.dart';
@@ -114,65 +115,95 @@ class _PageChampsInputState extends State<PageChampsInput> {
     double budgetObtenu = consommation * prixUnite;
     DateTime dateAddDevis = DateTime.now();
 
-
     DevisModel devisstation = DevisModel(
-        id: null,
-        valeurArriver: valeurArriver,
-        valeurDeDepart: valeurDeDepart,
-        prixUnite: prixUnite,
-        consommation: consommation,
-        budgetObtenu: budgetObtenu,
-        dateAddDevis: dateAddDevis,
-        idUser: idUser,
-        nomUtilisateur: nomUtilisateur,
-        prenomUtilisateur: prenomUtilisateur
+      id: null,
+      valeurArriver: valeurArriver,
+      valeurDeDepart: valeurDeDepart,
+      prixUnite: prixUnite,
+      consommation: consommation,
+      budgetObtenu: budgetObtenu,
+      dateAddDevis: dateAddDevis,
+      idUser: idUser,
+      nomUtilisateur: nomUtilisateur,
+      prenomUtilisateur: prenomUtilisateur,
     );
 
     try {
-      champsInDevis = await _devisService.createDevis(devisstation);
+      // Vérifiez la connexion Internet ici
+      bool isConnected = await checkInternetConnection();
 
-      if (idUser != null && champsInDevis != null && champsInDevis!.id != null) {
-        setState(() {
-          message = 'Devis créé avec succès';
-        });
+      if (!isConnected) {
+        // Enregistrement local avec SQLite
+        DatabaseHelper dbHelper = DatabaseHelper();
+        await dbHelper.insertDevis(devisstation);
 
-        print('Devis Station créé avec succès:');
-        print('ID: ${champsInDevis!.id}');
-        print('Valeur Arriver: ${champsInDevis!.valeurArriver}');
-        print('Valeur De Depart: ${champsInDevis!.valeurDeDepart}');
-        print('Prix Unité: ${champsInDevis!.prixUnite}');
-        print('Consommation: ${champsInDevis!.consommation}');
-        print('Budget Obtenu: ${champsInDevis!.budgetObtenu}');
-        print('Date de création: ${champsInDevis!.dateAddDevis}');
-        print('Id User: ${champsInDevis!.idUser}');
-        print('Nom User: ${champsInDevis!.nomUtilisateur}');
-        print('Prenom User: ${champsInDevis!.prenomUtilisateur}');
+        // Vérifiez que le devis a été inséré correctement
+        DevisModel? insertedDevis = await dbHelper.getDevisById(devisstation.id!);
+        if (insertedDevis != null) {
+          setState(() {
+            message = 'Devis enregistré localement sans connexion Internet.';
+          });
+        } else {
+          setState(() {
+            message = 'Erreur lors de l\'enregistrement du devis localement.';
+          });
+        }
+        return; // Sortir de la méthode après l'enregistrement local
       } else {
-        setState(() {
-          message = 'Erreur: données de devis manquantes';
-        });
-      }
+        // Enregistrement distant (API)
+        champsInDevis = await _devisService.createDevis(devisstation);
 
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => NavBarSection(
-            //utilisateur: utilisateurService.connectedUser!
-            //initialTabIndexx: 0,
-            //budgetObtenu: 0.0,
+        if (idUser != null && champsInDevis != null && champsInDevis!.id != null) {
+          setState(() {
+            message = 'Devis créé avec succès';
+          });
+
+          print('Devis Station créé git adavec succès:');
+          print('ID: ${champsInDevis!.id}');
+          print('Valeur Arriver: ${champsInDevis!.valeurArriver}');
+          print('Valeur De Depart: ${champsInDevis!.valeurDeDepart}');
+          print('Prix Unité: ${champsInDevis!.prixUnite}');
+          print('Consommation: ${champsInDevis!.consommation}');
+          print('Budget Obtenu: ${champsInDevis!.budgetObtenu}');
+          print('Date de création: ${champsInDevis!.dateAddDevis}');
+          print('Id User: ${champsInDevis!.idUser}');
+          print('Nom User: ${champsInDevis!.nomUtilisateur}');
+          print('Prenom User: ${champsInDevis!.prenomUtilisateur}');
+        } else {
+          setState(() {
+            message = 'Erreur: données de devis manquantes';
+          });
+        }
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NavBarSection(
+              // Utilisateur: utilisateurService.connectedUser!
+              // InitialTabIndexx: 0,
+              // BudgetObtenu: 0.0,
+            ),
           ),
-        ),
-            (Route<dynamic> route) => false,
-      );
-
+              (Route<dynamic> route) => false,
+        );
+      }
     } catch (e) {
       print('Erreur lors de la création de devis: $e');
       showErrorMessage('Erreur de création de devis, vérifiez que les champs ne sont pas vides');
       setState(() {
-        message = 'Erreur de récupérés devis: [] de création: vérifiez vos informations';
+        message = 'Erreur de récupération de devis: vérifiez vos informations';
       });
     }
   }
+
+
+// Méthode pour vérifier la connexion Internet
+  Future<bool> checkInternetConnection() async {
+    // Implémentez votre logique pour vérifier la connexion Internet ici
+    // Vous pouvez utiliser `connectivity_plus` pour vérifier la connexion
+    return true; // Remplacez par votre vérification de connexion réelle
+  }
+
 
   @override
   Widget build(BuildContext context) {
