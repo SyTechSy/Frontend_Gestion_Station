@@ -99,6 +99,7 @@ class _PageChampsInputModifierBonState extends State<PageChampsInputModifierBon>
         idUser: widget.bon.idUser,
         nomUtilisateur: widget.bon.nomUtilisateur,
         prenomUtilisateur: widget.bon.prenomUtilisateur,
+        idBonJour: null,
       );
       showSuccessMessage('Bon modifier avec succès');
       await _bonService.modifierBon(widget.bonId, updatedBon); // Utilisez le service pour appeler l'API

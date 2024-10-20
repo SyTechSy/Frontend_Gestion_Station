@@ -46,7 +46,7 @@ class _SectionStationBonsState extends State<SectionStationBons> {
         // Ajout de logs pour vérifier les valeurs récupérées
         for (var bonsdujour in bonDuJourStations) {
           print('idDevis: ${bonsdujour.idUser}');
-          print('ValeurArriver: ${bonsdujour.dateAddBonDuJour}');
+          print('Jour du bon: ${bonsdujour.dateAddBonDuJour}');
           print('id: ${bonsdujour.idUser}');
           print('nomUtilisateur: ${bonsdujour.nomUtilisateur}');
           print('prenomUtilisateur: ${bonsdujour.prenomUtilisateur}');
@@ -62,6 +62,9 @@ class _SectionStationBonsState extends State<SectionStationBons> {
       isLoading = false;
     });
   }
+
+  // Ajouter le jour de devis de bon du jour
+
 
   String message = '';
   //BonModel? champsInBon;
@@ -96,7 +99,10 @@ class _SectionStationBonsState extends State<SectionStationBons> {
                   child: GestureDetector(
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => SectionDetailStationBons(dateAddBonDuJour: bonsdujours.dateAddBonDuJour)
+                          builder: (context) => SectionDetailStationBons(
+                            dateAddBonDuJour: bonsdujours.dateAddBonDuJour,
+                            idBonDuJour: bonsdujours.idBonJour!,
+                          )
                       ));
                     },
                     child: Column(
@@ -120,7 +126,7 @@ class _SectionStationBonsState extends State<SectionStationBons> {
                             ),
                           ),
                           trailing: Text(
-                            "3",
+                            "6",
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.black.withOpacity(0.6),

@@ -7,16 +7,17 @@ class BonModel {
   int? idUser;
   String nomUtilisateur;
   String prenomUtilisateur;
+  int? idBonJour;
 
   BonModel({
     this.idBon,
-    //required this.nomDestinataire,
     required this.prixDemander,
     required this.motif,
     required this.dateAddBon,
     required this.idUser,
     required this.nomUtilisateur,
     required this.prenomUtilisateur,
+    required this.idBonJour,
   });
 
   factory BonModel.fromJson(Map<String, dynamic> json) {
@@ -31,6 +32,7 @@ class BonModel {
       idUser: json['utilisateur'] != null ? json['utilisateur']['id'] : null,
       nomUtilisateur: json['utilisateur'] != null ? json['utilisateur']['nomUtilisateur'] : '',
       prenomUtilisateur: json['utilisateur'] != null ? json['utilisateur']['prenomUtilisateur'] : '',
+      idBonJour: json['bondujour'] != null ? json['bondujour']['id'] : null,
     );
   }
 
@@ -61,6 +63,9 @@ class BonModel {
         'id': idUser,
         'nomUtilisateur': nomUtilisateur,
         'prenomUtilisateur': prenomUtilisateur,
+      },
+      'bondujour': {
+        'id': idBonJour,
       },
     };
   }

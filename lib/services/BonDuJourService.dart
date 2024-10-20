@@ -8,7 +8,7 @@ class BonDuJourService {
   final String baseUrl = 'http://10.0.2.2:8000';
 
   // Ajouter une seul bon par jour
-  Future<BonDuJourModel> ajouterBon(BonDuJourModel bonsdujours) async {
+  Future<BonDuJourModel> ajouterBonDuJour(BonDuJourModel bonsdujours) async {
     try {
       final Map<String, dynamic> requestData = bonsdujours.toJson();
       print('Request Data: $requestData');

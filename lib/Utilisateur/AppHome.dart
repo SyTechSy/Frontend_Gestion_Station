@@ -7,7 +7,7 @@ import 'package:get_it/get_it.dart';
 import '../models/devisStationModel.dart';
 import '../services/utilisateurService.dart';
 import '../stationPage/sommePage.dart';
-import 'bonAccueil.dart';
+import 'bonAccueil.txt';
 
 class AppHomes extends StatefulWidget {
   //final UserModel utilisateur;
@@ -31,7 +31,7 @@ class _AppHomesState extends State<AppHomes> {
     _currentIndex = widget.initialTabIndex;
     screens = [
       AccueilPage(),
-      AccueilBon(),
+      //AccueilBon(),
       SommePage(),
       Center(child: Text("Page history")),
       ProfilPageUtilisateur(utilisateur: utilisateurService.connectedUser!)

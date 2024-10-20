@@ -10,7 +10,8 @@ import '../services/utilisateurService.dart';
 
 class SectionDetailStationBons extends StatefulWidget {
   final String dateAddBonDuJour;
-  const SectionDetailStationBons({super.key, required this.dateAddBonDuJour});
+  final int idBonDuJour;
+  const SectionDetailStationBons({super.key, required this.dateAddBonDuJour, required this.idBonDuJour});
 
   @override
   State<SectionDetailStationBons> createState() => _SectionDetailStationBonsState();
@@ -60,7 +61,7 @@ class _SectionDetailStationBonsState extends State<SectionDetailStationBons> {
           ),
 
           Expanded(
-            child: ContenuSectionStationBons(dateAddBonDuJour: widget.dateAddBonDuJour,),
+            child: ContenuSectionStationBons(dateAddBonDuJour: widget.dateAddBonDuJour, idBonDuJour: widget.idBonDuJour,),
           ),
         ],
 
@@ -71,7 +72,8 @@ class _SectionDetailStationBonsState extends State<SectionDetailStationBons> {
 
 class ContenuSectionStationBons extends StatefulWidget {
   final String dateAddBonDuJour;
-  const ContenuSectionStationBons({super.key, required this.dateAddBonDuJour});
+  final int idBonDuJour;
+  const ContenuSectionStationBons({super.key, required this.dateAddBonDuJour, required this.idBonDuJour});
 
   @override
   State<ContenuSectionStationBons> createState() => _ContenuSectionStationBonsState();
@@ -132,7 +134,8 @@ class _ContenuSectionStationBonsState extends State<ContenuSectionStationBons> {
         idUser: idUser,
         nomUtilisateur: nomUtilisateur,
         prenomUtilisateur: prenomUtilisateur,
-        dateAddBon: dateAddBon
+        dateAddBon: dateAddBon,
+        idBonJour: null,
     );
 
     try {
@@ -282,21 +285,22 @@ class _ContenuSectionStationBonsState extends State<ContenuSectionStationBons> {
       if (connectedUser != null) {
         int? idUser = connectedUser.idUser; // Récupérer l'ID de l'utilisateur connecté
 
-        List<BonModel> bons = await _bonService.fetchBons(idUser!);
+        // Utilise l'ID du bon du jour passé en paramètre
+        List<BonModel> bons = await _bonService.fetchBons(widget.idBonDuJour, idUser!);
         setState(() {
           bonStations = bons;
           _calculerTotalPrix();
         });
 
         // Ajout de logs pour vérifier les valeurs récupérées
-        for (var bons in bonStations) {
-          print('idBon: ${bons.idBon}');
-          //print('nomDestinataire: ${bons.nomDestinataire}');
-          print('prixDemander: ${bons.prixDemander}');
-          print('dateAddBon: ${bons.dateAddBon}');
-          print('id: ${bons.idUser}');
-          print('nomUtilisateur: ${bons.nomUtilisateur}');
-          print('prenomUtilisateur: ${bons.prenomUtilisateur}');
+        for (var bon in bonStations) {
+          print('idBon: ${bon.idBon}');
+          // print('nomDestinataire: ${bon.nomDestinataire}');
+          print('prixDemander: ${bon.prixDemander}');
+          print('dateAddBon: ${bon.dateAddBon}');
+          print('id: ${bon.idUser}');
+          print('nomUtilisateur: ${bon.nomUtilisateur}');
+          print('prenomUtilisateur: ${bon.prenomUtilisateur}');
         }
       } else {
         print('Aucun utilisateur connecté');
@@ -309,6 +313,7 @@ class _ContenuSectionStationBonsState extends State<ContenuSectionStationBons> {
       isLoading = false;
     });
   }
+  
   @override
   Widget build(BuildContext context) {
     return Column(

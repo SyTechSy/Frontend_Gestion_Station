@@ -75,7 +75,43 @@ class BonService {
     }
   }
   // Liste de tout les bons
-  Future<List<BonModel>> fetchBons(int id) async {
+  Future<List<BonModel>> fetchBons(int idBonDuJour, int idUtilisateur) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/list/bons/bondujour/$idBonDuJour/utilisateur/$idUtilisateur'),
+    );
+
+    if (response.statusCode == 200) {
+      debugPrint(jsonDecode(response.body).toString());
+      List<dynamic> body = jsonDecode(response.body);
+      List<BonModel> bons = body.map((dynamic item) => BonModel.fromJson(item)).toList();
+      print('Bons Station récupérés: $bons');
+      return bons;
+    } else if (response.statusCode == 404) {
+      // Gérer le cas où l'utilisateur n'a pas créé de bons
+      print('L\'utilisateur n\'a pas créé de bons');
+      return []; // Retourner une liste vide dans ce cas
+    } else {
+      // Gérer les autres codes d'erreur
+      print('Erreur lors de la récupération des bons de Station: ${response.statusCode}');
+      throw Exception('Échec du chargement de bon: ${response.statusCode}');
+    }
+  }
+
+  // Suppression des devis essence
+  Future<void> deleteBon(int id) async {
+    final response = await http.delete(
+        Uri.parse('$baseUrl/delete/bon/$id')
+    );
+
+    if (response.statusCode != 200) {
+      print('Error lors de la suppression bon : ${response.statusCode} - ${response.body}');
+      throw Exception('Erreur lors de la suppression de bon');
+    }
+  }
+}
+
+/*
+Future<List<BonModel>> fetchBons(int id) async {
     final response = await http.get(
       Uri.parse('$baseUrl/list/bons/$id'),
     );
@@ -96,15 +132,4 @@ class BonService {
       throw Exception('Échec du chargement de bon: ${response.statusCode}');
     }
   }
-  // Suppression des devis essence
-  Future<void> deleteBon(int id) async {
-    final response = await http.delete(
-        Uri.parse('$baseUrl/delete/bon/$id')
-    );
-
-    if (response.statusCode != 200) {
-      print('Error lors de la suppression bon : ${response.statusCode} - ${response.body}');
-      throw Exception('Erreur lors de la suppression de bon');
-    }
-  }
-}
+ */

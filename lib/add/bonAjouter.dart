@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 import '../Utilisateur/AppHome.dart';
-import '../Utilisateur/bonAccueil.dart';
+import '../Utilisateur/bonAccueil.txt';
 import '../Utilisateur/navBar.dart';
 import '../models/bonModel.dart';
 import '../models/utilisateurModel.dart';
@@ -101,7 +101,8 @@ class _PageChampsInputAjouterBonState extends State<PageChampsInputAjouterBon> {
         idUser: idUser,
         nomUtilisateur: nomUtilisateur,
         prenomUtilisateur: prenomUtilisateur,
-        dateAddBon: dateAddBon
+        dateAddBon: dateAddBon,
+        idBonJour: null,
     );
 
     try {

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/utilisateurModel.dart';
-import '../usersCreation/bons.dart';
+import '../usersCreation/bons.txt';
 import '../usersCreation/essence.dart';
 import '../usersCreation/gasoil.dart';
 import '../usersCreation/stationBons.dart';
@@ -24,7 +24,7 @@ class _AccueilPageState extends State<AccueilPage> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this, initialIndex: widget.initialTabIndexx);
+    _tabController = TabController(length: 3, vsync: this, initialIndex: widget.initialTabIndexx);
   }
 
   String _getGreeting() {
@@ -140,7 +140,7 @@ class _AccueilPageState extends State<AccueilPage> with SingleTickerProviderStat
                       Tab(child: Text("Essence")),
                       Tab(child: Text("Gasoil")),
                       Tab(child: Text("Station bon")),
-                      Tab(child: Text("Bons")),
+                      //Tab(child: Text("Bons")),
                       //Tab(child: Text("Somme total")),
                     ],
                   ),
@@ -158,7 +158,7 @@ class _AccueilPageState extends State<AccueilPage> with SingleTickerProviderStat
             SectionEssence(),
             SectionGasoil(),
             SectionStationBons(),
-            SectionBons(),
+            //SectionBons(),
             //SommePage(budgetObtenu: 0.0),
           ],
         ),

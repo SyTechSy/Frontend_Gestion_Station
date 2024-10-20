@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 
 import '../Utilisateur/navBar.dart';
 import '../models/BonDuJourModel.dart';
 import '../models/bonModel.dart';
 import '../models/utilisateurModel.dart';
+import '../services/BonDuJourService.dart';
 import '../services/bonService.dart';
 import '../services/utilisateurService.dart';
 
@@ -18,6 +20,57 @@ class AddQuoteStationGood extends StatefulWidget {
 }
 
 class _AddQuoteStationGoodState extends State<AddQuoteStationGood> {
+  final BonDuJourService _bonDuJourService = BonDuJourService();
+  final _utilisateurService = GetIt.instance<UtilisateurService>();
+
+
+  String message = '';
+  List<BonDuJourModel> bonDuJourStations = [];
+  BonDuJourModel? champsInBonDuJour;
+
+  void _submitForm() async {
+    int? idUser = _utilisateurService.connectedUser?.idUser;
+    String nomUtilisateur = _utilisateurService.connectedUser?.nomUtilisateur ?? 'N/A';
+    String prenomUtilisateur = _utilisateurService.connectedUser?.prenomUtilisateur ?? 'N/A';
+    DateTime dateAddBonDuJour = DateTime.now();
+    final today = DateTime.now();
+    final dayName = getDayName(today);
+
+    // Conversion du DateTime en String au format souhaité (par exemple, 'yyyy-MM-dd HH:mm:ss')
+    String formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(dateAddBonDuJour);
+
+    BonDuJourModel bondujourstation = BonDuJourModel(
+        idBonJour: null,
+        idUser: idUser,
+        nomUtilisateur: nomUtilisateur,
+        prenomUtilisateur: prenomUtilisateur,
+        dateAddBonDuJour: formattedDate // Utilisez la chaîne formatée ici
+    );
+
+    try {
+      champsInBonDuJour = await _bonDuJourService.ajouterBonDuJour(bondujourstation);
+
+      if (idUser != null && champsInBonDuJour != null && champsInBonDuJour!.idBonJour != null) {
+        setState(() {
+          message = 'Bon créé avec succès';
+          print("Ajout du bon du jour");
+        });
+      } else {
+        setState(() {
+          message = 'Bon du jour non cree';
+        });
+      }
+
+      Navigator.pop(context, bondujourstation);
+
+    } catch (e) {
+      print('Erreur lors de la création de bon: $e');
+      showErrorMessage('Vous avez déjà créé un bon pour $dayName');
+      setState(() {
+        message = 'Vous avez déjà créé un bon aujourd\'hui.';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,11 +115,14 @@ class _AddQuoteStationGoodState extends State<AddQuoteStationGood> {
                 Spacer(),
                 Container(
                   margin: EdgeInsets.only(left: 10, top: 35, right: 10),
-                  child: Text(
-                    "Enregistre",
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.white
+                  child: GestureDetector(
+                    onTap: _submitForm,
+                    child: Text(
+                      "Enregistre",
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.white
+                      ),
                     ),
                   ),
                 ),
@@ -82,6 +138,43 @@ class _AddQuoteStationGoodState extends State<AddQuoteStationGood> {
       ),
     );
   }
+  // Fonction pour obtenir le nom du jour en français
+  String getDayName(DateTime date) {
+    final daysOfWeek = [
+      'Dimanche',
+      'Lundi',
+      'Mardi',
+      'Mercredi',
+      'Jeudi',
+      'Vendredi',
+      'Samedi',
+    ];
+    return daysOfWeek[date.weekday % 7];
+  }
+  void showSuccessMessage(String message) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(
+            color: Colors.white
+        ),
+      ),
+      backgroundColor: Color(0xff12343b),
+    );
+    ScaffoldMessenger.of(context as BuildContext).showSnackBar(snackBar);
+  }
+  void showErrorMessage(String message) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(
+            color: Colors.white
+        ),
+      ),
+      backgroundColor: Colors.red,
+    );
+    ScaffoldMessenger.of(context as BuildContext).showSnackBar(snackBar);
+  }
 }
 
 class ContentQuoteStationGood extends StatefulWidget {
@@ -94,6 +187,7 @@ class ContentQuoteStationGood extends StatefulWidget {
 
 class _ContentQuoteStationGoodState extends State<ContentQuoteStationGood> {
   final _bonService = GetIt.instance<BonService>();
+  final BonDuJourService _bonDuJourService = BonDuJourService();
   final _utilisateurService = GetIt.instance<UtilisateurService>();
 
   final _prixDemanderController = TextEditingController();
@@ -103,6 +197,7 @@ class _ContentQuoteStationGoodState extends State<ContentQuoteStationGood> {
 
   String message = '';
   BonModel? champsInBon;
+  BonDuJourModel? champsInBonDuJour;
 
   // Nouvelle variable pour la somme des prix
   double totalPrixDemander = 0.0;
@@ -129,66 +224,100 @@ class _ContentQuoteStationGoodState extends State<ContentQuoteStationGood> {
   }
 
   void _onAddBon() async {
-    //String nomDestinataire = _nomDestinataireController.text.trim();
+    // Récupération du prix et motif
     String prixDemander = _prixDemanderController.text.trim();
     String motif = _motifController.text.trim();
 
+    // Récupération de l'utilisateur connecté
     int? idUser = _utilisateurService.connectedUser?.idUser;
     String nomUtilisateur = _utilisateurService.connectedUser?.nomUtilisateur ?? 'N/A';
     String prenomUtilisateur = _utilisateurService.connectedUser?.prenomUtilisateur ?? 'N/A';
     DateTime dateAddBon = DateTime.now();
 
-    BonModel bonstation = BonModel(
+    // Vérifier que le bon du jour a été créé
+    if (champsInBonDuJour != null && champsInBonDuJour!.idBonJour != null) {
+      // Créer le bon avec l'idBonJour récupéré
+      BonModel bonstation = BonModel(
         idBon: null,
-        //nomDestinataire: nomDestinataire,
         prixDemander: prixDemander,
         motif: motif,
         idUser: idUser,
         nomUtilisateur: nomUtilisateur,
         prenomUtilisateur: prenomUtilisateur,
-        dateAddBon: dateAddBon
+        dateAddBon: dateAddBon,
+        idBonJour: champsInBonDuJour!.idBonJour,  // Assigner l'idBonJour ici
+      );
+
+      try {
+        // Appel au service pour ajouter un bon
+        champsInBon = await _bonService.ajouterBon(bonstation);
+
+        if (champsInBon != null && champsInBon!.idBon != null) {
+          setState(() {
+            message = 'Bon créé avec succès';
+            bonStations.add(champsInBon!);
+            _calculerTotalPrix();  // Recalculer la somme
+          });
+        } else {
+          setState(() {
+            message = 'Erreur: données de bon manquantes';
+          });
+        }
+
+        Navigator.pop(context, bonstation);
+        _prixDemanderController.clear();
+        _motifController.clear();
+      } catch (e) {
+        print('Erreur lors de la création de bon: $e');
+        showErrorMessage('Erreur de création de bon.');
+      }
+    } else {
+      showErrorMessage('Veuillez créer un bon du jour avant d\'ajouter des bons.');
+    }
+  }
+
+
+// Méthode pour créer le bon du jour si nécessaire
+
+  Future<void> _createBonDuJour() async {
+    int? idUser = _utilisateurService.connectedUser?.idUser;
+    String nomUtilisateur = _utilisateurService.connectedUser?.nomUtilisateur ?? 'N/A';
+    String prenomUtilisateur = _utilisateurService.connectedUser?.prenomUtilisateur ?? 'N/A';
+    DateTime dateAddBonDuJour = DateTime.now();
+
+    String formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(dateAddBonDuJour);
+
+    BonDuJourModel bondujourstation = BonDuJourModel(
+      idBonJour: null,
+      idUser: idUser,
+      nomUtilisateur: nomUtilisateur,
+      prenomUtilisateur: prenomUtilisateur,
+      dateAddBonDuJour: formattedDate,
     );
 
     try {
-      champsInBon = await _bonService.ajouterBon(bonstation);
+      champsInBonDuJour = await _bonDuJourService.ajouterBonDuJour(bondujourstation);
 
-      if (idUser != null && champsInBon != null && champsInBon!.idBon != null) {
+      if (champsInBonDuJour != null && champsInBonDuJour!.idBonJour != null) {
         setState(() {
-          message = 'Bon créé avec succès';
-
-          // Vérifiez que champsInBon n'est pas nul avant d'ajouter
-          if (champsInBon != null) {
-            bonStations.add(champsInBon!);
-
-            // Ajoutez un log pour voir si la somme est correctement calculée
-            print("Ajout du bon: ${champsInBon!.prixDemander}");
-
-            // Recalculer la somme après l'ajout d'un bon
-            _calculerTotalPrix();
-          } else {
-            print("Erreur : champsInBon est nul après l'ajout.");
-          }
+          message = 'Bon du jour créé avec succès';
+          print("Bon du jour ajouté avec ID: ${champsInBonDuJour!.idBonJour}");
         });
       } else {
         setState(() {
-          message = 'Erreur: données de bon manquantes';
+          message = 'Erreur lors de la création du bon du jour';
         });
       }
-
-      Navigator.pop(context, bonstation);
-
-      // Vider les champs après la validation et la soumission
-      _prixDemanderController.clear();
-      _motifController.clear();
-
     } catch (e) {
-      print('Erreur lors de la création de bon: $e');
-      showErrorMessage('Erreur de création de bon, vérifiez que les champs ne sont pas vides');
+      print('Erreur lors de la création du bon du jour: $e');
+      showErrorMessage('Vous avez déjà créé un bon du jour pour aujourd\'hui.');
       setState(() {
-        message = 'Vérifiez vos informations, les champs ne doivent pas être vides';
+        message = 'Vous avez déjà créé un bon du jour aujourd\'hui.';
       });
     }
   }
+
+
 
   void _addStationBons(BuildContext context) {
     showModalBottomSheet(
@@ -296,7 +425,7 @@ class _ContentQuoteStationGoodState extends State<ContentQuoteStationGood> {
               borderRadius: BorderRadius.circular(5)
           ),
           child: ListTile(
-            title: Text('Bon pour ???'),
+            title: Text('Bon pour ${dayName}'),
             trailing: Text(
               // Utilisation de la somme calculée ici
               '${totalPrixDemander.toStringAsFixed(0)} XOP',
