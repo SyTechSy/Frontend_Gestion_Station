@@ -10,6 +10,7 @@ import '../models/utilisateurModel.dart';
 import '../services/BonDuJourService.dart';
 import '../services/bonService.dart';
 import '../services/utilisateurService.dart';
+import '../usersCreation/detailStationBons.dart';
 
 class AddQuoteStationGood extends StatefulWidget {
   //final String? dateAddBonDuJour;
@@ -28,6 +29,7 @@ class _AddQuoteStationGoodState extends State<AddQuoteStationGood> {
   List<BonDuJourModel> bonDuJourStations = [];
   BonDuJourModel? champsInBonDuJour;
 
+  // AJOUTER UN BON DU JOUR
   void _submitForm() async {
     int? idUser = _utilisateurService.connectedUser?.idUser;
     String nomUtilisateur = _utilisateurService.connectedUser?.nomUtilisateur ?? 'N/A';
@@ -55,13 +57,22 @@ class _AddQuoteStationGoodState extends State<AddQuoteStationGood> {
           message = 'Bon créé avec succès';
           print("Ajout du bon du jour");
         });
+
+        // Naviguer vers le détail du bon du jour créé
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SectionDetailStationBons(
+              dateAddBonDuJour: champsInBonDuJour!.dateAddBonDuJour, // Passer la date du bon
+              idBonDuJour: champsInBonDuJour!.idBonJour!, // Passer l'ID du bon
+            ),
+          ),
+        );
       } else {
         setState(() {
           message = 'Bon du jour non cree';
         });
       }
-
-      Navigator.pop(context, bondujourstation);
 
     } catch (e) {
       print('Erreur lors de la création de bon: $e');
@@ -71,6 +82,7 @@ class _AddQuoteStationGoodState extends State<AddQuoteStationGood> {
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -223,62 +235,9 @@ class _ContentQuoteStationGoodState extends State<ContentQuoteStationGood> {
     });
   }
 
-  void _onAddBon() async {
-    // Récupération du prix et motif
-    String prixDemander = _prixDemanderController.text.trim();
-    String motif = _motifController.text.trim();
-
-    // Récupération de l'utilisateur connecté
-    int? idUser = _utilisateurService.connectedUser?.idUser;
-    String nomUtilisateur = _utilisateurService.connectedUser?.nomUtilisateur ?? 'N/A';
-    String prenomUtilisateur = _utilisateurService.connectedUser?.prenomUtilisateur ?? 'N/A';
-    DateTime dateAddBon = DateTime.now();
-
-    // Vérifier que le bon du jour a été créé
-    if (champsInBonDuJour != null && champsInBonDuJour!.idBonJour != null) {
-      // Créer le bon avec l'idBonJour récupéré
-      BonModel bonstation = BonModel(
-        idBon: null,
-        prixDemander: prixDemander,
-        motif: motif,
-        idUser: idUser,
-        nomUtilisateur: nomUtilisateur,
-        prenomUtilisateur: prenomUtilisateur,
-        dateAddBon: dateAddBon,
-        idBonJour: champsInBonDuJour!.idBonJour,  // Assigner l'idBonJour ici
-      );
-
-      try {
-        // Appel au service pour ajouter un bon
-        champsInBon = await _bonService.ajouterBon(bonstation);
-
-        if (champsInBon != null && champsInBon!.idBon != null) {
-          setState(() {
-            message = 'Bon créé avec succès';
-            bonStations.add(champsInBon!);
-            _calculerTotalPrix();  // Recalculer la somme
-          });
-        } else {
-          setState(() {
-            message = 'Erreur: données de bon manquantes';
-          });
-        }
-
-        Navigator.pop(context, bonstation);
-        _prixDemanderController.clear();
-        _motifController.clear();
-      } catch (e) {
-        print('Erreur lors de la création de bon: $e');
-        showErrorMessage('Erreur de création de bon.');
-      }
-    } else {
-      showErrorMessage('Veuillez créer un bon du jour avant d\'ajouter des bons.');
-    }
-  }
-
+  // AJOUTER UN BON DANS BON DU JOUR
 
 // Méthode pour créer le bon du jour si nécessaire
-
   Future<void> _createBonDuJour() async {
     int? idUser = _utilisateurService.connectedUser?.idUser;
     String nomUtilisateur = _utilisateurService.connectedUser?.nomUtilisateur ?? 'N/A';
@@ -316,8 +275,6 @@ class _ContentQuoteStationGoodState extends State<ContentQuoteStationGood> {
       });
     }
   }
-
-
 
   void _addStationBons(BuildContext context) {
     showModalBottomSheet(
@@ -382,7 +339,10 @@ class _ContentQuoteStationGoodState extends State<ContentQuoteStationGood> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    onPressed: _onAddBon,
+                    onPressed: () {
+
+                    },
+                    //onPressed: _onAddBon,
                   ),
                 ),
 

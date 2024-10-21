@@ -63,4 +63,16 @@ class BonDuJourService {
       throw Exception('Échec du chargement de bon du jour: ${response.statusCode}');
     }
   }
+
+  // Suppression des devis bon du jour
+  Future<void> deleteBonDuJour(int id) async {
+    final response = await http.delete(
+        Uri.parse('$baseUrl/delete/bondujour/$id')
+    );
+
+    if (response.statusCode != 200) {
+      print('du jour${response.statusCode} - ${response.body}');
+      throw Exception('Erreur lors de la suppression de bon du jour');
+    }
+  }
 }

@@ -32,6 +32,7 @@ class _SectionDetailStationBonsState extends State<SectionDetailStationBons> {
             ),
             child: GestureDetector(
               onTap: () {
+                //Navigator.push(context, MaterialPageRoute(builder: (context) => NavBarSection()));
                 Navigator.pop(context);
               },
               child: Row(
@@ -135,7 +136,7 @@ class _ContenuSectionStationBonsState extends State<ContenuSectionStationBons> {
         nomUtilisateur: nomUtilisateur,
         prenomUtilisateur: prenomUtilisateur,
         dateAddBon: dateAddBon,
-        idBonJour: null,
+        idBonJour: widget.idBonDuJour,
     );
 
     try {

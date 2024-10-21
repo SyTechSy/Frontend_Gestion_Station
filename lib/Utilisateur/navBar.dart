@@ -4,16 +4,20 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 import 'package:frontend_gestion_station/Utilisateur/profilUtilisateur.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 
 import '../add/ajouter_devis_bon.dart';
 import '../add/ajouter_devis_essence.dart';
 import '../add/ajouter_devis_gasoil.dart';
 import '../add/bonAjouter.dart';
+import '../models/BonDuJourModel.dart';
 import '../models/budgetTotalModel.dart';
 import '../models/utilisateurModel.dart';
+import '../services/BonDuJourService.dart';
 import '../services/utilisateurService.dart';
 import '../stationPage/sommePage.dart';
 import '../usersCreation/budgetSommeTotal.dart';
+import '../usersCreation/detailStationBons.dart';
 import 'accueil.dart';
 import 'homes.dart';
 
@@ -57,6 +61,69 @@ class _NavBarSectionState extends State<NavBarSection> {
   Color _getIconColor(int index) {
     return _currentIndex == index ? Color(0xff12343b) : Colors.black.withOpacity(0.7);
   }
+
+  final BonDuJourService _bonDuJourService = BonDuJourService();
+  final _utilisateurService = GetIt.instance<UtilisateurService>();
+
+
+  String message = '';
+  List<BonDuJourModel> bonDuJourStations = [];
+  BonDuJourModel? champsInBonDuJour;
+
+  void _submitForm() async {
+    int? idUser = _utilisateurService.connectedUser?.idUser;
+    String nomUtilisateur = _utilisateurService.connectedUser?.nomUtilisateur ?? 'N/A';
+    String prenomUtilisateur = _utilisateurService.connectedUser?.prenomUtilisateur ?? 'N/A';
+    DateTime dateAddBonDuJour = DateTime.now();
+    final today = DateTime.now();
+    final dayName = getDayName(today);
+
+    // Conversion du DateTime en String au format souhaité (par exemple, 'yyyy-MM-dd HH:mm:ss')
+    String formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(dateAddBonDuJour);
+
+    BonDuJourModel bondujourstation = BonDuJourModel(
+        idBonJour: null,
+        idUser: idUser,
+        nomUtilisateur: nomUtilisateur,
+        prenomUtilisateur: prenomUtilisateur,
+        dateAddBonDuJour: formattedDate // Utilisez la chaîne formatée ici
+    );
+
+    try {
+      champsInBonDuJour = await _bonDuJourService.ajouterBonDuJour(bondujourstation);
+
+      if (idUser != null && champsInBonDuJour != null && champsInBonDuJour!.idBonJour != null) {
+        setState(() {
+          message = 'Bon créé avec succès';
+          print("Ajout du bon du jour");
+        });
+
+        // Naviguer vers le détail du bon du jour créé
+        print("Navigation vers le bon du jour avec ID: ${champsInBonDuJour?.idBonJour}");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SectionDetailStationBons(
+              dateAddBonDuJour: champsInBonDuJour!.dateAddBonDuJour, // Passer la date du bon
+              idBonDuJour: champsInBonDuJour!.idBonJour!, // Passer l'ID du bon
+            ),
+          ),
+        );
+      } else {
+        setState(() {
+          message = 'Bon du jour non cree';
+        });
+      }
+
+    } catch (e) {
+      print('Erreur lors de la création de bon: $e');
+      showErrorMessage('Vous avez déjà créé un bon pour aujourd\'hui');
+      setState(() {
+        message = 'Vous avez déjà créé un bon aujourd\'hui.';
+      });
+    }
+  }
+
 
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
@@ -162,8 +229,12 @@ class _NavBarSectionState extends State<NavBarSection> {
                 ),
               ),
               GestureDetector(
-                onTap: () {
+                /*onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => AddQuoteStationGood()));
+                },*/
+                onTap: () async {
+                  _submitForm();
+                  Navigator.pop(context);
                 },
                 child: Card(
                   color: Colors.white,
@@ -183,14 +254,14 @@ class _NavBarSectionState extends State<NavBarSection> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Bon",
+                                  "Ajouter le bon du jour",
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16,
                                   ),
                                 ),
                                 Text(
-                                  "Vous pouvez créer un devis bon",
+                                  "Vous pouvez créer une seule fois le bon du jour ",
                                   style: TextStyle(
                                     color: Colors.black.withOpacity(0.5),
                                     fontSize: 12,
@@ -275,5 +346,42 @@ class _NavBarSectionState extends State<NavBarSection> {
       ),
     ),
   );
+  // Fonction pour obtenir le nom du jour en français
+  String getDayName(DateTime date) {
+    final daysOfWeek = [
+      'Dimanche',
+      'Lundi',
+      'Mardi',
+      'Mercredi',
+      'Jeudi',
+      'Vendredi',
+      'Samedi',
+    ];
+    return daysOfWeek[date.weekday % 7];
+  }
+  void showSuccessMessage(String message) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(
+            color: Colors.white
+        ),
+      ),
+      backgroundColor: Color(0xff12343b),
+    );
+    ScaffoldMessenger.of(context as BuildContext).showSnackBar(snackBar);
+  }
+  void showErrorMessage(String message) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(
+            color: Colors.white
+        ),
+      ),
+      backgroundColor: Colors.red,
+    );
+    ScaffoldMessenger.of(context as BuildContext).showSnackBar(snackBar);
+  }
 }
 
